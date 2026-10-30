@@ -1,0 +1,83 @@
+{
+ "date": "2026-10-29",
+ "build": "/home/claude/work/kwb2",
+ "gates": [
+  [
+   "Null effect: networks with nothing to split or loop, modes 0/0, 1/1, 2/1, 3/1 against stock",
+   "32 runs on 8 networks, 0 differences (.out bytes, .rpt bar clock lines)",
+   true
+  ],
+  [
+   "Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network",
+   "10 cases (ERROR 133: 6, ERROR 131: 4), KINWAVE and STEADY, all as expected",
+   true
+  ],
+  [
+   "Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops",
+   "5 of 5 networks: link peaks and continuity identical",
+   true
+  ],
+  [
+   "Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules",
+   "7.1e-15 cfs over 15 runs",
+   true
+  ],
+  [
+   "WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode",
+   "52 of 52 .out files byte-identical",
+   true
+  ],
+  [
+   "WebAssembly: swmm524.wasm (stock) against native musl stock",
+   "13 of 13 .out files byte-identical",
+   true
+  ],
+  [
+   "Reproducible build: swmm524kw.wasm rebuilt by tools/build.sh",
+   "byte-identical to wasm/swmm524kw.wasm",
+   true
+  ],
+  [
+   "Reproducible build: swmm524.wasm rebuilt by tools/build.sh",
+   "byte-identical to wasm/swmm524.wasm",
+   true
+  ],
+  [
+   "Patch: patch/swmm524-kw.patch on pristine EPA v5.2.4 reproduces src/",
+   "src/ = pristine v5.2.4 + patch, byte for byte (7 files)",
+   true
+  ]
+ ],
+ "engines": [
+  [
+   "kwswmm",
+   541240,
+   "9e4b5f68f3cea2d23ad144465382bd8cab809da2ebe039a2aaa0a39339972201"
+  ],
+  [
+   "kwswmm-musl",
+   534448,
+   "c280e5c8a37da717ebe9b7c2b5808412c50036c6a107ac004354fec4d796c057"
+  ],
+  [
+   "stockseq",
+   531224,
+   "61a4ed30e8dc00b167a68fcaaba4b05f27d8f201831c281710432add4375b552"
+  ],
+  [
+   "stockseq-musl",
+   520352,
+   "7da2fbdac3c54e52ed6f118b5dbeee20aa4b4860d5b9f14381fcf6eed54cdc9d"
+  ],
+  [
+   "swmm524.wasm",
+   840503,
+   "9714657c0306f5673e287dbd1f71f371f8f3285fa8ad5542f0285db33f7f455f"
+  ],
+  [
+   "swmm524kw.wasm",
+   853130,
+   "e62aa56968febce741d56de2f6e73660ead09fa700bad5071117b962b4939918"
+  ]
+ ]
+}

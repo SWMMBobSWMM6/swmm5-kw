@@ -1,12 +1,4 @@
-
-.DS_Store
-
-# Eclipse Stuff
-.metadata/
-.settings/
-
 build/
-nrtests/
-upload/
-
-*_export.h
+app/doc/out/
+__pycache__/
+*.pyc

@@ -1,0 +1,765 @@
+--- a/src/solver/flowrout.c
++++ b/src/solver/flowrout.c
+@@ -34,6 +34,8 @@
+ 
+ #include <stdlib.h>
+ #include <math.h>
++#include <string.h>
++#include <stdio.h>
+ #include "headers.h"
+ 
+ //-----------------------------------------------------------------------------
+@@ -68,6 +70,8 @@
+ static void   updateNodeDepth(int node, double y);
+ static int    steadyflow_execute(int link, double* qin, double* qout,
+               double tStep);
++static int    kwLoopExecute(int links[], int routingModel, double tStep);
++static void   kwListIDs(int what);
+ 
+ 
+ //=============================================================================
+@@ -95,7 +99,27 @@
+     }
+ 
+     // --- validate network layout for kinematic wave routing
+-    else validateTreeLayout();
++    else
++    {
++        validateTreeLayout();
++        if ( !ErrorCode && (KwSplitNodeCount > 0 || KwBackEdgeCount > 0) )
++        {
++            char line[200];
++            static const char* modes[] = {"STOCK", "HEAD", "CAPACITY", "AREA"};
++            report_writeLine("");
++            report_writeLine("*******************************************");
++            report_writeLine("KW/SF extension (modified engine, kwmod.c)");
++            report_writeLine("*******************************************");
++            snprintf(line, sizeof(line), "Multi-outlet junctions ... %d  (allocation %s)",
++                     KwSplitNodeCount, modes[KwSplitMode & 3]);
++            report_writeLine(line);
++            kwListIDs(1);
++            snprintf(line, sizeof(line), "Loop-closing links ....... %d  (%s)",
++                     KwBackEdgeCount, KwBackEdgeCount ? "iterated each step" : "none");
++            report_writeLine(line);
++            kwListIDs(2);
++        }
++    }
+ 
+     // --- initialize node & link volumes
+     initNodes();
+@@ -112,6 +136,50 @@
+ //
+ {
+     if ( routingModel == DW ) dynwave_close();
++    else
++    {
++        if ( KwBackEdgeCount > 0 && !ErrorCode )
++        {
++            double v[10];
++            char line[200];
++            kwmod_getStats(v);
++            report_writeLine("");
++            snprintf(line, sizeof(line),
++                "Loop iteration: %.0f steps, mean %.2f sweeps, max %.0f, %.0f steps at the %d-sweep cap, max residual %.4g %s",
++                v[4], v[5], v[6], v[7], 60, v[8] * UCF(FLOW), FlowUnitWords[FlowUnits]);
++            report_writeLine(line);
++        }
++        kwmod_close();
++    }
++}
++
++//=============================================================================
++
++static void kwListIDs(int what)
++//  Writes the IDs of split junctions (what = 1) or loop-closing links (2).
++{
++    char line[120];
++    int  j, n = 0, len = 0;
++    line[0] = 0;
++    if ( what == 1 )
++    {
++        for ( j = 0; j < Nobjects[NODE]; j++ )
++        {
++            if ( !kwmod_isSplitNode(j) ) continue;
++            if ( len + (int)strlen(Node[j].ID) + 3 > 100 ) { report_writeLine(line); len = 0; line[0] = 0; }
++            len += snprintf(line + len, sizeof(line) - len, "  %s", Node[j].ID); n++;
++        }
++    }
++    else if ( KwBackEdge )
++    {
++        for ( j = 0; j < Nobjects[LINK]; j++ )
++        {
++            if ( !KwBackEdge[j] ) continue;
++            if ( len + (int)strlen(Link[j].ID) + 3 > 100 ) { report_writeLine(line); len = 0; line[0] = 0; }
++            len += snprintf(line + len, sizeof(line) - len, "  %s", Link[j].ID); n++;
++        }
++    }
++    if ( len > 0 ) report_writeLine(line);
+ }
+ 
+ //=============================================================================
+@@ -167,7 +235,12 @@
+         return dynwave_execute(tStep);
+     }
+ 
++    // --- directed loops present: iterate the sweep to a fixed point
++    if ( KwBackEdgeCount > 0 && KwBackEdge )
++        return kwLoopExecute(links, routingModel, tStep);
++
+     // --- otherwise examine each link, moving from upstream to downstream
++    KwStamp++;
+     steps = 0.0;
+     for (i = 0; i < Nobjects[LINK]; i++)
+     {
+@@ -234,11 +307,13 @@
+           // --- storage nodes can have multiple outlets
+           case STORAGE: break;
+ 
+-          // --- all other nodes allowed only one outlet link
++          // --- all other nodes allowed only one outlet link, unless the
++          //     bifurcation extension can allocate among conduit outlets
+           default:
+             if ( Node[j].degree > 1 )
+             {
+-                report_writeErrorMsg(ERR_MULTI_OUTLET, Node[j].ID);
++                if ( kwmod_canSplit(j) ) kwmod_markSplitNode(j);
++                else report_writeErrorMsg(ERR_MULTI_OUTLET, Node[j].ID);
+             }
+         }
+     }
+@@ -800,3 +875,124 @@
+ }
+ 
+ //=============================================================================
++
++//=============================================================================
++//  KW/SF loop extension: fixed-point iteration over the sorted sweep
++//=============================================================================
++#ifndef KW_MAXSWEEP
++#define KW_MAXSWEEP 60
++#endif
++
++int kwLoopExecute(int links[], int routingModel, double tStep)
++//
++//  Routes one time step when some links close a directed cycle. Each back-edge
++//  link's outflow is guessed (last step's flow), added to its downstream node
++//  before the sweep, and replaced by the routed value after it. The sweep is
++//  repeated from the same starting state until the guesses stop changing.
++//  Any final residual is booked to the receiving node's inflow, so continuity
++//  is exact whether or not the iteration converged.
++//
++{
++    int     i, j, n1, sweep, nN = Nobjects[NODE], nL = Nobjects[LINK];
++    int     converged = 0;
++    double  qin, qout, steps = 0.0, res = 0.0, scale;
++    static double *sIn = NULL, *sOut = NULL, *sOver = NULL, *sVol = NULL,
++                  *sDep = NULL, *sNewFlow = NULL, *guess = NULL, *routed = NULL;
++    static char   *sUpd = NULL;
++    static TConduit *sCond = NULL;
++    static int sizeN = -1, sizeL = -1, sizeC = -1;
++
++    if ( sizeN != nN || sizeL != nL || sizeC != Nlinks[CONDUIT] )
++    {
++        FREE(sIn); FREE(sOut); FREE(sOver); FREE(sVol); FREE(sDep); FREE(sUpd);
++        FREE(sNewFlow); FREE(guess); FREE(routed); FREE(sCond);
++        sIn = (double*)calloc(nN, sizeof(double));  sOut = (double*)calloc(nN, sizeof(double));
++        sOver = (double*)calloc(nN, sizeof(double)); sVol = (double*)calloc(nN, sizeof(double));
++        sDep = (double*)calloc(nN, sizeof(double));  sUpd = (char*)calloc(nN, sizeof(char));
++        sNewFlow = (double*)calloc(nL, sizeof(double)); guess = (double*)calloc(nL, sizeof(double));
++        routed = (double*)calloc(nL, sizeof(double));
++        sCond = (TConduit*)calloc(Nlinks[CONDUIT] + 1, sizeof(TConduit));
++        sizeN = nN; sizeL = nL; sizeC = Nlinks[CONDUIT];
++        if ( !sIn || !sOut || !sOver || !sVol || !sDep || !sUpd || !sNewFlow ||
++             !guess || !routed || !sCond )
++        {
++            report_writeErrorMsg(ERR_MEMORY, "");
++            return 0;
++        }
++    }
++
++    // --- snapshot the state a sweep can change
++    for ( j = 0; j < nN; j++ )
++    {
++        sIn[j] = Node[j].inflow;   sOut[j] = Node[j].outflow;
++        sOver[j] = Node[j].overflow; sVol[j] = Node[j].newVolume;
++        sDep[j] = Node[j].newDepth; sUpd[j] = Node[j].updated;
++    }
++    for ( j = 0; j < nL; j++ )
++    {
++        sNewFlow[j] = Link[j].newFlow;
++        guess[j] = KwBackEdge[j] ? MAX(Link[j].newFlow, 0.0) : 0.0;
++    }
++    if ( Nlinks[CONDUIT] > 0 ) memcpy(sCond, Conduit, Nlinks[CONDUIT] * sizeof(TConduit));
++
++    for ( sweep = 1; sweep <= KW_MAXSWEEP; sweep++ )
++    {
++        if ( sweep > 1 )
++        {
++            for ( j = 0; j < nN; j++ )
++            {
++                Node[j].inflow = sIn[j];   Node[j].outflow = sOut[j];
++                Node[j].overflow = sOver[j]; Node[j].newVolume = sVol[j];
++                Node[j].newDepth = sDep[j]; Node[j].updated = sUpd[j];
++            }
++            for ( j = 0; j < nL; j++ ) Link[j].newFlow = sNewFlow[j];
++            if ( Nlinks[CONDUIT] > 0 ) memcpy(Conduit, sCond, Nlinks[CONDUIT] * sizeof(TConduit));
++        }
++        KwStamp++;
++        for ( j = 0; j < nL; j++ )
++            if ( KwBackEdge[j] ) Node[Link[j].node2].inflow += guess[j];
++
++        steps = 0.0;
++        for ( i = 0; i < nL; i++ )
++        {
++            j = links[i];
++            n1 = Link[j].node1;
++            if ( Node[n1].type == STORAGE ) updateStorageState(n1, i, links, tStep);
++            qin = getLinkInflow(j, tStep);
++            if ( routingModel == SF )
++                steps += steadyflow_execute(j, &qin, &qout, tStep);
++            else
++                steps += kinwave_execute(j, &qin, &qout, tStep);
++            Link[j].newFlow = qout;
++            Node[ Link[j].node1 ].outflow += qin;
++            if ( KwBackEdge[j] ) routed[j] = qout;
++            else Node[ Link[j].node2 ].inflow += qout;
++        }
++
++        // --- compare guesses with routed back-edge flows
++        res = 0.0; scale = FLOW_TOL;
++        for ( j = 0; j < nL; j++ )
++        {
++            if ( !KwBackEdge[j] ) continue;
++            res = MAX(res, fabs(routed[j] - guess[j]));
++            scale = MAX(scale, fabs(routed[j]));
++        }
++        if ( res <= FLOW_TOL + 1.0e-6 * scale ) { converged = 1; break; }
++        if ( sweep == KW_MAXSWEEP ) break;
++        for ( j = 0; j < nL; j++ )
++        {
++            if ( !KwBackEdge[j] ) continue;
++            guess[j] = (sweep < 20) ? routed[j] : 0.5 * (guess[j] + routed[j]);
++        }
++    }
++
++    // --- book any remaining residual so node continuity stays exact
++    for ( j = 0; j < nL; j++ )
++        if ( KwBackEdge[j] ) Node[Link[j].node2].inflow += routed[j] - guess[j];
++
++    kwmod_noteLoopStep(sweep > KW_MAXSWEEP ? KW_MAXSWEEP : sweep, res, converged);
++    if ( nL > 0 ) steps /= nL;
++    for ( j = 0; j < nN; j++ ) setNewNodeState(j, tStep);
++    for ( j = 0; j < nL; j++ ) setNewLinkState(j);
++    return (int)(steps + 0.5);
++}
+--- a/src/solver/toposort.c
++++ b/src/solver/toposort.c
+@@ -11,6 +11,7 @@
+ #define _CRT_SECURE_NO_DEPRECATE
+ 
+ #include <stdlib.h>
++#include <string.h>
+ #include "headers.h"
+ 
+ //-----------------------------------------------------------------------------
+@@ -120,6 +121,7 @@
+         }
+ 
+         // --- topo sort the links
++        if ( !kwmod_init() ) report_writeErrorMsg(ERR_MEMORY, "");
+         n = topoSort(sortedLinks);
+     }   
+ 
+@@ -228,10 +230,23 @@
+ //  Output:  sortedLinks = array of sorted link indexes,
+ //           returns number of links successfully sorted
+ //  Purpose: performs a stack-based topo sort of the drainage network's links.
++//           With KwLoopMode on, a directed cycle no longer stops the sort:
++//           the unfinished node with the fewest unsorted inflow links is
++//           forced onto the stack, and the links that then arrive at an
++//           already-processed node are flagged as back edges.
+ //
+ {
+     int i, j, k, n;
+     int i1, i2, k1, k2;
++    int* popOrder = NULL;
++    char* pushed = NULL;
++    int popCount = 0;
++    if ( KwLoopMode )
++    {
++        popOrder = (int *) calloc(Nobjects[NODE], sizeof(int));
++        pushed = (char *) calloc(Nobjects[NODE], sizeof(char));
++        if ( !popOrder || !pushed ) { FREE(popOrder); FREE(pushed); }
++    }
+ 
+     // --- initialize a stack which contains nodes with zero in-degree
+     First = 0;
+@@ -242,12 +257,15 @@
+         {
+             Last++;
+             Stack[Last] = i;
++            if ( pushed ) pushed[i] = 1;
+         }
+     }
+ 
+     // --- traverse the stack, adding each node's outgoing link indexes
+     //     to the SortedLinks array in the order processed
+     n = 0;
++    for (;;)
++    {
+     while ( First <= Last )
+     {
+         // --- determine range of adjacency list indexes belonging to 
+@@ -272,10 +290,55 @@
+             {
+                 Last++;
+                 Stack[Last] = i2;
++                if ( pushed ) pushed[i2] = 1;
+             }  
+         }
++        if ( popOrder ) popOrder[i1] = popCount++;
+         First++;
+     }
++    // --- loop mode: break a cycle and carry on sorting
++    if ( n >= Nobjects[LINK] || !pushed ) break;
++    {
++        // --- choose the node to force: fewest unsorted inflow links, then
++        //     most inflow links already sorted (an entry point of the cycle),
++        //     then the smallest ID, so the choice never depends on how the
++        //     input file happens to number nodes or links
++        int best = -1, fed, bestFed = -1;
++        for ( i = 0; i < Nobjects[NODE]; i++ )
++        {
++            if ( pushed[i] || InDegree[i] <= 0 || Node[i].degree == 0 ) continue;
++            fed = 0;
++            for ( j = 0; j < Nobjects[LINK]; j++ )
++                if ( Link[j].node2 == i && pushed[Link[j].node1] ) fed++;
++            if ( best < 0 || InDegree[i] < InDegree[best] ||
++                 (InDegree[i] == InDegree[best] && fed > bestFed) ||
++                 (InDegree[i] == InDegree[best] && fed == bestFed &&
++                  strcmp(Node[i].ID, Node[best].ID) < 0) )
++            { best = i; bestFed = fed; }
++        }
++        if ( best < 0 ) break;
++        InDegree[best] = 0;
++        Last++;
++        Stack[Last] = best;
++        pushed[best] = 1;
++    }
++    }
++
++    // --- flag back edges: links whose downstream node was processed first
++    if ( popOrder && KwBackEdge && n >= Nobjects[LINK] )
++    {
++        for ( j = 0; j < Nobjects[LINK]; j++ )
++        {
++            if ( popOrder[Link[j].node2] <= popOrder[Link[j].node1] &&
++                 Node[Link[j].node2].type != OUTFALL )
++            {
++                KwBackEdge[j] = 1;
++                KwBackEdgeCount++;
++            }
++        }
++    }
++    FREE(popOrder);
++    FREE(pushed);
+     return n;
+ }
+ 
+--- a/src/solver/node.c
++++ b/src/solver/node.c
+@@ -409,7 +409,9 @@
+     {
+       case DIVIDER: return divider_getOutflow(j, k);
+       case STORAGE: return storage_getOutflow(j, k);
+-      default:      return Node[j].inflow + Node[j].overflow;
++      default:
++        if ( kwmod_isSplitNode(j) ) return kwmod_getOutflow(j, k);
++        return Node[j].inflow + Node[j].overflow;
+     }
+ }
+ 
+--- a/src/solver/swmm5.c
++++ b/src/solver/swmm5.c
+@@ -1719,3 +1719,24 @@
+     return rc;
+ }
+ #endif
++
++//=============================================================================
++//  KW/SF extension API (modified engine)
++//=============================================================================
++int DLLEXPORT swmm_setKwOptions(int splitMode, int loopMode)
++//  splitMode: 0 stock (ERROR 133), 1 HEAD, 2 CAPACITY, 3 AREA
++//  loopMode:  0 stock (ERROR 131), 1 iterate directed loops each step
++//  Call before swmm_start (validation happens when routing opens).
++{
++    KwSplitMode = (splitMode >= 0 && splitMode <= 3) ? splitMode : 0;
++    KwLoopMode  = loopMode ? 1 : 0;
++    return 0;
++}
++
++int DLLEXPORT swmm_getKwStats(double* v)
++//  Fills v[0..9]; see kwmod_getStats. Valid after swmm_end.
++{
++    kwmod_getStats(v);
++    return 0;
++}
++
+--- a/src/solver/funcs.h
++++ b/src/solver/funcs.h
+@@ -216,6 +216,24 @@
+ double  landuse_getCoPollutLoad(int p, double washoff[]);
+ 
+ //-----------------------------------------------------------------------------
++//   KW/SF bifurcation + loop extensions (kwmod.c)
++//-----------------------------------------------------------------------------
++extern int   KwSplitMode;
++extern int   KwLoopMode;
++extern char* KwBackEdge;
++extern int   KwBackEdgeCount;
++extern int   KwSplitNodeCount;
++extern long  KwStamp;
++int     kwmod_init(void);
++void    kwmod_close(void);
++int     kwmod_canSplit(int node);
++void    kwmod_markSplitNode(int node);
++int     kwmod_isSplitNode(int node);
++double  kwmod_getOutflow(int node, int link);
++void    kwmod_noteLoopStep(int sweeps, double residual, int converged);
++void    kwmod_getStats(double* v);
++
++//-----------------------------------------------------------------------------
+ //   Flow/Quality Routing Methods
+ //-----------------------------------------------------------------------------
+ void    flowrout_init(int routingModel);
+--- a/src/solver/include/swmm5.h
++++ b/src/solver/include/swmm5.h
+@@ -127,6 +127,8 @@
+ } swmm_FlowUnitsProperty;
+ 
+ int    DLLEXPORT swmm_run(const char *f1, const char *f2, const char *f3);
++int    DLLEXPORT swmm_setKwOptions(int splitMode, int loopMode);
++int    DLLEXPORT swmm_getKwStats(double* v);
+ int    DLLEXPORT swmm_open(const char *f1, const char *f2, const char *f3);
+ int    DLLEXPORT swmm_start(int saveFlag);
+ int    DLLEXPORT swmm_step(double *elapsedTime);
+--- a/src/solver/kwmod.c
++++ b/src/solver/kwmod.c
+@@ -0,0 +1,316 @@
++//-----------------------------------------------------------------------------
++//   kwmod.c
++//
++//   Kinematic Wave / Steady Flow extensions for EPA SWMM 5.2.4:
++//     (1) node bifurcations: a junction may have several conduit outlets;
++//         its outflow is allocated among them once per sweep
++//     (2) directed loops: links that close a cycle are routed with a
++//         per-time-step fixed-point iteration (see flowrout.c)
++//
++//   Both features are OFF by default (KwSplitMode = KwLoopMode = 0), in which
++//   case the engine behaves exactly like stock 5.2.4 (ERROR 133 / ERROR 131).
++//
++//   Split modes:
++//     0 STOCK     ERROR 133 at any junction with more than one outlet
++//     1 HEAD      common allocation head: find y with sum_k Q_k(y) = Q, where
++//                 Q_k(y) = min(cap_k, barrels*beta*S(A(y - offset_k)))
++//     2 CAPACITY  proportional to cap_k = barrels*min(qFull, qLimit)
++//     3 AREA      proportional to barrels * upstream flow area of the previous
++//                 step (falls back to CAPACITY when every area is zero)
++//   Every mode caps each branch at cap_k; inflow beyond sum(cap_k) stays at
++//   the node, exactly as the KW/SF conduit solvers already clip it.
++//-----------------------------------------------------------------------------
++#define _CRT_SECURE_NO_DEPRECATE
++#include <stdlib.h>
++#include <string.h>
++#include <math.h>
++#include "headers.h"
++
++int     KwSplitMode = 0;          // 0 stock, 1 head, 2 capacity, 3 area
++int     KwLoopMode  = 0;          // 0 stock (ERROR 131), 1 iterate
++char*   KwBackEdge  = NULL;       // per link: closes a directed cycle
++int     KwBackEdgeCount = 0;
++int     KwSplitNodeCount = 0;
++long    KwStamp = 0;              // incremented once per routing sweep
++
++static char*   SplitNode  = NULL; // per node: allocation active
++static int*    OutStart   = NULL; // CSR of conduit outlets per node
++static int*    OutList    = NULL;
++static long*   AllocStamp = NULL; // per node: sweep stamp of cached allocation
++static double* AllocQ     = NULL; // per link: allocated inflow (cfs)
++
++// --- run statistics (exposed through swmm_getKwStats)
++static double StatAllocs, StatMaxImbalance, StatLoopSteps, StatSweeps,
++              StatMaxSweeps, StatNonConv, StatMaxResidual, StatHeadIters;
++
++static double branchCap(int L)
++{
++    int k = Link[L].subIndex;
++    double cap = Link[L].qFull * Conduit[k].barrels;
++    if ( Link[L].qLimit > 0.0 ) cap = MIN(cap, Link[L].qLimit);
++    if ( Link[L].setting == 0.0 ) cap = 0.0;          // closed conduit
++    return MAX(cap, 0.0);
++}
++
++static double branchQ(int L, double y, double cap)
++{
++    int k = Link[L].subIndex;
++    double h = y - Link[L].offset1, a, q;
++    if ( cap <= 0.0 || h <= 0.0 ) return 0.0;
++    if ( h >= Link[L].xsect.yFull ) return cap;
++    a = xsect_getAofY(&Link[L].xsect, h);
++    q = Conduit[k].barrels * Conduit[k].beta * xsect_getSofA(&Link[L].xsect, a);
++    return MIN(q, cap);
++}
++
++int kwmod_init(void)
++//  Called from toposort_sortLinks (KW/SF only) after the adjacency is known.
++{
++    int i, j, n;
++    kwmod_close();
++    StatAllocs = StatMaxImbalance = StatLoopSteps = StatSweeps = 0.0;
++    StatMaxSweeps = StatNonConv = StatMaxResidual = StatHeadIters = 0.0;
++    KwBackEdgeCount = 0;
++    KwSplitNodeCount = 0;
++    KwStamp = 0;
++    n = Nobjects[NODE];
++    SplitNode  = (char*)  calloc(n + 1, sizeof(char));
++    OutStart   = (int*)   calloc(n + 1, sizeof(int));
++    AllocStamp = (long*)  calloc(n + 1, sizeof(long));
++    OutList    = (int*)   calloc(Nobjects[LINK] + 1, sizeof(int));
++    AllocQ     = (double*)calloc(Nobjects[LINK] + 1, sizeof(double));
++    KwBackEdge = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
++    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge )
++        return 0;
++    for ( j = 0; j < Nobjects[LINK]; j++ ) OutStart[Link[j].node1 + 1]++;
++    for ( i = 0; i < n; i++ ) OutStart[i + 1] += OutStart[i];
++    {
++        int* fill = (int*)calloc(n + 1, sizeof(int));
++        if ( !fill ) return 0;
++        for ( j = 0; j < Nobjects[LINK]; j++ )
++        {
++            i = Link[j].node1;
++            OutList[OutStart[i] + fill[i]] = j;
++            fill[i]++;
++        }
++        free(fill);
++    }
++    for ( i = 0; i < n; i++ ) AllocStamp[i] = -1;
++    return 1;
++}
++
++void kwmod_close(void)
++{
++    FREE(SplitNode); FREE(OutStart); FREE(OutList);
++    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge);
++}
++
++int kwmod_canSplit(int node)
++//  A junction can split if split mode is on and every outlet is a real conduit.
++{
++    int m, L;
++    if ( KwSplitMode == 0 || !SplitNode ) return 0;
++    if ( Node[node].type == STORAGE || Node[node].type == DIVIDER ||
++         Node[node].type == OUTFALL ) return 0;
++    for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++    {
++        L = OutList[m];
++        if ( Link[L].type != CONDUIT ) return 0;
++        if ( Link[L].xsect.type == DUMMY ) return 0;
++    }
++    return 1;
++}
++
++void kwmod_markSplitNode(int node)
++{
++    if ( SplitNode && !SplitNode[node] ) { SplitNode[node] = 1; KwSplitNodeCount++; }
++}
++
++int kwmod_isSplitNode(int node)
++{
++    return SplitNode ? SplitNode[node] : 0;
++}
++
++static void allocate(int node)
++{
++    int m, L, iter, nOut = OutStart[node + 1] - OutStart[node];
++    double qT = Node[node].inflow + Node[node].overflow;
++    double capSum = 0.0, sum, y0, y1, y, f;
++    double w, wSum, remaining;
++
++    for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++    {
++        L = OutList[m];
++        AllocQ[L] = 0.0;
++        capSum += branchCap(L);
++    }
++    StatAllocs += 1.0;
++    if ( qT <= 0.0 || capSum <= 0.0 || nOut == 0 ) return;
++
++    // --- everything full: each branch takes its cap, excess stays at node
++    if ( qT >= capSum )
++    {
++        for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++        {
++            L = OutList[m];
++            AllocQ[L] = branchCap(L);
++        }
++        return;
++    }
++
++    if ( KwSplitMode == 1 )
++    {
++        // --- common allocation head by bisection on a monotone function
++        y0 = 0.0; y1 = 0.0;
++        for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++        {
++            L = OutList[m];
++            y1 = MAX(y1, Link[L].offset1 + Link[L].xsect.yFull);
++        }
++        y = 0.5 * (y0 + y1);
++        for ( iter = 0; iter < 80; iter++ )
++        {
++            y = 0.5 * (y0 + y1);
++            sum = 0.0;
++            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++            {
++                L = OutList[m];
++                sum += branchQ(L, y, branchCap(L));
++            }
++            f = sum - qT;
++            if ( fabs(f) <= 1.0e-10 * capSum ) break;
++            if ( f > 0.0 ) y1 = y; else y0 = y;
++        }
++        StatHeadIters += (double)(iter + 1);
++        // --- close the tiny bisection residual exactly on the branches that
++        //     are below their cap; a capped branch keeps exactly its cap, so
++        //     the KW solver still sees it as running full (a scaled 0.9999999
++        //     of qFull would flip its inlet area to the lower root of S(A))
++        {
++            double sumFree = 0.0, sumCapped = 0.0, cap;
++            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++            {
++                L = OutList[m];
++                cap = branchCap(L);
++                AllocQ[L] = branchQ(L, y, cap);
++                if ( AllocQ[L] >= cap ) sumCapped += AllocQ[L];
++                else sumFree += AllocQ[L];
++            }
++            if ( sumFree > 0.0 && qT > sumCapped )
++            {
++                for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++                {
++                    L = OutList[m];
++                    if ( AllocQ[L] < branchCap(L) )
++                        AllocQ[L] = MIN(AllocQ[L] * (qT - sumCapped) / sumFree, branchCap(L));
++                }
++            }
++            else if ( sumFree + sumCapped <= 0.0 )
++                for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++                {   L = OutList[m]; AllocQ[L] = qT * branchCap(L) / capSum; }
++        }
++    }
++    else
++    {
++        // --- proportional (CAPACITY or AREA) with water-filling at the caps
++        char done[64];
++        int  useArea = (KwSplitMode == 3);
++        remaining = qT;
++        memset(done, 0, sizeof(done));
++        if ( useArea )
++        {
++            wSum = 0.0;
++            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++            {
++                L = OutList[m];
++                if ( branchCap(L) > 0.0 )
++                    wSum += Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels;
++            }
++            if ( wSum <= 0.0 ) useArea = 0;   // cold start: fall back to capacity
++        }
++        for ( iter = 0; iter < nOut + 1 && remaining > 0.0; iter++ )
++        {
++            int capped = 0;
++            wSum = 0.0;
++            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++            {
++                int idx = m - OutStart[node];
++                L = OutList[m];
++                if ( idx < 64 && done[idx] ) continue;
++                w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
++                            : branchCap(L);
++                if ( branchCap(L) <= 0.0 ) w = 0.0;
++                wSum += w;
++            }
++            if ( wSum <= 0.0 ) break;
++            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++            {
++                int idx = m - OutStart[node];
++                double cap;
++                L = OutList[m];
++                if ( idx < 64 && done[idx] ) continue;
++                w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
++                            : branchCap(L);
++                cap = branchCap(L);
++                if ( cap <= 0.0 ) w = 0.0;
++                AllocQ[L] = remaining * w / wSum;
++                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }
++            }
++            if ( !capped ) break;
++            // --- recompute what is left for the uncapped branches
++            remaining = qT;
++            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++            {
++                int idx = m - OutStart[node];
++                if ( idx < 64 && done[idx] ) remaining -= AllocQ[OutList[m]];
++            }
++        }
++    }
++
++    // --- conservation check (always on): allocations never create water
++    sum = 0.0;
++    for ( m = OutStart[node]; m < OutStart[node + 1]; m++ ) sum += AllocQ[OutList[m]];
++    f = fabs(sum - MIN(qT, capSum));
++    if ( f > StatMaxImbalance ) StatMaxImbalance = f;
++}
++
++double kwmod_getOutflow(int node, int link)
++//  Replaces Node[].inflow + Node[].overflow for split junctions: returns the
++//  share of the node's outflow allocated to this outlet link. All shares are
++//  computed together at the first outlet touched in a sweep, so the result
++//  does not depend on which outlet is evaluated first.
++{
++    if ( AllocStamp[node] != KwStamp )
++    {
++        allocate(node);
++        AllocStamp[node] = KwStamp;
++    }
++    return AllocQ[link];
++}
++
++void kwmod_noteLoopStep(int sweeps, double residual, int converged)
++{
++    StatLoopSteps += 1.0;
++    StatSweeps += sweeps;
++    if ( sweeps > StatMaxSweeps ) StatMaxSweeps = sweeps;
++    if ( !converged ) StatNonConv += 1.0;
++    if ( residual > StatMaxResidual ) StatMaxResidual = residual;
++}
++
++void kwmod_getStats(double* v)
++//  v[0] split nodes, v[1] back-edge links, v[2] allocations made,
++//  v[3] max allocation imbalance (cfs), v[4] steps iterated for loops,
++//  v[5] mean sweeps per iterated step, v[6] max sweeps, v[7] steps that hit
++//  the sweep cap, v[8] max final loop residual (cfs), v[9] mean head iterations
++{
++    v[0] = KwSplitNodeCount;
++    v[1] = KwBackEdgeCount;
++    v[2] = StatAllocs;
++    v[3] = StatMaxImbalance;
++    v[4] = StatLoopSteps;
++    v[5] = StatLoopSteps > 0 ? StatSweeps / StatLoopSteps : 0.0;
++    v[6] = StatMaxSweeps;
++    v[7] = StatNonConv;
++    v[8] = StatMaxResidual;
++    v[9] = StatAllocs > 0 ? StatHeadIters / StatAllocs : 0.0;
++}

@@ -1,0 +1,101 @@
+{
+ "passes": [
+  {
+   "label": "KINWAVE and STEADY",
+   "file": "gate_kwsf.jsonl",
+   "modes": [
+    "00",
+    "11",
+    "21",
+    "31"
+   ],
+   "models": 357,
+   "identical": 352,
+   "crash_same": 3,
+   "census_ran": 1,
+   "census_error": 0,
+   "different": 0,
+   "inconclusive": 1,
+   "stock_input_errors": 62,
+   "routing": {
+    "KINWAVE": 334,
+    "STEADY": 21,
+    "STEADYFLOW": 2
+   },
+   "runs": 1785
+  }
+ ],
+ "census": [
+  {
+   "inp": "NCIMM_ROUTING/water.inp",
+   "routing": "KINWAVE",
+   "stock_errors": [
+    131
+   ],
+   "result": "census_ran",
+   "errors": [],
+   "continuity": "-2.167",
+   "stats": {
+    "rc": 0.0,
+    "split": 2.0,
+    "back": 1.0,
+    "allocs": 1440.0,
+    "maxImb": 0.0,
+    "loopSteps": 720.0,
+    "meanSweeps": 1.0,
+    "maxSweeps": 1.0,
+    "atCap": 0.0,
+    "maxRes": 0.0,
+    "headIt": 0.0
+   },
+   "modes": {
+    "11": {
+     "rc": 0,
+     "continuity": "-2.167"
+    },
+    "21": {
+     "rc": 0,
+     "continuity": "-2.167"
+    },
+    "31": {
+     "rc": 0,
+     "continuity": "-2.167"
+    }
+   }
+  }
+ ],
+ "different": [],
+ "inconclusive": [
+  {
+   "inp": "OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-huge/IO-02_end-time-1e30.inp",
+   "why": "stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical"
+  }
+ ],
+ "crashes": [
+  {
+   "inp": "OpenSWMM_Code_Review_2026/5-crashes/CRASH-08-rule-expression-freed-after-input-error/CRASH-08_expr-bad-option.inp",
+   "signal": 11
+  },
+  {
+   "inp": "OpenSWMM_Code_Review_2026/5-crashes/CRASH-08-rule-expression-freed-after-input-error/CRASH-08_expr-duplicate-id.inp",
+   "signal": 11
+  },
+  {
+   "inp": "OpenSWMM_Code_Review_2026/5-crashes/CRASH-05-expression-buffer-overflow/CRASH-05_long-number.inp",
+   "signal": 6
+  }
+ ],
+ "models": 357,
+ "max_allocation_imbalance_cfs": 0.0,
+ "total": {
+  "models": 357,
+  "identical": 352,
+  "crash_same": 3,
+  "census_ran": 1,
+  "census_error": 0,
+  "different": 0,
+  "inconclusive": 1,
+  "runs": 1785,
+  "stock_input_errors": 62
+ }
+}
