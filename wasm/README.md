@@ -3,7 +3,7 @@
 | File | Bytes | SHA-256 | What |
 |---|---|---|---|
 | `swmm524kw.wasm` | 853,130 | `e62aa56968febce741d56de2f6e73660ead09fa700bad5071117b962b4939918` | EPA SWMM 5.2.4 + the KW/SF extension (`src/solver/`), wasm32-wasi reactor |
-| `swmm524.wasm` | 840,503 | `9714657c0306f5673e287dbd1f71f371f8f3285fa8ad5542f0285db33f7f455f` | stock EPA SWMM 5.2.4 (tag `epa-v5.2.4`), same toolchain and flags |
+| `swmm524.wasm` | 840,503 | `9714657c0306f5673e287dbd1f71f371f8f3285fa8ad5542f0285db33f7f455f` | stock EPA SWMM 5.2.4 (this repository's first commit, `4cbd1eb`), same toolchain and flags |
 | `kwengine.js` | | | runs either module: `new KWEngine(module).run(inpText, {split, loop, totalDays}, onProgress, shouldStop)` |
 | `wasi-shim.iife.js` | | | [@bjorn3/browser_wasi_shim](https://github.com/bjorn3/browser_wasi_shim) 0.4.2, bundled to an IIFE with esbuild; sets `globalThis.WasiShim`. Licensed MIT OR Apache-2.0 by its authors |
 

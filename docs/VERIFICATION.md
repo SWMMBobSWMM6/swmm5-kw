@@ -5,7 +5,7 @@ writes its record into `results/`. The numbers live in those records and in the 
 results block, which `tools/update_readme.py` writes from them; this page says what each gate
 proves, what it does not, and how to rerun it.
 
-"Stock" always means unmodified EPA 5.2.4 built from the repository's tag `epa-v5.2.4`, driven
+"Stock" always means unmodified EPA 5.2.4 built from the repository's first commit (`4cbd1eb`, EPA's tag unchanged), driven
 by `tools/stockmain.c` with the same call sequence as the extended driver `tools/kwmain.c`
 (open, start, step, end, report, close). `swmm_run` writes the report's time-series section
 differently from an explicit step loop, so comparing `runswmm` with a stepped driver would

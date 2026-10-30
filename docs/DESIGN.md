@@ -1,7 +1,7 @@
 # Design and code map
 
-Base: EPA SWMM 5.2.4, tag `v5.2.4`, commit 7952ca8 (this repository's tag `epa-v5.2.4`).
-The extension is the diff from `epa-v5.2.4` to `kw-v1`, also kept as
+Base: EPA SWMM 5.2.4, tag `v5.2.4`, commit 7952ca8 (this repository's first commit, `4cbd1eb`).
+The extension is the diff from `4cbd1eb` to `5c6c060`, also kept as
 [`patch/swmm524-kw.patch`](../patch/swmm524-kw.patch): seven files, 622 lines added (587 not blank), 4 removed.
 
 ## Why stock SWMM needs a tree

@@ -12,16 +12,16 @@
 #                   libclang-rt-18-dev-wasm32); compared against wasm/ in the repo
 #
 # The pristine EPA source comes from, in order: the second argument; this repository's own
-# tag epa-v5.2.4 (absent in a shallow clone); a fresh clone of USEPA tag v5.2.4.
+# first commit 4cbd1eb, EPA's tree as released (absent in a shallow clone); a fresh clone of USEPA tag v5.2.4.
 set -e
 R=$(cd "$(dirname "$0")/.." && pwd)
 OUT=$(mkdir -p "${1:-$R/build/kw}" && cd "${1:-$R/build/kw}" && pwd)
 S="$R/src/solver"
 
 if [ -n "$2" ]; then EPA=$(cd "$2" && pwd)
-elif git -C "$R" rev-parse -q --verify epa-v5.2.4^{commit} >/dev/null 2>&1; then
+elif BASE=$(git -C "$R" rev-parse -q --verify epa-v5.2.4^{commit} 2>/dev/null || git -C "$R" rev-parse -q --verify 4cbd1eb^{commit} 2>/dev/null); then
   EPA="$OUT/epa-v5.2.4"; rm -rf "$EPA"; mkdir -p "$EPA"
-  git -C "$R" archive epa-v5.2.4 src | tar -x -C "$EPA"
+  git -C "$R" archive "$BASE" src | tar -x -C "$EPA"
 else
   EPA="$OUT/epa-v5.2.4"; rm -rf "$EPA"
   git clone -q --depth 1 --branch v5.2.4 https://github.com/USEPA/Stormwater-Management-Model.git "$EPA"

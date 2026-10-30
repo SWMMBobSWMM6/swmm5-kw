@@ -6,8 +6,8 @@ Stock SWMM routes KINWAVE and STEADY in one upstream-to-downstream pass, so it n
 
 | | |
 |---|---|
-| Base | EPA SWMM 5.2.4, [USEPA/Stormwater-Management-Model](https://github.com/USEPA/Stormwater-Management-Model/tree/v5.2.4) tag `v5.2.4` (commit 7952ca8), imported unchanged as this repository's first commit, tag `epa-v5.2.4` |
-| Change | the second commit, tag `kw-v1`: one new file (`src/solver/kwmod.c`) and edits to six, 622 lines added (587 not blank), 4 removed. `git diff epa-v5.2.4 kw-v1` is the whole extension; [`patch/swmm524-kw.patch`](patch/swmm524-kw.patch) is the same change as a file |
+| Base | EPA SWMM 5.2.4, [USEPA/Stormwater-Management-Model](https://github.com/USEPA/Stormwater-Management-Model/tree/v5.2.4) tag `v5.2.4` (commit 7952ca8), imported unchanged as this repository's first commit, `4cbd1eb` |
+| Change | the second commit, `5c6c060`: one new file (`src/solver/kwmod.c`) and edits to six, 622 lines added (587 not blank), 4 removed. `git diff 4cbd1eb 5c6c060` is the whole extension; [`patch/swmm524-kw.patch`](patch/swmm524-kw.patch) is the same change as a file |
 | API | `swmm_setKwOptions(split, loop)` before `swmm_start`; `swmm_getKwStats(double v[10])` after `swmm_end` |
 | Gates | see [Results](#results) |
 | WebAssembly | [`wasm/swmm524kw.wasm`](wasm/) (the extension) and `wasm/swmm524.wasm` (stock), wasm32-wasi reactors, rebuilt byte for byte by `tools/build.sh`; [`wasm/kwengine.js`](wasm/kwengine.js) runs either in a browser or Node |
