@@ -25,6 +25,18 @@ if S.get('passes'):
     if len(S['passes']) < 3:
         L.append(f"*Still running: {', '.join(n for n in ('the DYNWAVE pass', 'the interface-file pass') if not any((n.split()[1] in p['label']) or (n == 'the interface-file pass' and 'interface' in p['label']) for p in S['passes']))}. This table is updated when they finish.*")
     if S['inconclusive']: L.append('Inconclusive: ' + '; '.join(f"`{i['inp']}` ({i['why']})" for i in S['inconclusive']) + '.')
+Wf = S.get('whatif')
+if Wf:
+    codes = ', '.join(f"ERROR {k} ×{v}" for k, v in sorted(Wf['census_error_codes'].items(), key=lambda kv: -kv[1]))
+    L += ['', f"**What-if: every DYNWAVE corpus model switched to KINWAVE** (`tools/corpus_gate.py --force-routing KINWAVE --modes 11`, interface-file models left out). Not how these models were built; it measures how often a real network has a fork or a loop.", '',
+          '| | Models |', '|---|---|',
+          f"| Switched to KINWAVE | {Wf['models']:,} |",
+          f"| Stock runs it | {Wf['stock_ran']:,} (swmm5-kw identical in {Wf['identical']:,}, different in {Wf['different']}) |",
+          f"| Stock stops on another input check (not a fork or loop) | {Wf['stock_other_errors']:,} (swmm5-kw gives the same report) |",
+          f"| Stock refuses with ERROR 133 or 131 | {Wf['census']:,} |",
+          f"| ... and swmm5-kw runs it to the end | {Wf['census_ran']:,} (median {Wf['split_median']:g} split junctions and {Wf['loop_median']:g} loop links; routing continuity over 1% in {Wf['cont_over_1']}) |",
+          f"| ... and swmm5-kw then stops on another check | {Wf['census_error']:,}" + (f" ({codes})" if codes else '') + ' |',
+          f"| Inconclusive or stock crashes | {Wf['inconclusive'] + Wf['crash_same']} |"]
 sh = {r['name']: r for r in F['split_shares']}
 L += ['', '**Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):', '',
       '| Routing and rule | 3.0 ft pipe | 1.5 ft pipe | Routing continuity |', '|---|---|---|---|']

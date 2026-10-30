@@ -34,6 +34,7 @@ ap.add_argument('--modes', default='00,11')
 ap.add_argument('--timeout', type=float, default=300)
 ap.add_argument('--jobs', type=int, default=2)
 ap.add_argument('--mem', type=float, default=3)
+ap.add_argument('--force-routing', default='', help='what-if: run a copy of each model with FLOW_ROUTING set to this')
 a = ap.parse_args()
 B = os.path.abspath(a.build); C = os.path.abspath(a.corpus)
 STOCK = os.path.join(B, 'stockseq'); KW = os.path.join(B, 'kwswmm')
@@ -117,7 +118,32 @@ def kwblock(head):
     t = head.decode('latin-1'); i = t.find('KW/SF extension')
     return t[i:i + 1500] if i >= 0 else ''
 
+def force_copy(inp, method):
+    """A copy of inp beside it (so relative file names still resolve) with FLOW_ROUTING = method."""
+    lines = open(inp, encoding='latin-1').read().split('\n'); sec = ''; at = -1; done = False
+    for i, raw in enumerate(lines):
+        s = raw.split(';', 1)[0].strip()
+        if not s: continue
+        if s.startswith('['): sec = s.upper(); at = i if sec == '[OPTIONS]' else at; continue
+        if sec == '[OPTIONS]' and s.split()[0].upper() == 'FLOW_ROUTING': lines[i] = 'FLOW_ROUTING         ' + method; done = True; break
+    if not done:
+        if at >= 0: lines.insert(at + 1, 'FLOW_ROUTING         ' + method)
+        else: lines = ['[OPTIONS]', 'FLOW_ROUTING         ' + method, ''] + lines
+    fd, path = tempfile.mkstemp(prefix='.kwwhatif_', suffix='.inp', dir=os.path.dirname(inp)); os.close(fd)
+    open(path, 'w', encoding='latin-1').write('\n'.join(lines)); return path
+
 def one(inp):
+    if a.force_routing:
+        cp = force_copy(inp, a.force_routing.upper())
+        try:
+            rec = one_run(cp); rec['inp'] = os.path.relpath(inp, C); rec['forced'] = a.force_routing.upper(); rec['routing_in_file'] = routing_of(inp)
+            return rec
+        finally:
+            try: os.remove(cp)
+            except OSError: pass
+    return one_run(inp)
+
+def one_run(inp):
     rec = dict(inp=os.path.relpath(inp, C), routing=routing_of(inp))
     with tempfile.TemporaryDirectory(dir=TMP) as d:
         rc, dt, r0, o0, _ = run(STOCK, inp, d)
