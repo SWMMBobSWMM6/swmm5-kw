@@ -216,6 +216,24 @@ double  landuse_getAvgBmpEffic(int j, int p);
 double  landuse_getCoPollutLoad(int p, double washoff[]);
 
 //-----------------------------------------------------------------------------
+//   KW/SF bifurcation + loop extensions (kwmod.c)
+//-----------------------------------------------------------------------------
+extern int   KwSplitMode;
+extern int   KwLoopMode;
+extern char* KwBackEdge;
+extern int   KwBackEdgeCount;
+extern int   KwSplitNodeCount;
+extern long  KwStamp;
+int     kwmod_init(void);
+void    kwmod_close(void);
+int     kwmod_canSplit(int node);
+void    kwmod_markSplitNode(int node);
+int     kwmod_isSplitNode(int node);
+double  kwmod_getOutflow(int node, int link);
+void    kwmod_noteLoopStep(int sweeps, double residual, int converged);
+void    kwmod_getStats(double* v);
+
+//-----------------------------------------------------------------------------
 //   Flow/Quality Routing Methods
 //-----------------------------------------------------------------------------
 void    flowrout_init(int routingModel);

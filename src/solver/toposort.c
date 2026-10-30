@@ -11,6 +11,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include <stdlib.h>
+#include <string.h>
 #include "headers.h"
 
 //-----------------------------------------------------------------------------
@@ -120,6 +121,7 @@ void toposort_sortLinks(int sortedLinks[])
         }
 
         // --- topo sort the links
+        if ( !kwmod_init() ) report_writeErrorMsg(ERR_MEMORY, "");
         n = topoSort(sortedLinks);
     }   
 
@@ -228,10 +230,23 @@ int topoSort(int sortedLinks[])
 //  Output:  sortedLinks = array of sorted link indexes,
 //           returns number of links successfully sorted
 //  Purpose: performs a stack-based topo sort of the drainage network's links.
+//           With KwLoopMode on, a directed cycle no longer stops the sort:
+//           the unfinished node with the fewest unsorted inflow links is
+//           forced onto the stack, and the links that then arrive at an
+//           already-processed node are flagged as back edges.
 //
 {
     int i, j, k, n;
     int i1, i2, k1, k2;
+    int* popOrder = NULL;
+    char* pushed = NULL;
+    int popCount = 0;
+    if ( KwLoopMode )
+    {
+        popOrder = (int *) calloc(Nobjects[NODE], sizeof(int));
+        pushed = (char *) calloc(Nobjects[NODE], sizeof(char));
+        if ( !popOrder || !pushed ) { FREE(popOrder); FREE(pushed); }
+    }
 
     // --- initialize a stack which contains nodes with zero in-degree
     First = 0;
@@ -242,12 +257,15 @@ int topoSort(int sortedLinks[])
         {
             Last++;
             Stack[Last] = i;
+            if ( pushed ) pushed[i] = 1;
         }
     }
 
     // --- traverse the stack, adding each node's outgoing link indexes
     //     to the SortedLinks array in the order processed
     n = 0;
+    for (;;)
+    {
     while ( First <= Last )
     {
         // --- determine range of adjacency list indexes belonging to 
@@ -272,10 +290,55 @@ int topoSort(int sortedLinks[])
             {
                 Last++;
                 Stack[Last] = i2;
+                if ( pushed ) pushed[i2] = 1;
             }  
         }
+        if ( popOrder ) popOrder[i1] = popCount++;
         First++;
     }
+    // --- loop mode: break a cycle and carry on sorting
+    if ( n >= Nobjects[LINK] || !pushed ) break;
+    {
+        // --- choose the node to force: fewest unsorted inflow links, then
+        //     most inflow links already sorted (an entry point of the cycle),
+        //     then the smallest ID, so the choice never depends on how the
+        //     input file happens to number nodes or links
+        int best = -1, fed, bestFed = -1;
+        for ( i = 0; i < Nobjects[NODE]; i++ )
+        {
+            if ( pushed[i] || InDegree[i] <= 0 || Node[i].degree == 0 ) continue;
+            fed = 0;
+            for ( j = 0; j < Nobjects[LINK]; j++ )
+                if ( Link[j].node2 == i && pushed[Link[j].node1] ) fed++;
+            if ( best < 0 || InDegree[i] < InDegree[best] ||
+                 (InDegree[i] == InDegree[best] && fed > bestFed) ||
+                 (InDegree[i] == InDegree[best] && fed == bestFed &&
+                  strcmp(Node[i].ID, Node[best].ID) < 0) )
+            { best = i; bestFed = fed; }
+        }
+        if ( best < 0 ) break;
+        InDegree[best] = 0;
+        Last++;
+        Stack[Last] = best;
+        pushed[best] = 1;
+    }
+    }
+
+    // --- flag back edges: links whose downstream node was processed first
+    if ( popOrder && KwBackEdge && n >= Nobjects[LINK] )
+    {
+        for ( j = 0; j < Nobjects[LINK]; j++ )
+        {
+            if ( popOrder[Link[j].node2] <= popOrder[Link[j].node1] &&
+                 Node[Link[j].node2].type != OUTFALL )
+            {
+                KwBackEdge[j] = 1;
+                KwBackEdgeCount++;
+            }
+        }
+    }
+    FREE(popOrder);
+    FREE(pushed);
     return n;
 }
 

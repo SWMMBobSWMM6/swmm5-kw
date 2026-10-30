@@ -127,6 +127,8 @@ typedef enum {
 } swmm_FlowUnitsProperty;
 
 int    DLLEXPORT swmm_run(const char *f1, const char *f2, const char *f3);
+int    DLLEXPORT swmm_setKwOptions(int splitMode, int loopMode);
+int    DLLEXPORT swmm_getKwStats(double* v);
 int    DLLEXPORT swmm_open(const char *f1, const char *f2, const char *f3);
 int    DLLEXPORT swmm_start(int saveFlag);
 int    DLLEXPORT swmm_step(double *elapsedTime);

@@ -1719,3 +1719,24 @@ int xfilter(int xc, char* module, double elapsedTime, long step)
     return rc;
 }
 #endif
+
+//=============================================================================
+//  KW/SF extension API (modified engine)
+//=============================================================================
+int DLLEXPORT swmm_setKwOptions(int splitMode, int loopMode)
+//  splitMode: 0 stock (ERROR 133), 1 HEAD, 2 CAPACITY, 3 AREA
+//  loopMode:  0 stock (ERROR 131), 1 iterate directed loops each step
+//  Call before swmm_start (validation happens when routing opens).
+{
+    KwSplitMode = (splitMode >= 0 && splitMode <= 3) ? splitMode : 0;
+    KwLoopMode  = loopMode ? 1 : 0;
+    return 0;
+}
+
+int DLLEXPORT swmm_getKwStats(double* v)
+//  Fills v[0..9]; see kwmod_getStats. Valid after swmm_end.
+{
+    kwmod_getStats(v);
+    return 0;
+}
+

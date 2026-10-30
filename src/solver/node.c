@@ -409,7 +409,9 @@ double node_getOutflow(int j, int k)
     {
       case DIVIDER: return divider_getOutflow(j, k);
       case STORAGE: return storage_getOutflow(j, k);
-      default:      return Node[j].inflow + Node[j].overflow;
+      default:
+        if ( kwmod_isSplitNode(j) ) return kwmod_getOutflow(j, k);
+        return Node[j].inflow + Node[j].overflow;
     }
 }
 

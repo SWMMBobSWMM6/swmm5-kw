@@ -34,6 +34,8 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+#include <stdio.h>
 #include "headers.h"
 
 //-----------------------------------------------------------------------------
@@ -68,6 +70,8 @@ static void   setNewLinkState(int link);
 static void   updateNodeDepth(int node, double y);
 static int    steadyflow_execute(int link, double* qin, double* qout,
               double tStep);
+static int    kwLoopExecute(int links[], int routingModel, double tStep);
+static void   kwListIDs(int what);
 
 
 //=============================================================================
@@ -95,7 +99,27 @@ void flowrout_init(int routingModel)
     }
 
     // --- validate network layout for kinematic wave routing
-    else validateTreeLayout();
+    else
+    {
+        validateTreeLayout();
+        if ( !ErrorCode && (KwSplitNodeCount > 0 || KwBackEdgeCount > 0) )
+        {
+            char line[200];
+            static const char* modes[] = {"STOCK", "HEAD", "CAPACITY", "AREA"};
+            report_writeLine("");
+            report_writeLine("*******************************************");
+            report_writeLine("KW/SF extension (modified engine, kwmod.c)");
+            report_writeLine("*******************************************");
+            snprintf(line, sizeof(line), "Multi-outlet junctions ... %d  (allocation %s)",
+                     KwSplitNodeCount, modes[KwSplitMode & 3]);
+            report_writeLine(line);
+            kwListIDs(1);
+            snprintf(line, sizeof(line), "Loop-closing links ....... %d  (%s)",
+                     KwBackEdgeCount, KwBackEdgeCount ? "iterated each step" : "none");
+            report_writeLine(line);
+            kwListIDs(2);
+        }
+    }
 
     // --- initialize node & link volumes
     initNodes();
@@ -112,6 +136,50 @@ void  flowrout_close(int routingModel)
 //
 {
     if ( routingModel == DW ) dynwave_close();
+    else
+    {
+        if ( KwBackEdgeCount > 0 && !ErrorCode )
+        {
+            double v[10];
+            char line[200];
+            kwmod_getStats(v);
+            report_writeLine("");
+            snprintf(line, sizeof(line),
+                "Loop iteration: %.0f steps, mean %.2f sweeps, max %.0f, %.0f steps at the %d-sweep cap, max residual %.4g %s",
+                v[4], v[5], v[6], v[7], 60, v[8] * UCF(FLOW), FlowUnitWords[FlowUnits]);
+            report_writeLine(line);
+        }
+        kwmod_close();
+    }
+}
+
+//=============================================================================
+
+static void kwListIDs(int what)
+//  Writes the IDs of split junctions (what = 1) or loop-closing links (2).
+{
+    char line[120];
+    int  j, n = 0, len = 0;
+    line[0] = 0;
+    if ( what == 1 )
+    {
+        for ( j = 0; j < Nobjects[NODE]; j++ )
+        {
+            if ( !kwmod_isSplitNode(j) ) continue;
+            if ( len + (int)strlen(Node[j].ID) + 3 > 100 ) { report_writeLine(line); len = 0; line[0] = 0; }
+            len += snprintf(line + len, sizeof(line) - len, "  %s", Node[j].ID); n++;
+        }
+    }
+    else if ( KwBackEdge )
+    {
+        for ( j = 0; j < Nobjects[LINK]; j++ )
+        {
+            if ( !KwBackEdge[j] ) continue;
+            if ( len + (int)strlen(Link[j].ID) + 3 > 100 ) { report_writeLine(line); len = 0; line[0] = 0; }
+            len += snprintf(line + len, sizeof(line) - len, "  %s", Link[j].ID); n++;
+        }
+    }
+    if ( len > 0 ) report_writeLine(line);
 }
 
 //=============================================================================
@@ -167,7 +235,12 @@ int flowrout_execute(int links[], int routingModel, double tStep)
         return dynwave_execute(tStep);
     }
 
+    // --- directed loops present: iterate the sweep to a fixed point
+    if ( KwBackEdgeCount > 0 && KwBackEdge )
+        return kwLoopExecute(links, routingModel, tStep);
+
     // --- otherwise examine each link, moving from upstream to downstream
+    KwStamp++;
     steps = 0.0;
     for (i = 0; i < Nobjects[LINK]; i++)
     {
@@ -234,11 +307,13 @@ void validateTreeLayout()
           // --- storage nodes can have multiple outlets
           case STORAGE: break;
 
-          // --- all other nodes allowed only one outlet link
+          // --- all other nodes allowed only one outlet link, unless the
+          //     bifurcation extension can allocate among conduit outlets
           default:
             if ( Node[j].degree > 1 )
             {
-                report_writeErrorMsg(ERR_MULTI_OUTLET, Node[j].ID);
+                if ( kwmod_canSplit(j) ) kwmod_markSplitNode(j);
+                else report_writeErrorMsg(ERR_MULTI_OUTLET, Node[j].ID);
             }
         }
     }
@@ -800,3 +875,124 @@ int steadyflow_execute(int j, double* qin, double* qout, double tStep)
 }
 
 //=============================================================================
+
+//=============================================================================
+//  KW/SF loop extension: fixed-point iteration over the sorted sweep
+//=============================================================================
+#ifndef KW_MAXSWEEP
+#define KW_MAXSWEEP 60
+#endif
+
+int kwLoopExecute(int links[], int routingModel, double tStep)
+//
+//  Routes one time step when some links close a directed cycle. Each back-edge
+//  link's outflow is guessed (last step's flow), added to its downstream node
+//  before the sweep, and replaced by the routed value after it. The sweep is
+//  repeated from the same starting state until the guesses stop changing.
+//  Any final residual is booked to the receiving node's inflow, so continuity
+//  is exact whether or not the iteration converged.
+//
+{
+    int     i, j, n1, sweep, nN = Nobjects[NODE], nL = Nobjects[LINK];
+    int     converged = 0;
+    double  qin, qout, steps = 0.0, res = 0.0, scale;
+    static double *sIn = NULL, *sOut = NULL, *sOver = NULL, *sVol = NULL,
+                  *sDep = NULL, *sNewFlow = NULL, *guess = NULL, *routed = NULL;
+    static char   *sUpd = NULL;
+    static TConduit *sCond = NULL;
+    static int sizeN = -1, sizeL = -1, sizeC = -1;
+
+    if ( sizeN != nN || sizeL != nL || sizeC != Nlinks[CONDUIT] )
+    {
+        FREE(sIn); FREE(sOut); FREE(sOver); FREE(sVol); FREE(sDep); FREE(sUpd);
+        FREE(sNewFlow); FREE(guess); FREE(routed); FREE(sCond);
+        sIn = (double*)calloc(nN, sizeof(double));  sOut = (double*)calloc(nN, sizeof(double));
+        sOver = (double*)calloc(nN, sizeof(double)); sVol = (double*)calloc(nN, sizeof(double));
+        sDep = (double*)calloc(nN, sizeof(double));  sUpd = (char*)calloc(nN, sizeof(char));
+        sNewFlow = (double*)calloc(nL, sizeof(double)); guess = (double*)calloc(nL, sizeof(double));
+        routed = (double*)calloc(nL, sizeof(double));
+        sCond = (TConduit*)calloc(Nlinks[CONDUIT] + 1, sizeof(TConduit));
+        sizeN = nN; sizeL = nL; sizeC = Nlinks[CONDUIT];
+        if ( !sIn || !sOut || !sOver || !sVol || !sDep || !sUpd || !sNewFlow ||
+             !guess || !routed || !sCond )
+        {
+            report_writeErrorMsg(ERR_MEMORY, "");
+            return 0;
+        }
+    }
+
+    // --- snapshot the state a sweep can change
+    for ( j = 0; j < nN; j++ )
+    {
+        sIn[j] = Node[j].inflow;   sOut[j] = Node[j].outflow;
+        sOver[j] = Node[j].overflow; sVol[j] = Node[j].newVolume;
+        sDep[j] = Node[j].newDepth; sUpd[j] = Node[j].updated;
+    }
+    for ( j = 0; j < nL; j++ )
+    {
+        sNewFlow[j] = Link[j].newFlow;
+        guess[j] = KwBackEdge[j] ? MAX(Link[j].newFlow, 0.0) : 0.0;
+    }
+    if ( Nlinks[CONDUIT] > 0 ) memcpy(sCond, Conduit, Nlinks[CONDUIT] * sizeof(TConduit));
+
+    for ( sweep = 1; sweep <= KW_MAXSWEEP; sweep++ )
+    {
+        if ( sweep > 1 )
+        {
+            for ( j = 0; j < nN; j++ )
+            {
+                Node[j].inflow = sIn[j];   Node[j].outflow = sOut[j];
+                Node[j].overflow = sOver[j]; Node[j].newVolume = sVol[j];
+                Node[j].newDepth = sDep[j]; Node[j].updated = sUpd[j];
+            }
+            for ( j = 0; j < nL; j++ ) Link[j].newFlow = sNewFlow[j];
+            if ( Nlinks[CONDUIT] > 0 ) memcpy(Conduit, sCond, Nlinks[CONDUIT] * sizeof(TConduit));
+        }
+        KwStamp++;
+        for ( j = 0; j < nL; j++ )
+            if ( KwBackEdge[j] ) Node[Link[j].node2].inflow += guess[j];
+
+        steps = 0.0;
+        for ( i = 0; i < nL; i++ )
+        {
+            j = links[i];
+            n1 = Link[j].node1;
+            if ( Node[n1].type == STORAGE ) updateStorageState(n1, i, links, tStep);
+            qin = getLinkInflow(j, tStep);
+            if ( routingModel == SF )
+                steps += steadyflow_execute(j, &qin, &qout, tStep);
+            else
+                steps += kinwave_execute(j, &qin, &qout, tStep);
+            Link[j].newFlow = qout;
+            Node[ Link[j].node1 ].outflow += qin;
+            if ( KwBackEdge[j] ) routed[j] = qout;
+            else Node[ Link[j].node2 ].inflow += qout;
+        }
+
+        // --- compare guesses with routed back-edge flows
+        res = 0.0; scale = FLOW_TOL;
+        for ( j = 0; j < nL; j++ )
+        {
+            if ( !KwBackEdge[j] ) continue;
+            res = MAX(res, fabs(routed[j] - guess[j]));
+            scale = MAX(scale, fabs(routed[j]));
+        }
+        if ( res <= FLOW_TOL + 1.0e-6 * scale ) { converged = 1; break; }
+        if ( sweep == KW_MAXSWEEP ) break;
+        for ( j = 0; j < nL; j++ )
+        {
+            if ( !KwBackEdge[j] ) continue;
+            guess[j] = (sweep < 20) ? routed[j] : 0.5 * (guess[j] + routed[j]);
+        }
+    }
+
+    // --- book any remaining residual so node continuity stays exact
+    for ( j = 0; j < nL; j++ )
+        if ( KwBackEdge[j] ) Node[Link[j].node2].inflow += routed[j] - guess[j];
+
+    kwmod_noteLoopStep(sweep > KW_MAXSWEEP ? KW_MAXSWEEP : sweep, res, converged);
+    if ( nL > 0 ) steps /= nL;
+    for ( j = 0; j < nN; j++ ) setNewNodeState(j, tStep);
+    for ( j = 0; j < nL; j++ ) setNewLinkState(j);
+    return (int)(steps + 0.5);
+}
