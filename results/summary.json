@@ -86,6 +86,7 @@
   }
  ],
  "models": 357,
+ "corpus_set": 3759,
  "max_allocation_imbalance_cfs": 0.0,
  "total": {
   "models": 357,

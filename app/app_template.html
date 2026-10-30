@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>swmm5-kw</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="EPA SWMM 5.2.4 with split junctions and directed loops under kinematic wave and steady flow, run beside stock EPA in the browser.">
+<meta name="color-scheme" content="dark light">
+<meta name="swmm5-kw-build" content="@@BUILD@@">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+/* Dark first. Header lockup, tab bar, then a 1fr/2fr bench (controls left,
+   evidence right) that stacks below 900px. Three runs, three inks:
+   stock EPA amber, swmm5-kw teal, the dynamic-wave reference violet. */
+:root{
+  color-scheme: dark;
+  --bg:#0b1220; --card:#131c2e; --field:#1a2438; --line:#2a3752; --line-soft:#212c42; --row-hover:#18233a;
+  --ink:#e6edf7; --ink-dim:#a3b1c6; --ink-faint:#8b9bb5; --ink-strong:#f8fafc; --head:#dbe7f7;
+  --headerbg:#0d1830; --onheader:#eaf2ff; --headersub:#b9cbe4; --btn-dark:rgba(255,255,255,.25); --tab-on:#2dd4bf;
+  --accent:#60a5fa; --accent-ink:#0b1220;
+  --epa:#fbbf24; --kw:#2dd4bf; --dw:#c084fc;
+  --panel:#152238; --panel-line:#2b3d5c; --panel-ink:#c3d7f3;
+  --hi-bg:#2a1c0f; --hi-line:#7c4a1d; --hi-ink:#fdba74;
+  --warn-bg:#2a1416; --warn-line:#7f2b32; --warn-ink:#fca5a5;
+  --ok-bg:#0f2318; --ok-line:#245c39; --ok-ink:#86efac;
+  --pill-bg:#1f2a44; --pill-ink:#c7d2fe;
+  --code-bg:#070d18; --code-ink:#dbe4f0;
+  --shadow:rgba(0,0,0,.45); --scrim:rgba(3,7,18,.6); --capbar:rgba(3,7,18,.8); --capink:#ffffff;
+  --f-ink:#e6edf7; --f-dim:#a3b1c6; --f-line:#2e3c58; --f-face:#0f1a2c; --f-soft:#16223a; --f-on:#0b1220;
+  --f-a:#60a5fa; --f-b:#fbbf24; --f-c:#4ade80; --f-d:#f87171; --f-e:#c084fc; --f-f:#2dd4bf;
+  --font-display:"Archivo", "Arial Narrow", Arial, sans-serif;
+  --font-ui:"IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-read:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-mono:"IBM Plex Mono", Menlo, Consolas, monospace;
+  --r:12px; --gap:16px;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#f5f7fa; --card:#ffffff; --field:#ffffff; --line:#dfe5ee; --line-soft:#eef2f7; --row-hover:#f3f6fb;
+  --ink:#1b2733; --ink-dim:#4f5d6e; --ink-faint:#6b7280; --ink-strong:#0b1220; --head:#1e3a5f;
+  --headerbg:#1e3a5f; --onheader:#ffffff; --headersub:#c7d7ea; --btn-dark:rgba(255,255,255,.35); --tab-on:#5eead4;
+  --accent:#1f6fd1; --accent-ink:#ffffff;
+  --epa:#a15c00; --kw:#0f766e; --dw:#7e22ce;
+  --panel:#eff6ff; --panel-line:#dbeafe; --panel-ink:#1e3a5f;
+  --hi-bg:#fff7ed; --hi-line:#fed7aa; --hi-ink:#9a3412;
+  --warn-bg:#fef2f2; --warn-line:#fecaca; --warn-ink:#991b1b;
+  --ok-bg:#f0fdf4; --ok-line:#bbf7d0; --ok-ink:#166534;
+  --pill-bg:#eef2ff; --pill-ink:#3730a3;
+  --code-bg:#0f172a; --code-ink:#e2e8f0;
+  --shadow:rgba(15,23,42,.06); --scrim:rgba(15,23,42,.45); --capbar:rgba(15,23,42,.8); --capink:#ffffff;
+  --f-ink:#1b2733; --f-dim:#5a6878; --f-line:#cfd8e3; --f-face:#ffffff; --f-soft:#eef3f8; --f-on:#ffffff;
+  --f-a:#1f6fd1; --f-b:#a15c00; --f-c:#15803d; --f-d:#b91c1c; --f-e:#7e22ce; --f-f:#0f766e;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  color-scheme: light;
+  --bg:#f5f7fa; --card:#ffffff; --field:#ffffff; --line:#dfe5ee; --line-soft:#eef2f7; --row-hover:#f3f6fb;
+  --ink:#1b2733; --ink-dim:#4f5d6e; --ink-faint:#6b7280; --ink-strong:#0b1220; --head:#1e3a5f;
+  --headerbg:#1e3a5f; --onheader:#ffffff; --headersub:#c7d7ea; --btn-dark:rgba(255,255,255,.35); --tab-on:#5eead4;
+  --accent:#1f6fd1; --accent-ink:#ffffff;
+  --epa:#a15c00; --kw:#0f766e; --dw:#7e22ce;
+  --panel:#eff6ff; --panel-line:#dbeafe; --panel-ink:#1e3a5f;
+  --hi-bg:#fff7ed; --hi-line:#fed7aa; --hi-ink:#9a3412;
+  --warn-bg:#fef2f2; --warn-line:#fecaca; --warn-ink:#991b1b;
+  --ok-bg:#f0fdf4; --ok-line:#bbf7d0; --ok-ink:#166534;
+  --pill-bg:#eef2ff; --pill-ink:#3730a3;
+  --code-bg:#0f172a; --code-ink:#e2e8f0;
+  --shadow:rgba(15,23,42,.06); --scrim:rgba(15,23,42,.45); --capbar:rgba(15,23,42,.8); --capink:#ffffff;
+  --f-ink:#1b2733; --f-dim:#5a6878; --f-line:#cfd8e3; --f-face:#ffffff; --f-soft:#eef3f8; --f-on:#ffffff;
+  --f-a:#1f6fd1; --f-b:#a15c00; --f-c:#15803d; --f-d:#b91c1c; --f-e:#7e22ce; --f-f:#0f766e;
+}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 13px/1.5 var(--font-ui);-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+code,pre,.mono{font-family:var(--font-mono)}
+code{font-size:12px;background:var(--line-soft);padding:1px 4px;border-radius:4px}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1360px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+header.top{background:var(--headerbg);color:var(--onheader);position:sticky;top:env(safe-area-inset-top, 0px);z-index:5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--headerbg)}
+header.top > .wrap{display:flex;align-items:center;gap:var(--gap);padding-block:12px;flex-wrap:wrap}
+.lockup{display:flex;align-items:center;gap:12px;min-width:0}
+.lockup svg{flex:none}
+.lockup h1{font:700 26px/1 var(--font-display);font-stretch:85%;margin:0;letter-spacing:.2px;color:var(--onheader)}
+.lockup .sub{font-size:11px;color:var(--headersub);letter-spacing:.4px}
+.pill{font:500 11px/1 var(--font-mono);border:1px solid var(--headersub);color:var(--headersub);border-radius:999px;padding:4px 8px;white-space:nowrap}
+.cluster{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+header .seg{border-color:var(--btn-dark)}
+.seg button{background:transparent;border:0;color:inherit;padding:6px 10px;font-size:12px}
+header .seg button{color:var(--headersub)}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.hbtn{background:transparent;border:1px solid var(--btn-dark);color:var(--onheader);border-radius:8px;padding:6px 10px;font-size:12px}
+.hbtn:hover{border-color:var(--onheader)}
+.hbtn:disabled{opacity:.5;cursor:default}
+nav.tabs{background:var(--headerbg);border-top:1px solid var(--btn-dark)}
+nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}
+nav.tabs button{background:none;border:0;color:var(--headersub);padding:10px 14px;font-size:13px;border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--onheader);border-bottom-color:var(--tab-on);font-weight:600}
+main{padding-block:var(--gap) 32px}
+.bench{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--gap);align-items:start}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--gap);align-items:start}
+@media (max-width:900px){.bench,.grid2{grid-template-columns:minmax(0,1fr)}}
+.stack{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;min-width:0;box-shadow:0 1px 2px var(--shadow)}
+.card h2{font:650 15px/1.3 var(--font-display);font-stretch:92%;margin:0 0 10px;color:var(--head);text-wrap:balance}
+.card h3{font:600 13px/1.3 var(--font-ui);margin:14px 0 6px;color:var(--head)}
+.card p{margin:0 0 8px}
+.kicker{font:600 11px/1 var(--font-ui);letter-spacing:.9px;text-transform:uppercase;color:var(--ink-faint);margin:0 0 6px}
+.box{border-radius:10px;padding:12px 14px;border:1px solid;min-width:0}
+.box.panel{background:var(--panel);border-color:var(--panel-line);color:var(--panel-ink)}
+.box.hi{background:var(--hi-bg);border-color:var(--hi-line);color:var(--hi-ink)}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
+.box.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+.box b{color:inherit} .box p{margin:0 0 6px} .box p:last-child{margin:0}
+label.f{display:block;font-size:12px;color:var(--ink-dim);margin:10px 0 4px}
+select,input[type=text]{width:100%;background:var(--field);border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink)}
+.check{display:flex;gap:8px;align-items:flex-start;margin:8px 0;font-size:13px}
+.check input{margin-top:3px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 14px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--ink-dim)} .faint{color:var(--ink-faint);font-size:11px}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:12px;text-align:center;color:var(--ink-dim);font-size:12px;margin-top:10px}
+.drop.over{border-color:var(--accent);color:var(--ink)}
+.engines{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.engines{grid-template-columns:minmax(0,1fr)}}
+.eng{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--field);min-width:0}
+.eng .name{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:2px}
+.eng .what{font-size:11px;color:var(--ink-faint);margin-bottom:8px}
+.eng dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;margin:8px 0 0;font-size:12px}
+.eng dt{color:var(--ink-dim)} .eng dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-size:11.5px;overflow-wrap:anywhere}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.prog{height:6px;background:var(--line-soft);border-radius:4px;overflow:hidden;margin-top:6px}
+.prog > span{display:block;height:100%;width:0;transition:width .15s}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.tile .n{font:700 22px/1.1 var(--font-display);font-stretch:85%;color:var(--ink-strong);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tile .l{font-size:11.5px;color:var(--ink-dim);margin-top:4px}
+.idlist{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}
+.idlist code{font-size:11.5px}
+.chartbox{position:relative;border:1px solid var(--line);border-radius:10px;background:var(--f-face);overflow:hidden}
+.chartbox svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-dim);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;max-width:100%}
+table.t{border-collapse:collapse;width:100%;font-size:12px}
+table.t th,table.t td{padding:6px 10px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+table.t th{font-weight:600;color:var(--ink-dim);background:var(--field);position:sticky;top:0}
+table.t td.num,table.t th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-size:11.5px;white-space:nowrap}
+table.t tbody tr:hover{background:var(--row-hover)}
+.tag{display:inline-block;font:600 11px/1 var(--font-ui);padding:3px 7px;border-radius:999px;border:1px solid;white-space:nowrap}
+.tag.ok{color:var(--ok-ink);background:var(--ok-bg);border-color:var(--ok-line)}
+.tag.warn{color:var(--warn-ink);background:var(--warn-bg);border-color:var(--warn-line)}
+.tag.hi{color:var(--hi-ink);background:var(--hi-bg);border-color:var(--hi-line)}
+.tag.panel{color:var(--panel-ink);background:var(--panel);border-color:var(--panel-line)}
+pre.code{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:12px 14px;overflow:auto;font-size:11.5px;line-height:1.45;max-height:460px;margin:0;white-space:pre}
+details.more{margin-top:10px} details.more summary{cursor:pointer;color:var(--ink-dim);font-size:12px}
+.hidden{display:none !important}
+footer.prov{border-top:1px solid var(--line);background:var(--card);font-size:11.5px;color:var(--ink-dim)}
+footer.prov .wrap{display:flex;gap:6px 22px;flex-wrap:wrap;padding-block:12px}
+footer.prov b{color:var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink-strong);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:12.5px;z-index:30;box-shadow:0 4px 16px var(--shadow)}
+.modal{position:fixed;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;z-index:20;padding:16px}
+.modal[hidden]{display:none}
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:var(--r);max-width:560px;width:100%;padding:20px;box-shadow:0 12px 40px var(--shadow);max-height:90vh;overflow:auto}
+.sheet h2{font:700 20px/1.2 var(--font-display);font-stretch:88%;margin:0 0 8px;color:var(--head)}
+.sheet ol{padding-left:20px;margin:10px 0 16px} .sheet li{margin:4px 0}
+/* Doc */
+.doc{display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.doc{grid-template-columns:minmax(0,1fr)} nav.toc{position:static !important}}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;scroll-behavior:auto !important}}
+nav.toc{position:sticky;top:120px;font-size:12.5px;border-left:2px solid var(--line);padding-left:12px}
+nav.toc a{display:block;color:var(--ink-dim);text-decoration:none;padding:3px 0}
+nav.toc a:hover{color:var(--ink)}
+article.essay{font:400 16.5px/1.65 var(--font-read);max-width:760px;color:var(--ink)}
+article.essay h1{font:700 30px/1.15 var(--font-display);font-stretch:88%;margin:0 0 6px;color:var(--ink-strong)}
+article.essay .deck{font:400 15px/1.5 var(--font-ui);color:var(--ink-dim);margin:0 0 22px}
+article.essay h2{font:650 21px/1.25 var(--font-display);font-stretch:92%;margin:34px 0 10px;color:var(--head)}
+article.essay p{margin:0 0 14px}
+article.essay figure{margin:20px 0 24px}
+article.essay figure .chartbox{background:var(--f-face)}
+article.essay figcaption{font:400 12.5px/1.5 var(--font-ui);color:var(--ink-dim);margin-top:8px}
+article.essay table.t{font-family:var(--font-ui)}
+article.essay .box{font:400 14px/1.55 var(--font-ui);margin:18px 0}
+article.essay code{font-size:13px}
+article.essay pre.code{margin:0 0 16px;max-height:none;white-space:pre-wrap}
+article.essay ul{margin:0 0 14px;padding-left:22px} article.essay li{margin:0 0 6px}
+</style>
+<script>/* theme before first paint: dark unless this viewer chose otherwise */
+(function(){var d=document.documentElement,v=null;try{v=localStorage.getItem('swmm5kw_theme')}catch(e){}
+var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'):'dark';d.setAttribute('data-theme',t)})();</script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="lockup">
+      <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="17" fill="none" stroke="var(--headersub)" stroke-width="2.2"/>
+        <path d="M8 13h9M17 13l7-5M17 13l7 6M24 8h8M24 19h8" stroke="var(--onheader)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10 28h20M30 28c3 0 3-6 0-6H14" stroke="var(--tab-on)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M17 19.5l-3 2.5 3 2.5" stroke="var(--tab-on)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h1>swmm5-kw</h1>
+        <div class="sub">EPA SWMM 5.2.4 &middot; kinematic wave and steady flow that split and loop</div>
+      </div>
+      <span class="pill">v1.0 &middot; 5.2.4 + kw</span>
+    </div>
+    <div class="cluster">
+      <div class="seg" id="theme-toggle" role="group" aria-label="Colour theme">
+        <button data-t="dark" class="on" type="button">Dark</button><button data-t="light" type="button">Light</button><button data-t="auto" type="button">Auto</button>
+      </div>
+      <button class="hbtn" id="helpBtn" type="button" aria-label="How to use">?</button>
+      <button class="hbtn" id="gifBtn" type="button">Make a GIF</button>
+      <button class="hbtn" id="exportBtn" type="button">Export CSV</button>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Sections">
+    <div class="wrap" role="tablist" id="tablist">
+      <button role="tab" data-view="run" aria-selected="true">Run</button>
+      <button role="tab" data-view="verify" aria-selected="false">Verify</button>
+      <button role="tab" data-view="about" aria-selected="false">About</button>
+      <button role="tab" data-view="doc" aria-selected="false">Doc</button>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap" id="app">
+
+<!-- ============================== RUN -->
+<section class="view" id="view-run">
+  <div class="bench">
+    <div class="stack">
+      <div class="card">
+        <p class="kicker">Model</p>
+        <h2>Pick a network, or bring your own</h2>
+        <label class="f" for="modelSel">Test networks shipped with the engine</label>
+        <select id="modelSel"></select>
+        <p class="faint" id="modelDesc" style="margin-top:6px"></p>
+        <div class="drop" id="drop">Drop a <code>.inp</code> here, or <label style="color:var(--accent);cursor:pointer;text-decoration:underline">choose a file<input type="file" id="fileIn" accept=".inp,.INP,.txt" hidden></label></div>
+      </div>
+      <div class="card">
+        <p class="kicker">Engine options</p>
+        <h2>How swmm5-kw should treat splits and loops</h2>
+        <label class="f" for="routingSel">Flow routing for the stock and swmm5-kw runs</label>
+        <select id="routingSel">
+          <option value="file">As written in the file</option>
+          <option value="KINWAVE">KINWAVE (kinematic wave)</option>
+          <option value="STEADY">STEADY (steady flow)</option>
+        </select>
+        <label class="f" for="splitSel">Split rule at a junction with several outlets</label>
+        <select id="splitSel">
+          <option value="1" selected>HEAD: one water level shared by every outlet</option>
+          <option value="2">CAPACITY: in proportion to full-flow capacity</option>
+          <option value="3">AREA: in proportion to last step's flow area</option>
+          <option value="0">Off: stock behaviour, ERROR 133</option>
+        </select>
+        <label class="check"><input type="checkbox" id="loopOn" checked><span>Iterate directed loops each step (off: stock behaviour, ERROR 131)</span></label>
+        <label class="check"><input type="checkbox" id="dwOn" checked><span>Also run stock EPA with <b>DYNWAVE</b> as the reference</span></label>
+        <div class="row" style="margin-top:12px">
+          <button class="btn" id="runBtn" type="button" disabled>Loading engines…</button>
+          <button class="btn ghost" id="stopBtn" type="button" disabled>Stop</button>
+        </div>
+        <p class="faint" id="runNote" style="margin-top:8px">Each run gets a fresh engine instance. Nothing leaves this page.</p>
+      </div>
+      <div class="box panel" id="whatBox">
+        <p><b>What you are looking at.</b> Stock SWMM routes kinematic wave and steady flow in one upstream-to-downstream pass, so it refuses a junction with two outlets (ERROR 133) and a network where water can come back around (ERROR 131). swmm5-kw is the same EPA 5.2.4 engine with those two refusals replaced by an allocation rule and a per-step iteration.</p>
+        <p>When there is nothing to split or loop, swmm5-kw writes the same bytes as stock. The Run tab shows that live: the two <code>.out</code> fingerprints match.</p>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="kicker">Three runs</p>
+        <h2 id="runTitle">Stock EPA 5.2.4, swmm5-kw, and the dynamic-wave reference</h2>
+        <div class="engines" id="engCards"></div>
+      </div>
+      <div class="box hidden" id="verdict"></div>
+      <div class="card hidden" id="kwCard">
+        <p class="kicker">Inside the swmm5-kw run</p>
+        <h2>What the extension did</h2>
+        <div class="tiles" id="kwTiles"></div>
+        <div id="kwLists" style="margin-top:10px"></div>
+      </div>
+      <div class="card hidden" id="chartCard">
+        <p class="kicker">Flow through time</p>
+        <h2 id="chartTitle">Link flows</h2>
+        <div class="row" style="margin-bottom:8px">
+          <label class="muted" for="linkSel" style="font-size:12px">Links</label>
+          <select id="linkSel" multiple size="4" style="max-width:280px"></select>
+          <span class="faint">Ctrl or Cmd click for several. Solid: swmm5-kw. Dashed: DYNWAVE. Dotted: stock.</span>
+        </div>
+        <div class="chartbox"><svg id="chart" viewBox="0 0 760 320" role="img" aria-label="Link flow time series"></svg></div>
+        <div class="legend" id="chartLegend"></div>
+      </div>
+      <div class="card hidden" id="splitCard">
+        <p class="kicker">Split junctions</p>
+        <h2>How each junction shared its water, against dynamic wave</h2>
+        <div class="tablewrap"><table class="t" id="splitTable"></table></div>
+        <p class="faint" style="margin-top:6px">Share = an outlet's flow over the junction's total outflow, at the moment that total peaks in each run. HEAD is an allocation at normal depth: no backwater, no surcharge.</p>
+      </div>
+      <div class="card hidden" id="linksCard">
+        <p class="kicker">Every link</p>
+        <h2>Peak flows, run against run</h2>
+        <div class="tablewrap" style="max-height:420px"><table class="t" id="linksTable"></table></div>
+      </div>
+      <div class="card hidden" id="rptCard">
+        <p class="kicker">Reports</p>
+        <h2>The status reports, as the engines wrote them</h2>
+        <div class="seg" id="rptSeg" role="group" aria-label="Which report" style="margin-bottom:8px"></div>
+        <pre class="code" id="rptPre"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== VERIFY -->
+<section class="view" id="view-verify" hidden>
+  <div class="grid2">
+    <div class="stack">
+      <div class="card">
+        <p class="kicker">Check it here</p>
+        <h2>Run the gates in this browser</h2>
+        <p>Every shipped test network through both WebAssembly engines, in every mode. The page checks the extension's contract: off means stock, splits and loops run where stock refuses, and no water is created.</p>
+        <div class="row"><button class="btn" id="gateBtn" type="button" disabled>Run the gates</button><span class="faint" id="gateNote"></span></div>
+        <div class="tablewrap" style="margin-top:12px"><table class="t" id="gateTable"><tbody><tr><td class="muted">Press "Run the gates".</td></tr></tbody></table></div>
+      </div>
+      <div class="card">
+        <h2>The contract</h2>
+        <ol style="margin:0;padding-left:18px">
+          <li><b>Off means stock.</b> With both options off (the engine's default) the bytes are stock 5.2.4, ERROR 133 and 131 included.</li>
+          <li><b>On changes nothing it has no business changing.</b> A network with nothing to split or loop gives the same bytes as stock in every mode.</li>
+          <li><b>No order dependence.</b> Shuffling the file's junctions and conduits changes nothing.</li>
+          <li><b>Exact conservation.</b> An allocation never creates water; a loop's leftover is booked to the receiving node.</li>
+          <li><b>One engine, one answer.</b> The wasm engine matches a native build of the same source and the same maths library byte for byte.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card">
+        <p class="kicker">Run natively, 29 October 2026</p>
+        <h2>Gates on the build in this repository</h2>
+        <div class="tablewrap"><table class="t" id="nativeGates"></table></div>
+      </div>
+      <div class="card">
+        <p class="kicker">The corpus</p>
+        <h2>Bob's 1729 corpus, model by model</h2>
+        <div id="corpusBox"></div>
+      </div>
+      <div class="card">
+        <h2>The engines on this page</h2>
+        <div class="tablewrap"><table class="t" id="provTable"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== DOC -->
+<section class="view" id="view-doc" hidden>
+  <div class="doc">
+    <nav class="toc" id="toc" aria-label="Contents"></nav>
+    <article class="essay" id="essay">@@ESSAY@@</article>
+  </div>
+</section>
+
+<!-- ============================== ABOUT -->
+<section class="view" id="view-about" hidden>
+  <div class="grid2">
+    <div class="stack">
+      <div class="card">
+        <h2>About swmm5-kw</h2>
+        <p>swmm5-kw is EPA SWMM 5.2.4 with one change in purpose: kinematic wave and steady flow routing no longer stop at a junction with several outlets (ERROR 133) or at a directed loop (ERROR 131). A split junction shares its outflow among its outlets by one of three rules; a loop is iterated within each routing step until the flow coming back around settles. Dynamic wave is untouched, and with both options off the engine is stock 5.2.4.</p>
+        <p>This page runs two engines compiled to WebAssembly from the same source tree: stock EPA SWMM 5.2.4 from the official v5.2.4 tag, and the same tree with the extension. The source, the patch, the test networks, the gates and their logs are in the repository <a href="https://github.com/SWMMBobSWMM6/swmm5-kw" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-kw</a>, with the Doc essay as a Word file (<code>dist/swmm5-kw-doc.docx</code>).</p>
+        <p>The EPA Storm Water Management Model is a work of the U.S. Environmental Protection Agency, in the public domain. Version 5.2.4's engine is Lewis Rossman's design.</p>
+        <div class="box hi"><p><b>A modified engine.</b> Results from swmm5-kw with either option on are not stock EPA SWMM results. Its report says so in a <code>KW/SF extension</code> block; keep that block with any result you pass on.</p></div>
+      </div>
+      <div class="card">
+        <h2>Open decisions</h2>
+        <ul style="margin:0;padding-left:18px">
+          <li>A runtime switch (today) or an <code>[OPTIONS]</code> keyword such as <code>NODE_SPLIT NONE|HEAD|AREA|CAPACITY</code>.</li>
+          <li>A version stamp such as <code>5.2.4-kw</code> in the report header.</li>
+          <li>HEAD or AREA as the default rule (the first ask was AREA).</li>
+          <li>Whether apps start with the extension on (this page) while the engine defaults to off.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card" id="aiUse">
+        <h2>AI use</h2>
+        <p>The extension, this page, its tests and the Doc essay were made with Claude, Anthropic's AI model, under the direction of Robert (Bob) Dickinson: the engine in a session on 28 and 29 September 2026, the repository, this page and the essay on 29 October 2026 (Claude Opus 5.5). Bob asked for KW and steady flow that run loops and bifurcations, chose to keep the work in its own repository, and supplies the model corpus it was tested on. Responsibility for publishing the work is his.</p>
+        <p><b>What Claude did:</b> designed and wrote the allocator (<code>kwmod.c</code>) and the changes to <code>flowrout.c</code>, <code>toposort.c</code>, <code>node.c</code> and <code>swmm5.c</code>; wrote the test networks, the drivers and the gates; built both WebAssembly engines and the JavaScript that runs them; rebuilt everything from EPA's tag in a fresh workspace for this repository; ran the corpus gate; wrote this page, its figures and the essay.</p>
+        <p><b>How it was checked:</b> mechanically. Byte comparison of <code>.out</code> and <code>.rpt</code> files against stock 5.2.4 built from the official tag, on the shipped networks and on Bob's corpus; the wasm engines against native builds; the patch against a fresh checkout. <b>Not yet checked by a person:</b> the C changes have not been reviewed line by line by Bob, and the split rules have been compared with dynamic wave on five small test networks only.</p>
+      </div>
+      <div class="card">
+        <h2>Sources</h2>
+        <ul style="margin:0;padding-left:18px">
+          <li><a href="https://github.com/USEPA/Stormwater-Management-Model/tree/v5.2.4" target="_blank" rel="noopener">USEPA/Stormwater-Management-Model, tag v5.2.4</a> (commit 7952ca8, the base engine)</li>
+          <li><a href="https://github.com/SWMMBobSWMM6/swmm5-kw" target="_blank" rel="noopener">SWMMBobSWMM6/swmm5-kw</a> (this engine: source, patch, gates)</li>
+          <li><a href="https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030" target="_blank" rel="noopener">SWMMBobSWMM6/1729-SWMM5-Models-2030</a> (the corpus, commit 9ee63bd)</li>
+          <li><a href="https://github.com/bjorn3/browser_wasi_shim" target="_blank" rel="noopener">@bjorn3/browser_wasi_shim</a> 0.4.2 (runs the engines in this page); Clang 18 with wasi-libc; GCC 13</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="prov">
+  <div class="wrap">
+    <span><b>Engines:</b> EPA SWMM 5.2.4 (tag v5.2.4) and swmm5-kw, both wasm32-wasi from one tree</span>
+    <span><b>Parity:</b> with nothing to split or loop, byte-identical to stock</span>
+    <span><b>What this does not show:</b> backwater, surcharge or design-grade results in a split or a loop; HEAD shares water at normal depth</span>
+    <span><b>AI use:</b> built with Claude; see About</span>
+  </div>
+</footer>
+
+<div class="modal" id="welcome" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wTitle">
+    <h2 id="wTitle">Kinematic wave, now with forks in the road</h2>
+    <p class="muted" style="margin:0 0 6px">Stock SWMM's kinematic wave and steady flow need a tree: one way out of every junction, no way back. swmm5-kw lets the water fork and come round again, and leaves everything else byte for byte as EPA wrote it.</p>
+    <ol>
+      <li><b>Run</b> a test network or your own <code>.inp</code> through stock EPA, swmm5-kw and a dynamic-wave reference, and compare the splits.</li>
+      <li><b>Verify</b> runs the engine's gates in this browser and shows the native and corpus results.</li>
+      <li><b>Doc</b> explains how it works, with the numbers; <b>About</b> says who made it and how.</li>
+    </ol>
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="welcomeClose" type="button">Start</button></div>
+  </div>
+</div>
+
+<script id="wasm-kw" type="application/octet-stream">@@WASM_KW@@</script>
+<script id="wasm-stock" type="application/octet-stream">@@WASM_STOCK@@</script>
+<script id="models-json" type="application/json">@@MODELS@@</script>
+<script id="results-json" type="application/json">@@RESULTS@@</script>
+<script>@@SHIM@@</script>
+<script>@@KWENGINE@@</script>
+<script>@@APP@@</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+"""The Doc essay: one source, rendered into the app's Doc tab and into the .docx.
+
+Every number comes from results/figdata.json (tools/figure_runs.py) or results/summary.json
+(tools/summarize.py). Inline markup: **bold**, *italic*, `code`.
+"""
+import html, json, os, re
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+RES = os.path.join(HERE, '..', '..', 'results')
+
+
+def blocks(D, S):
+    sh = {r['name']: r for r in D['split_shares']}
+    dw, kh, sf, kc, ka = (sh['DYNWAVE (stock)'], sh['KINWAVE, HEAD'], sh['STEADY, HEAD'], sh['KINWAVE, CAPACITY'], sh['KINWAVE, AREA'])
+    q = lambda r, i: r['total'] * r['share'][i]
+    pct = lambda r, i: 100 * r['share'][i]
+    la = D['nets']['loopactive']; lp = D['nets']['loop']
+    lst = la['stats']
+    peaks = D['peaks']
+    def maxdev(models):
+        v = [abs(p['kw'] - p['dw']) / p['dw'] for p in peaks if p['model'] in models and p['dw'] > 0.5]
+        return 100 * max(v)
+    sf_curve = D['section_factor']; pk = max(sf_curve, key=lambda c: c[1]); cross = next(y for y, v in sf_curve if v >= 1)
+    chain = D['chain_sweep']; worst = min(chain, key=lambda c: c['musl'])
+    ch = {c['q']: c['musl'] for c in chain}
+    R1kw = max(D['loop_series']['kw']); R1dw = min(D['loop_series']['dw'])
+    T = S.get('total', {}); P = {p['file']: p for p in S.get('passes', [])}; NSET = S.get('corpus_set', 0); W = S.get('whatif')
+    kwp = P.get('gate_kwsf.jsonl', {}); dwp = P.get('gate_dw.jsonl', {}); ifp = P.get('gate_iface.jsonl', {})
+    cen = S.get('census', [])
+    cen_txt = ', '.join(f"`{c['inp']}`" for c in cen) or 'none'
+    imb = max([S.get('max_allocation_imbalance_cfs', 0.0)] + [n['stats'][3] for n in D['nets'].values()])
+
+    B = []
+    h1 = lambda t: B.append(('h1', t)); deck = lambda t: B.append(('deck', t)); h2 = lambda t: B.append(('h2', t))
+    p = lambda t: B.append(('p', t)); fig = lambda k, c: B.append(('fig', k, c)); box = lambda kind, t: B.append(('box', kind, t))
+    pre = lambda t: B.append(('pre', t)); ul = lambda items: B.append(('ul', items)); table = lambda hd, rows: B.append(('table', hd, rows))
+
+    h1('Forks in the Road')
+    deck('How swmm5-kw teaches EPA SWMM 5.2.4\'s kinematic wave and steady flow to split a junction and run a loop, what it proved about itself, and what it still cannot do.')
+
+    h2('The one-way street')
+    p('Kinematic wave is the plainest honest way to move water through a sewer model. Each pipe takes what its upstream junction hands it, runs that through Manning\'s equation and the continuity equation, and passes the result on. No pipe ever asks what is happening below it. That is why it is fast. It is also why it is fussy.')
+    p('Because every pipe waits on its upstream junction, SWMM has to put the pipes in order before it routes a drop: each pipe after every pipe that feeds it. The ordering is called a topological sort, and `toposort.c` does it once, before the run. A network with one way out of every junction and no way back sorts cleanly. Mathematicians call that shape a tree. So do sewer designers, for the same reason.')
+    p('Hand stock SWMM 5.2.4 anything else under KINWAVE or STEADY routing and it stops before it starts. A junction with two outlets gets you this:')
+    pre('ERROR 133: Node J2 has more than one outlet link.')
+    p('A path that leads back to where it began gets you this:')
+    pre('ERROR 131: the following links form cyclic loops in the drainage system:')
+    fig('tree', 'Stock SWMM routes kinematic wave and steady flow in one pass, upstream to downstream. A fork leaves the pass without a rule for dividing the water; a loop leaves it without a place to start.')
+
+    h2('Why the rule is there')
+    p('The rule is not an oversight. The engine knows exactly how much water reaches a junction. What it does not know is how to divide it. Dynamic wave never needs telling: it solves for the water surface at every node at once, and the head difference along each pipe settles the share. Kinematic wave has no head to speak of. It knows depth in a pipe, not level at a junction.')
+    p('So SWMM gives you a node built for the job, the DIVIDER, with four ways to divide (CUTOFF, OVERFLOW, TABULAR and WEIR), and it makes you pick one and supply its numbers. The old Transport block worked the same way with its flow-divider elements. The position is "you tell me how the water splits, and I will route it." That is a sound engineering position.')
+    p('It is also a tax. Real systems are full of forks: relief sewers, twin barrels laid forty years apart, a storm drain that parts around a building and meets itself on the other side. Each one has to become a divider, and each divider needs a curve somebody made up. A made-up curve is a guess dressed as data, and it does not get better because it sits in an input file.')
+    p('In September 2026 Bob asked for a SWMM5 whose kinematic wave and steady flow would run loops and node bifurcations. swmm5-kw is that engine.')
+
+    h2('What swmm5-kw is')
+    p('swmm5-kw is EPA SWMM 5.2.4, built from the official `v5.2.4` tag, with seven source files changed: one new file, `kwmod.c`, and small edits to `flowrout.c`, `toposort.c`, `node.c`, `swmm5.c`, `swmm5.h` and `funcs.h`, 622 lines added and 4 removed. It has two switches, set through one new API call, `swmm_setKwOptions(split, loop)`. The split switch picks a rule for dividing a junction\'s outflow among its outlets. The loop switch lets a directed loop iterate within each routing step. Both start off. With both off the engine is stock 5.2.4, byte for byte, refusals included. Dynamic wave is never touched.')
+
+    h2('One water level for every outlet')
+    p('The default split rule is called HEAD, and it borrows the one idea kinematic wave lacks. Imagine water standing in the junction at some level, call it *y*. Every outlet pipe sees that level at its own entrance, less its own offset above the junction floor. At normal depth, each pipe carries whatever Manning\'s equation gives for that depth. Add up those flows. Too much water leaving? Lower *y*. Too little? Raise it. Halve the bracket each time, and after 22 to 31 halvings on average (in the test runs) you have the one level at which the outlets together carry exactly what came in.')
+    fig('head', 'HEAD in elevation. The same level y fills each outlet to a different depth because each sits at a different height. The small pipe takes y minus its offset; the large pipe, with y above its crown, is full and capped.')
+    p(f'There is one trap, and it is an old one. A circular pipe carries more than its full-pipe flow when it runs just short of full. The wetted perimeter shrinks faster than the area near the crown, so Manning\'s flow climbs past full at {cross:.2f} of the diameter and peaks at {pk[1]:.3f} times full flow at {pk[0]:.2f}. Let that curve run free and the total is no longer a steady climb in *y*, and a bisection can be fooled. So HEAD caps each outlet at its full-flow capacity. Water beyond the sum of the capacities stays in the junction and ponds or floods, which is exactly what SWMM\'s kinematic wave already does with a single pipe that is full.')
+    fig('sfactor', f'Flow against depth in a circular pipe, from Manning\'s equation. The open-channel curve passes full-pipe flow at {cross:.2f} of the diameter and peaks {100 * (pk[1] - 1):.1f}% above it. HEAD uses the capped curve, which only ever rises.')
+    p('The other two rules are simpler. CAPACITY divides in proportion to each outlet\'s full-flow capacity. AREA divides in proportion to each outlet\'s flow area at the end of the previous step, falling back to CAPACITY on the first step, when every area is zero. AREA was the first rule Bob asked for, in August 2026. All three compute every outlet of a junction together, once per sweep, so the answer cannot depend on which outlet happens to ask first.')
+
+    h2('What the numbers say')
+    p(f'The first test network, `split.inp`, is as small as a fork can be: one 3 ft pipe carrying 20 cfs into a junction with two outlets, a 3.0 ft pipe and a 1.5 ft pipe, both 400 ft long on the same slope. Stock 5.2.4 refuses it under kinematic wave with ERROR 133 and runs it under dynamic wave. swmm5-kw runs it under all three rules.')
+    fig('shares', f'How split.inp divides its 20 cfs at the moment the total outflow peaks. HEAD and AREA put the 1.5 ft pipe at its full-flow capacity; dynamic wave pushes {q(dw, 1):.2f} cfs through it under pressure. CAPACITY sends far too much down the big pipe.')
+    p(f'HEAD sends {pct(kh, 0):.1f}% of the flow down the big pipe. Dynamic wave sends {pct(dw, 0):.1f}%. The gap is not a flaw in the rule. It is the one thing dynamic wave can do that kinematic wave cannot: push a pipe past full. Dynamic wave drives {q(dw, 1):.2f} cfs through the 1.5 ft pipe, about {100 * (q(dw, 1) / q(kh, 1) - 1):.0f}% beyond the {q(kh, 1):.2f} cfs it can carry flowing full by gravity, because the junction\'s water surface rises and the pipe runs under pressure. Under kinematic wave, full is full. AREA lands in the same place here, because the small pipe is at its cap either way. CAPACITY sends {pct(kc, 0):.1f}% down the big pipe and misses by {pct(kc, 0) - pct(dw, 0):.0f} points. Capacity says what a pipe could carry flowing full, not what it takes when both pipes see the same water level.')
+    fig('hydro', 'The whole storm at the fork in split.inp. Solid lines are swmm5-kw under KINWAVE with HEAD; dashed lines are stock EPA under DYNWAVE. The small outlet runs at its capacity through the plateau; dynamic wave puts it under pressure.')
+    p(f'Two more networks split and rejoin: `diamond.inp`, one fork and one merge, and `braid.inp`, two of each. Every pipe\'s peak flow under swmm5-kw lands within {maxdev(["diamond", "braid"]):.1f}% of dynamic wave, and within {maxdev(["split"]):.1f}% on `split.inp`. Steady flow with HEAD gives a routing continuity error of {sf["cont"]:.3f}% on `split.inp`; kinematic wave gives {kh["cont"]:.3f}%, about what stock kinematic wave gives on the plain three-pipe chain at 30 cfs ({ch[30.0]:.3f}%).')
+    fig('peaks', 'Peak flow in every link of the five test networks, swmm5-kw (KINWAVE, HEAD, loops iterated) against stock EPA under DYNWAVE. The splits sit on the line. The loops do not, for reasons the next two sections give. R1\'s dynamic-wave flow is negative all storm, so its peak plots at zero.')
+
+    h2('Water that comes back')
+    p('A loop breaks the sort itself. Kahn\'s algorithm, which `toposort.c` uses, repeatedly takes a junction whose inflows are all accounted for. In a loop, every junction is waiting on another, and the algorithm runs out of candidates with pipes still unsorted. Stock SWMM reports ERROR 131 at that point.')
+    p('swmm5-kw instead picks one junction and declares its waiting over. It takes the unfinished junction with the fewest unsorted inflows; on a tie, the one with the most inflows already sorted, which is the loop\'s natural entrance; on a further tie, the smallest ID in alphabetical order. That last rule matters more than it looks. The first version broke ties by position in the input file, and the loop models\' continuity changed between 0.122% and 0.125% when the file\'s lines were shuffled. An engine whose answer depends on line order is not an engine you can trust. After sorting, any pipe that delivers water to a junction already processed is marked as loop-closing.')
+    p('Then, each routing step, the engine has to route water it has not computed yet. It guesses. Each loop-closing pipe is assumed to deliver what it delivered last step. The engine sweeps the network in order, compares what each loop-closing pipe actually routed with the guess, and if they disagree, puts everything back the way it was at the start of the step and sweeps again with better guesses.')
+    fig('loopstep', 'One routing step on a network with a loop. The snapshot is what makes this sound for kinematic wave: each trial sweep must start from the same pipe state, or water is counted twice.')
+    p(f'"Puts everything back" is the important part. A kinematic-wave pipe carries its state from one step to the next: flow and area at both ends. A trial sweep changes that state. Sweep again without restoring it and the second trial starts from the first trial\'s answer, which is how you count water twice. After 60 sweeps, or as soon as the guesses stop changing, the engine books any remaining difference to the receiving junction, so the books balance whether the iteration settled or not. On `loopactive.inp`, a relief pipe that spills from the bottom of the network back to the top, it took {lst[5]:.2f} sweeps per step on average; {int(lst[7])} of {int(lst[4])} steps reached the cap, and the largest leftover was {lst[8]:.4f} cfs.')
+
+    h2('The pipe that ran backwards')
+    p(f'Here is the result that matters most, and it corrects something. In September this engine\'s write-up compared the flow in that relief pipe, R1, under the two methods: {R1kw:.2f} cfs under swmm5-kw, {abs(R1dw):.2f} cfs under dynamic wave, and called both of them recirculation. Claude wrote that comparison. It looked only at the size of the two flows. It never looked at their sign.')
+    p(f'The sign is the whole story. Under dynamic wave, R1 runs backwards for the entire storm, from J1 to J3, down to {R1dw:.2f} cfs. The water at J1 stands higher than the water at J3, so the "relief" pipe becomes a second path downstream, beside the main line. That is what a relief pipe in that position would really do. Kinematic wave cannot run a pipe backwards. A link\'s direction is fixed by the way it is drawn in the input file. So under swmm5-kw, R1 can only carry water the way it points, from J3 back to J1, and it carries {R1kw:.2f} cfs spilling over its 3.5 ft offset.')
+    fig('backwards', 'Flow in the relief pipe R1 of loopactive.inp. Dynamic wave runs it backwards all storm as a second path downstream. Kinematic wave cannot reverse a pipe, so swmm5-kw sends a small flow the way the pipe is drawn.')
+    p(f'`loop.inp` shows the same thing harder. There dynamic wave sends 30 cfs through a 2 ft outlet under pressure, and kinematic wave, which caps the pipe at full flow, gets 12 cfs through it and floods the rest. Its routing continuity error is {lp["kw_cont"]:.2f}%. September\'s pipe-by-pipe accounting put all of that imbalance in the two pipes running exactly at capacity, every junction in balance: a stock kinematic-wave behaviour described below.')
+    p('The lesson is plain, and it belongs on every result swmm5-kw produces for a loop: a kinematic-wave loop is honest only where the ground fixes the direction of every pipe in it, where nothing would ever run backwards. Where backwater would reverse a pipe, kinematic wave is answering a different question, and no amount of iteration will make it answer yours. Loops are exactly where backwater tends to govern. Treat a kinematic-wave loop as screening, never as design.')
+
+    h2('Proof that nothing else moved')
+    p('An engine change is easy to make and hard to trust, so this one was built to be checked by machine. The first promise is that where the extension has no work, it does nothing at all. Not "nearly nothing": the same bytes.')
+    kw_ident = kwp.get('identical', 0); kw_n = kwp.get('models', 0)
+    pending = [n for n, q in (('the dynamic-wave pass', dwp), ('the interface-file pass', ifp)) if not q]
+    p(f'Bob\'s corpus of SWMM5 models (the 1729-SWMM5-Models-2030 repository) supplied the test. The same {NSET:,} models swmm5-rust was gated on went through stock 5.2.4 and swmm5-kw, side by side, with the same calling sequence. The {kw_n:,} models that route KINWAVE or STEADY ran four times through swmm5-kw: extension off, then each split rule with loops on. {kw_ident:,} of them gave a `.out` file identical to stock byte for byte, and a report identical apart from its three clock lines, in all four runs. ' + (f'The {dwp["models"]:,} dynamic-wave models ran with the extension switched on and were identical to stock in {dwp["identical"]:,} cases. ' if dwp else '') + (f'Models that share interface files ran one at a time, so two runs never wrote the same file: {ifp["identical"]:,} of {ifp["models"]:,} identical. ' if ifp else '') + (f'When this page was built, {" and ".join(pending)} {"were" if len(pending) > 1 else "was"} still running; the README has the current table. ' if pending else '') + f'Not one model differed. {T.get("crash_same", 0)} more are decks from the OpenSWMM 2026 code review that crash stock 5.2.4 outright; swmm5-kw crashes at the same point and leaves the same partial output, which says the extension changed nothing there and says nothing else, because what C does after a crash like that is undefined. {T.get("inconclusive", 0)} could not be compared at all, because stock 5.2.4 itself never finished.')
+    p(f'And how many of those models did the extension actually change? {len(cen)}: {cen_txt}, which stock refuses with ERROR 131 and swmm5-kw runs. The corpus is a strong test that the extension leaves everything else alone and a weak test of the extension itself, because real models that need it have been converted to dividers or to dynamic wave long ago. The five small networks above are, so far, most of the evidence about the splits themselves.')
+    if W:
+        p(f'So the corpus was asked a harder question. Each of its {W["models"]:,} dynamic-wave models was copied with its routing switched to KINWAVE and run through both engines. That is not how anyone built those models, and many fail kinematic wave\'s other checks first (a regulator that does not leave a storage unit, for one). But it shows how often a real network has a fork or a loop. Stock 5.2.4 refused {W["census"]:,} of them with ERROR 133 or 131. swmm5-kw ran {W["census_ran"]:,} of those to the end; {W["census_error"]:,} stopped on another kinematic-wave check once the fork or loop was no longer in the way. Of the {W["stock_ran"]:,} that stock could run under kinematic wave, {W["identical"]:,} gave identical bytes from swmm5-kw, {W["different"]} differed, and {W["inconclusive"] + W["crash_same"]} could not be compared.')
+        if W.get('census_ran'):
+            p(f'Among the networks swmm5-kw ran, the median had {W["split_median"]:g} split junctions and {W["loop_median"]:g} loop-closing links; the largest had {W["split_max"]:,} and {W["loop_max"]:,}. Their kinematic-wave routing continuity errors had a median magnitude of {W["cont_median_abs"]:.2f}%, and {W["cont_over_1"]} of {W["census_ran"]} exceeded 1%. That says the extension runs real networks. It says nothing about whether their answers are right: these models were built for dynamic wave, and the backwater they depend on is exactly what kinematic wave leaves out.')
+    fig('corpus', 'The corpus gate. Every model stock 5.2.4 runs gives the same bytes from swmm5-kw, in every mode; the ones stock refuses for a loop or a fork, swmm5-kw runs.')
+    p(f'Three more checks ran on the shipped networks. Shuffling the order of junctions and conduits in the input file changed nothing, in five networks with three shuffles each. No allocation created or destroyed water: the largest difference between what a junction handed out and what it had was {imb:.1e} cfs, which is arithmetic rounding. And the WebAssembly engine this page runs gave the same bytes as a native build of the same source on all 52 runs, provided the native build uses the same maths library. That proviso turned out to be a finding of its own.')
+
+    h2('Two things stock 5.2.4 does by itself')
+    p(f'Building this engine meant running a great many kinematic-wave models, and two behaviours of unmodified EPA 5.2.4 came to light. Neither has anything to do with the extension. Both show up on a plain chain of three 3 ft pipes with nothing to split and no loop.')
+    p(f'The first is a continuity leak at capacity. Feed the chain less than its full-pipe capacity of 33.35 cfs and the routing continuity error is about a tenth of a percent. Feed it a little more and the error grows, steadily, to {worst["musl"]:.2f}% at {worst["q"]:g} cfs, four cfs over capacity, then drops back to {ch[38.0]:.2f}% at 38 cfs. A model whose peak happens to sit in that band reports losing a tenth of its water. In September only three inflows were run, 30, 34 and 40 cfs, and the worst of the three was {ch[34.0]:.2f}%. The sweep found the band they had stepped over.')
+    fig('chain', 'Stock EPA 5.2.4, kinematic wave, three 3 ft pipes in series: routing continuity error against the inflow held for two and a half hours. Measured every 0.5 cfs. The open rings are the three inflows measured in September.')
+    p('The likely cause sits in `kinwave.c`. When a pipe\'s inflow reaches full-pipe flow, the solver sets its inlet area to full. Just below, it takes the lower of the two depths that carry that flow, because a circle carries full flow twice, once at 82% depth and once at 100%. A pipe hovering at capacity can flip between the two from one step to the next, a jump of about 18% of the full area, and every flip is booked as stored water that was never there. The sudden recovery at 38 cfs is not explained yet.')
+    p('The second is that kinematic-wave answers depend on the maths library. The same source compiled against glibc and against musl agree for the first 241 minutes of a storm on the 30 cfs chain and then part company by up to 2% on the recession. Dynamic wave and steady flow gave identical answers under both libraries. So "the same engine" means little for kinematic wave unless you also say which `libm` it was linked against. The browser engine uses musl\'s mathematics, and its gate compares against a musl build for exactly that reason.')
+
+    h2('What this does not show')
+    ul(['That kinematic wave can represent backwater, surcharge or flow reversal. It cannot, in a split or a loop or anywhere else. HEAD is an allocation at normal depth.',
+        'That swmm5-kw\'s loop results are fit for design. Where a pipe in a loop would run backwards, the answer is wrong in direction, not just in size.',
+        'How the three split rules compare across real networks. Five small test networks were compared with dynamic wave. The corpus contains one model the extension changes.',
+        'Anything about dynamic wave, which the extension never touches.',
+        'A Windows build. The engine was built and gated on Linux (GCC 13, musl 1.2.4) and as WebAssembly (Clang 18, wasi-libc). EPA\'s optional `.def` export file does not list the two new functions.',
+        'A person\'s review of the C changes, line by line. The checks above are mechanical.'])
+
+    h2('How to use it')
+    p('**In this page.** Pick a test network or drop in your own `.inp`, choose a rule, and press Run. The page runs stock EPA 5.2.4, swmm5-kw and a dynamic-wave reference, and shows whether stock refused the model, how each split junction shared its water, and every link\'s peak flow side by side. The Verify tab runs the gates in your browser.')
+    p('**On your own machine.** `tools/build.sh` builds the extended engine as `kwswmm`, and stock 5.2.4 beside it. Run `KWSPLIT=1 KWLOOP=1 build/kw/kwswmm model.inp model.rpt model.out`. `KWSPLIT` takes 1 for HEAD, 2 for CAPACITY, 3 for AREA; unset means stock. EPA\'s own CMake build also works on this tree and gives `runswmm` and `libswmm5`, which behave as stock until a program calls `swmm_setKwOptions`.')
+    p('**In another app.** `wasm/swmm524kw.wasm` with `wasm/kwengine.js` and `wasm/wasi-shim.iife.js` runs anywhere a browser or Node runs, with no compiler. For a SWMM5 tree of your own, apply `patch/swmm524-kw.patch`, then run the gates before calling it the same engine.')
+
+    h2('AI use')
+    p('This engine, its tests, this page and this essay were made with Claude, Anthropic\'s AI model, under the direction of Robert (Bob) Dickinson, who asked for kinematic wave and steady flow that run loops and bifurcations, asked for the AREA rule first, chose to keep the work in its own repository, and supplies the model corpus. The engine was written on 29 September 2026; the repository, the corpus gate, this page and the essay on 29 October 2026, with Claude Opus 5.5. Claude designed and wrote the C changes, the test networks, the drivers, the gates, the WebAssembly builds and the JavaScript that runs them, the figures and this text. The checks are mechanical: byte comparison against stock 5.2.4 built from EPA\'s tag, on the shipped networks and the corpus, and the wasm against native builds. Claude also made the September errors this essay corrects, about the relief pipe and the continuity sweep. No person has yet reviewed the C changes line by line.')
+    return B
+
+
+# ------------------------------------------------------------------ rendering
+def inline_html(t):
+    t = html.escape(t, quote=False)
+    t = re.sub(r'`([^`]+)`', r'<code>\1</code>', t)
+    t = re.sub(r'\*\*([^*]+)\*\*', r'<b>\1</b>', t)
+    t = re.sub(r'\*([^*]+)\*', r'<i>\1</i>', t)
+    return t
+
+
+def runs(t):
+    """[(text, {'b':..,'i':..,'code':..})] for the docx builder."""
+    out = []
+    for part in re.split(r'(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)', t):
+        if not part: continue
+        if part.startswith('`'): out.append([part[1:-1], {'code': True}])
+        elif part.startswith('**'): out.append([part[2:-2], {'b': True}])
+        elif part.startswith('*'): out.append([part[1:-1], {'i': True}])
+        else: out.append([part, {}])
+    return out
+
+
+def to_html(B, figs, P):
+    h = []; n = 0
+    for b in B:
+        k = b[0]
+        if k == 'h1': h.append(f'<h1>{inline_html(b[1])}</h1>')
+        elif k == 'deck': h.append(f'<p class="deck">{inline_html(b[1])}</p>')
+        elif k == 'h2': h.append(f'<h2>{inline_html(b[1])}</h2>')
+        elif k == 'p': h.append(f'<p>{inline_html(b[1])}</p>')
+        elif k == 'pre': h.append(f'<pre class="code">{html.escape(b[1])}</pre>')
+        elif k == 'ul': h.append('<ul>' + ''.join(f'<li>{inline_html(i)}</li>' for i in b[1]) + '</ul>')
+        elif k == 'box': h.append(f'<div class="box {b[1]}"><p>{inline_html(b[2])}</p></div>')
+        elif k == 'fig':
+            n += 1
+            h.append(f'<figure><div class="chartbox">{figs[b[1]](P)}</div><figcaption><b>Figure {n}.</b> {inline_html(b[2])}</figcaption></figure>')
+    return '\n'.join(h)
+
+
+def to_json(B):
+    out = []; n = 0
+    for b in B:
+        k = b[0]
+        if k in ('h1', 'h2', 'deck', 'pre'): out.append(dict(kind=k, text=b[1]))
+        elif k == 'p': out.append(dict(kind='p', runs=runs(b[1])))
+        elif k == 'ul': out.append(dict(kind='ul', items=[runs(i) for i in b[1]]))
+        elif k == 'box': out.append(dict(kind='box', runs=runs(b[2])))
+        elif k == 'fig':
+            n += 1; out.append(dict(kind='fig', key=b[1], n=n, caption=runs(b[2])))
+    return out
+
+
+def load_data():
+    D = json.load(open(os.path.join(RES, 'figdata.json')))
+    sp = os.path.join(RES, 'summary.json')
+    S = json.load(open(sp)) if os.path.exists(sp) else {}
+    rows = []
+    for p in S.get('passes', []):
+        lab = {'gate_kwsf.jsonl': 'KINWAVE, STEADY', 'gate_dw.jsonl': 'DYNWAVE', 'gate_iface.jsonl': 'Interface-file models'}[p['file']]
+        txt = f"{p['identical']:,} identical" + (f" · {p['census_ran']} run" if p['census_ran'] else '') + (f" · {p.get('crash_same', 0)} crash as stock" if p.get('crash_same') else '') + (f" · {p['inconclusive']} inconclusive" if p['inconclusive'] else '') + (f" · {p['different']} DIFFERENT" if p['different'] else '')
+        rows.append(dict(label=lab, n=p['models'], same=p['identical'], ran=p['census_ran'] + p['census_error'], inc=p['inconclusive'] + p.get('crash_same', 0), diff=p['different'], text=txt))
+    D['corpus_fig'] = rows
+    return D, S
