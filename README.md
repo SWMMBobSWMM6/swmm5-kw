@@ -54,17 +54,18 @@ Written by `tools/update_readme.py` from `results/`; the app's Verify tab and th
 | Reproducible build: swmm524.wasm rebuilt by tools/build.sh | byte-identical to wasm/swmm524.wasm | pass |
 | Patch: patch/swmm524-kw.patch on pristine EPA v5.2.4 reproduces src/ | src/ = pristine v5.2.4 + patch, byte for byte (7 files) | pass |
 
-**Corpus** ([SWMMBobSWMM6/1729-SWMM5-Models-2030](https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030) at 9ee63bd, the 3,759-model set swmm5-rust was gated on; `tools/corpus_gate.py`, 1,785 engine runs):
+**Corpus** ([SWMMBobSWMM6/1729-SWMM5-Models-2030](https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030) at 9ee63bd, the 3,759-model set swmm5-rust was gated on; `tools/corpus_gate.py`, 8,747 engine runs):
 
 | Pass | Modes run through swmm5-kw | Models | Identical to stock | Refused by stock, run by swmm5-kw | Stock crashes, same crash | Different | Inconclusive |
 |---|---|---|---|---|---|---|---|
 | KINWAVE and STEADY | 00, 11, 21, 31 | 357 | 352 | 1 | 3 | 0 | 1 |
-| **All** | | **357** | **352** | **1** | **3** | **0** | **1** |
+| DYNWAVE (and unrecognised routing) | 11 | 3,239 | 3,226 | 0 | 7 | 0 | 6 |
+| Models sharing interface files, run one at a time | 00, 11 | 163 | 159 | 0 | 0 | 0 | 4 |
+| **All** | | **3,759** | **3,737** | **1** | **10** | **0** | **11** |
 
 "Identical" means the `.out` file byte for byte and the `.rpt` byte for byte after removing the three wall-clock lines, in every mode listed. Modes: 00 extension off, 11 HEAD + loops, 21 CAPACITY + loops, 31 AREA + loops. "Stock crashes": OpenSWMM 2026 code-review decks on which EPA 5.2.4 itself dies with a signal; swmm5-kw dies at the same point with the same partial output.
 Refused by stock and run by swmm5-kw: `NCIMM_ROUTING/water.inp` (stock ERROR 131; swmm5-kw routing continuity -2.167% with HEAD).
-*Still running: the DYNWAVE pass, the interface-file pass. This table is updated when they finish.*
-Inconclusive: `OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-huge/IO-02_end-time-1e30.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical).
+Inconclusive: `OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-huge/IO-02_end-time-1e30.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `NCIMM_Training/EPA-5.1.013-InfilTrench/infiltration5_longerm.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `SWMM5_NCIMM/1220_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/4190_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/669_Subs_4500_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/indy_small.inp` (stock run hit the time cap); `Simon_EPA/Session38_100_Control_Rules.inp` (stock run hit the time cap); `z1000Years/1000yearSimulation_Case6.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case1.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case0.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case0_wq.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical).
 
 **Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):
 
