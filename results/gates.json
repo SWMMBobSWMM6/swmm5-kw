@@ -1,6 +1,6 @@
 {
- "date": "2026-10-29",
- "build": "/home/claude/work/kwb2",
+ "date": "2026-10-31",
+ "build": "/home/claude/kwbuild/fix",
  "gates": [
   [
    "Null effect: networks with nothing to split or loop, modes 0/0, 1/1, 2/1, 3/1 against stock",
@@ -9,27 +9,32 @@
   ],
   [
    "Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network",
-   "10 cases (ERROR 133: 6, ERROR 131: 4), KINWAVE and STEADY, all as expected",
+   "14 cases (ERROR 133: 10, ERROR 131: 4), KINWAVE and STEADY, all as expected",
    true
   ],
   [
    "Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops",
-   "5 of 5 networks: link peaks and continuity identical",
+   "7 of 7 networks: link peaks and continuity identical",
    true
   ],
   [
    "Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules",
-   "7.1e-15 cfs over 15 runs",
+   "6e-14 cfs over 21 runs",
+   true
+  ],
+  [
+   "Fan-out: 64, 65, 66 and 130 outlets from one junction, one capped by a flow limit and moved through the list, three rules, KINWAVE and STEADY",
+   "78 runs, 0 failures: largest allocation gap 1.2e-13 cfs, no flooding, outlet peaks unchanged by position (largest change 0 cfs)",
    true
   ],
   [
    "WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode",
-   "52 of 52 .out files byte-identical",
+   "60 of 60 .out files byte-identical",
    true
   ],
   [
    "WebAssembly: swmm524.wasm (stock) against native musl stock",
-   "13 of 13 .out files byte-identical",
+   "15 of 15 .out files byte-identical",
    true
   ],
   [
@@ -51,13 +56,13 @@
  "engines": [
   [
    "kwswmm",
-   541240,
-   "9e4b5f68f3cea2d23ad144465382bd8cab809da2ebe039a2aaa0a39339972201"
+   541272,
+   "bf7bd4b294cac8b50a00641816c14594e6e2bd5084cd4033885a7f11075cabcb"
   ],
   [
    "kwswmm-musl",
-   534448,
-   "c280e5c8a37da717ebe9b7c2b5808412c50036c6a107ac004354fec4d796c057"
+   534480,
+   "aea108f7b681ec6b766be73248f752a4360c3745b5a7f126b45002d87397eff0"
   ],
   [
    "stockseq",
@@ -76,8 +81,8 @@
   ],
   [
    "swmm524kw.wasm",
-   853130,
-   "e62aa56968febce741d56de2f6e73660ead09fa700bad5071117b962b4939918"
+   853296,
+   "640115c4d1fff34cb586c5702c5199678cfdc2ba433b58ec09cfcafa1c2fd096"
   ]
  ]
 }

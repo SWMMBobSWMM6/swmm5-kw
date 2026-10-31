@@ -4,7 +4,7 @@ Every number in the README, the app and the essay is read from these files.
 
 | File | Written by | What |
 |---|---|---|
-| `gates.json`, `gates.log` | `tools/gates.py` | every gate on the 13 networks in `models/`, the build's binaries with their SHA-256 |
+| `gates.json`, `gates.log` | `tools/gates.py` | every gate on the 13 networks in `models/` and the two in `tests/fanout/`, the build's binaries with their SHA-256 |
 | `corpus_set.txt` | (from swmm5-rust) | the 3,759 corpus models, relative to the corpus root |
 | `interface_models.txt` | (from swmm5-rust) | corpus models that read or write interface files; run one at a time |
 | `gate_kwsf.jsonl`, `gate_kwsf.log` | `tools/corpus_gate.py` | KINWAVE and STEADY models, modes 00, 11, 21, 31 |
@@ -16,6 +16,9 @@ Every number in the README, the app and the essay is read from these files.
 | `head_fix_check.json` | `tools/head_fix_check.py` | the proposed HEAD overshoot fix against the engine as it stands, on every network the what-if routed |
 | `summary.json` | `tools/summarize.py` | the three passes classified: identical, refused by stock and run, stock crashes, different, inconclusive |
 | `figdata.json` | `tools/figure_runs.py` | the runs behind every chart in the essay and the flat-channel table (musl builds) |
+| `fanout_fig.json` | `tools/fanout_figure.py` | 65 outlets, AREA, STEADY: allocation gap and junction flooding with the capped outlet at each position, v1.0 and v1.1 builds |
+| `outlet_census.json` | `tools/outlet_census.py` | the most outgoing links any node has in each corpus model; the one node over 64 |
+| `app_review2.json` | `tests/app/review2.test.js` | the last passing run of the app checks from the second outside review |
 
 Each corpus record: `inp`, `routing` (from the file; absent means KINWAVE), `rc_stock`,
 `t_stock`, `out_sha` (first 16 hex of the stock `.out`), `stock_errors`, `census` (stock stopped

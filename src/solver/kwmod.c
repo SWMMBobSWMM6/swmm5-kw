@@ -38,6 +38,9 @@ static int*    OutStart   = NULL; // CSR of conduit outlets per node
 static int*    OutList    = NULL;
 static long*   AllocStamp = NULL; // per node: sweep stamp of cached allocation
 static double* AllocQ     = NULL; // per link: allocated inflow (cfs)
+static char*   AllocFull  = NULL; // per link: outlet already at its cap during water-filling
+                                  // (v1.0 kept these flags in a char[64] per junction, so a capped
+                                  // outlet listed 65th or later was never marked full; see allocate)
 
 // --- run statistics (exposed through swmm_getKwStats)
 static double StatAllocs, StatMaxImbalance, StatLoopSteps, StatSweeps,
@@ -80,7 +83,8 @@ int kwmod_init(void)
     OutList    = (int*)   calloc(Nobjects[LINK] + 1, sizeof(int));
     AllocQ     = (double*)calloc(Nobjects[LINK] + 1, sizeof(double));
     KwBackEdge = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
-    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge )
+    AllocFull  = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
+    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge || !AllocFull )
         return 0;
     for ( j = 0; j < Nobjects[LINK]; j++ ) OutStart[Link[j].node1 + 1]++;
     for ( i = 0; i < n; i++ ) OutStart[i + 1] += OutStart[i];
@@ -102,7 +106,7 @@ int kwmod_init(void)
 void kwmod_close(void)
 {
     FREE(SplitNode); FREE(OutStart); FREE(OutList);
-    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge);
+    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge); FREE(AllocFull);
 }
 
 int kwmod_canSplit(int node)
@@ -212,11 +216,13 @@ static void allocate(int node)
     }
     else
     {
-        // --- proportional (CAPACITY or AREA) with water-filling at the caps
-        char done[64];
+        // --- proportional (CAPACITY or AREA) with water-filling at the caps.
+        //     Each pass shares what is left among the outlets not yet full; an
+        //     outlet whose share exceeds its cap takes the cap and is marked full.
+        //     The full flags are per link, so any number of outlets is handled.
         int  useArea = (KwSplitMode == 3);
         remaining = qT;
-        memset(done, 0, sizeof(done));
+        for ( m = OutStart[node]; m < OutStart[node + 1]; m++ ) AllocFull[OutList[m]] = 0;
         if ( useArea )
         {
             wSum = 0.0;
@@ -234,9 +240,8 @@ static void allocate(int node)
             wSum = 0.0;
             for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
             {
-                int idx = m - OutStart[node];
                 L = OutList[m];
-                if ( idx < 64 && done[idx] ) continue;
+                if ( AllocFull[L] ) continue;
                 w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
                             : branchCap(L);
                 if ( branchCap(L) <= 0.0 ) w = 0.0;
@@ -245,24 +250,23 @@ static void allocate(int node)
             if ( wSum <= 0.0 ) break;
             for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
             {
-                int idx = m - OutStart[node];
                 double cap;
                 L = OutList[m];
-                if ( idx < 64 && done[idx] ) continue;
+                if ( AllocFull[L] ) continue;
                 w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
                             : branchCap(L);
                 cap = branchCap(L);
                 if ( cap <= 0.0 ) w = 0.0;
                 AllocQ[L] = remaining * w / wSum;
-                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }
+                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; AllocFull[L] = 1; capped = 1; }
             }
             if ( !capped ) break;
-            // --- recompute what is left for the uncapped branches
+            // --- recompute what is left for the outlets not yet full
             remaining = qT;
             for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
             {
-                int idx = m - OutStart[node];
-                if ( idx < 64 && done[idx] ) remaining -= AllocQ[OutList[m]];
+                L = OutList[m];
+                if ( AllocFull[L] ) remaining -= AllocQ[L];
             }
         }
     }

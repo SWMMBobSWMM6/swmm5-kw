@@ -17,9 +17,11 @@ report differences that are not the extension's.
 |---|---|---|---|
 | 1 | **Off means stock.** With both options off (the default) the bytes are stock 5.2.4, ERROR 133 and 131 included | Stock refusals reproduced with modes 0/0; corpus mode 00 identical on every KINWAVE/STEADY model | `tools/gates.py`, `tools/corpus_gate.py --modes 00,...` |
 | 2 | **On changes nothing it has no business changing.** A network with nothing to split or loop gives stock's bytes in every mode | Null gate on the tree networks; corpus modes 11, 21, 31 on every model stock runs | `tools/null_gate.sh`, `tools/corpus_gate.py` |
-| 3 | **No order dependence.** Shuffling `[JUNCTIONS]` and `[CONDUITS]` changes nothing | Three seeded shuffles of each split and loop network | `tools/order_check.py` |
+| 3 | **No order dependence.** Shuffling `[JUNCTIONS]` and `[CONDUITS]` changes nothing. v1.0 broke this past 64 outlets (CAPACITY and AREA; fixed in v1.1) | Three seeded shuffles of each split and loop network; the fan-out gate moves one capped outlet through positions 1, 64, 65, 66, 129 and 130 of junctions with 64 to 130 outlets, three rules, KINWAVE and STEADY, and requires every outlet's peak (from the `.out`), no flooding and an allocation gap under 1e-9 cfs | `tools/order_check.py`, `tools/fanout_check.py` |
 | 4 | **Conservation.** An allocation never creates water; a loop's leftover is booked. Holds to rounding on every shipped network; broken by up to 1.48e-6 cfs on 20 corpus networks switched to KINWAVE (HEAD overshoot, `docs/DESIGN.md` "Open defect"; fix proposed, not applied) | Largest gap between flow allocated and flow available, over every step and rule (`swmm_getKwStats` v[3]); `tools/head_fix_check.py` for the fix | `tools/gates.py`, `tools/head_fix_check.py` |
 | 5 | **One engine, one answer.** The wasm engine is the same engine | `.out` bytes of `swmm524kw.wasm` against native musl, every network, every mode; the same for the stock wasm | `tools/wasm_check.js` |
+
+`tests/fanout/` holds the second review's two networks (65 outlets, capped outlet first and 65th); `tools/gates.py` runs them with `models/` through every gate above.
 
 Plus two reproducibility checks: `tools/build.sh` rebuilds both `.wasm` files byte for byte, and
 `tools/check_patch.sh` confirms that `patch/swmm524-kw.patch` applied to pristine v5.2.4
@@ -116,3 +118,27 @@ The C changes have not been reviewed line by line by anyone but their author (Cl
 have run on one machine (Ubuntu 24.04, GCC 13.3, musl 1.2.4, Clang 18) and in Node 22 and
 headless Chromium; not on Windows, not with MSVC, and not with EPA's optional `.def` export
 build, which does not list the two new functions.
+
+## The second outside review (31 October 2026, v1.0)
+
+It graded v1.0 82/100 and found one engine fault and four in the app. All five were reproduced
+before any change, and each now has a check that fails on v1.0 and passes on v1.1:
+
+| Finding | Check | On v1.0 | On v1.1 |
+|---|---|---|---|
+| A capped outlet listed 65th or later misallocated (CAPACITY, AREA) | `tools/fanout_check.py`, 78 runs | 12 failures, gap up to 0.0399 cfs, flooding | 0 failures, gap 1.2e-13 cfs |
+| Export named after the selected model, holding the previous run | `tests/app/review2.test.js` (2 checks) | fail | pass |
+| A stopped run got the success headline | `tests/app/review2.test.js` (4 checks) | fail | pass |
+| `-Infinity` peaks; reversed flow hidden by the signed maximum | `tests/app/review2.test.js` (3 checks) | fail | pass |
+| Samples plotted one report step early; last tick outside the chart | `tests/app/review2.test.js` (2 checks) | fail | pass |
+
+Run `node tests/app/review2.test.js` (Playwright with Chromium) against `dist/swmm5-kw.html`,
+or `--page=` an older build. `results/app_review2.json` records the last passing run.
+
+The corpus was not rerun through v1.1. `tools/outlet_census.py` (`results/outlet_census.json`)
+counted every node's outgoing links in all 3,759 corpus models: one node has more than 64, node
+`n` in `XPSWMM/CTIA_EXI.inp` (65 conduits from `n` to `n`, a conversion artefact), in a DYNWAVE
+model that stops on ERROR 131 or 115 when switched to KINWAVE; v1.0 and v1.1 write identical
+`.out` files for it. At 64 outlets or fewer v1.0 and v1.1 execute the same instructions, so no
+corpus record changes. On `models/`, v1.0 and v1.1 give identical `.out` files in modes 00, 11,
+21, 31, 20 and 30 (78 of 78).

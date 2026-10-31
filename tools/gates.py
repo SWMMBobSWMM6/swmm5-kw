@@ -9,7 +9,7 @@ stockseq-musl. Needs node for the WebAssembly gate.
 import json, os, re, subprocess, sys, tempfile, hashlib, glob, datetime
 R = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 B = os.path.abspath(sys.argv[1]); M = os.path.join(R, 'models'); TOOLS = os.path.join(R, 'tools')
-models = sorted(glob.glob(os.path.join(M, '*.inp')))
+models = sorted(glob.glob(os.path.join(M, '*.inp'))) + sorted(glob.glob(os.path.join(R, 'tests', 'fanout', '*.inp')))  # + the 65-outlet review networks
 log = []; gates = []
 def sh(cmd, **kw):
     p = subprocess.run(cmd, capture_output=True, text=True, **kw); log.append('$ ' + ' '.join(cmd) + '\n' + p.stdout + p.stderr); return p
@@ -59,6 +59,12 @@ for f in split_loop:
         m = re.search(r'maxImb=(\S+)', p.stdout); mx = max(mx, float(m.group(1)))
 gates.append(['Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules',
               f'{mx:.2g} cfs over {len(split_loop) * 3} runs', mx < 1e-9])
+
+# 4b. fan-out: many outlets, one capped (second review of v1.0, 2026-10-31)
+p = sh([sys.executable, os.path.join(TOOLS, 'fanout_check.py'), os.path.join(B, 'kwswmm')])
+m = re.search(r'fan-out gate: (\d+) runs, (\d+) failures, largest allocation gap (\S+) cfs, largest change in any outlet peak with the capped outlet moved (\S+) cfs', p.stdout)
+gates.append(['Fan-out: 64, 65, 66 and 130 outlets from one junction, one capped by a flow limit and moved through the list, three rules, KINWAVE and STEADY',
+              f'{m.group(1)} runs, {m.group(2)} failures: largest allocation gap {float(m.group(3)):.2g} cfs, no flooding, outlet peaks unchanged by position (largest change {float(m.group(4)):.2g} cfs)', m.group(2) == '0'])
 
 # 5. WebAssembly against native musl
 p = sh(['node', os.path.join(TOOLS, 'wasm_check.js'), B] + models)

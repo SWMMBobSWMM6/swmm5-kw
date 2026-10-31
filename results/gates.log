@@ -1,206 +1,248 @@
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=26.66
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/braid_dynwave.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/chain30.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/chain30.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/chain34.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/chain34.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/chain40.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/chain40.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=28.62
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/diamond_dynwave.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=1 back=1 allocs=9868 maxImb=8.88e-16 loopSteps=4320 meanSweeps=2.284 maxSweeps=60 nonConv=73 maxRes=0.363 headIt=22.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=1 back=1 allocs=6708 maxImb=3.55e-15 loopSteps=4320 meanSweeps=1.553 maxSweeps=60 nonConv=5 maxRes=0.00189 headIt=31.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loopactive_dynwave.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=27.82
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/split_dynwave.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/storage.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/storage.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ bash /home/claude/swmm5-kw/tools/null_gate.sh /home/claude/work/kwb2 /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
+rc=0 split=1 back=0 allocs=4320 maxImb=4.09e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=29.06
+
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp /tmp/tmph4thqu17/a.rpt /tmp/tmph4thqu17/a.out
+rc=0 split=1 back=0 allocs=4320 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=29.06
+
+$ bash /home/claude/swmm5-kw/tools/null_gate.sh /home/claude/kwbuild/fix /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
 null gate: 32 runs, 0 differences
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=26.66
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=21.27
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=28.62
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=22.10
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=1 allocs=9868 maxImb=8.88e-16 loopSteps=4320 meanSweeps=2.284 maxSweeps=60 nonConv=73 maxRes=0.363 headIt=22.11
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=1 allocs=4565 maxImb=8.88e-16 loopSteps=4320 meanSweeps=1.057 maxSweeps=60 nonConv=3 maxRes=0.0612 headIt=4.50
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=1 allocs=6708 maxImb=3.55e-15 loopSteps=4320 meanSweeps=1.553 maxSweeps=60 nonConv=5 maxRes=0.00189 headIt=31.11
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=1 allocs=5282 maxImb=7.11e-15 loopSteps=4320 meanSweeps=1.223 maxSweeps=4 nonConv=0 maxRes=1.03e-05 headIt=23.84
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=27.82
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=21.24
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=0 split=1 back=0 allocs=4320 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=31.03
+
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=0 split=1 back=0 allocs=4320 maxImb=4.09e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=29.06
+
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=0 split=1 back=0 allocs=4320 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=31.03
+
+$ /home/claude/kwbuild/fix/stockseq /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /tmp/tmph4thqu17/r.inp /tmp/tmph4thqu17/r.rpt /tmp/tmph4thqu17/r.out
+rc=0 split=1 back=0 allocs=4320 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=29.06
 
 braid.inp KINWAVE: stock [133], off [133], on runs
 braid.inp STEADY: stock [133], off [133], on runs
@@ -212,62 +254,130 @@ loopactive.inp KINWAVE: stock [131], off [131], on runs
 loopactive.inp STEADY: stock [131], off [131], on runs
 split.inp KINWAVE: stock [133], off [133], on runs
 split.inp STEADY: stock [133], off [133], on runs
-$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/order_check.py /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/split.inp
+fanout65_limited_1.inp KINWAVE: stock [133], off [133], on runs
+fanout65_limited_1.inp STEADY: stock [133], off [133], on runs
+fanout65_limited_65.inp KINWAVE: stock [133], off [133], on runs
+fanout65_limited_65.inp STEADY: stock [133], off [133], on runs
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/order_check.py /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/split.inp /home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp /home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp
 /home/claude/swmm5-kw/models/braid.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/diamond.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/loop.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/loopactive.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/split.inp renumberings identical to original: 3 of 3
+/home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp renumberings identical to original: 3 of 3
+/home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp renumberings identical to original: 3 of 3
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=26.66
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=2 back=0 allocs=8640 maxImb=1.78e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=28.62
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=1 allocs=9868 maxImb=8.88e-16 loopSteps=4320 meanSweeps=2.284 maxSweeps=60 nonConv=73 maxRes=0.363 headIt=22.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=1 allocs=18435 maxImb=1.78e-15 loopSteps=4320 meanSweeps=4.267 maxSweeps=60 nonConv=158 maxRes=0.281 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=1 allocs=14113 maxImb=1.78e-15 loopSteps=4320 meanSweeps=3.267 maxSweeps=60 nonConv=71 maxRes=0.34 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=1 allocs=6708 maxImb=3.55e-15 loopSteps=4320 meanSweeps=1.553 maxSweeps=60 nonConv=5 maxRes=0.00189 headIt=31.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=1 allocs=10769 maxImb=7.11e-15 loopSteps=4320 meanSweeps=2.493 maxSweeps=60 nonConv=26 maxRes=0.00337 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=1 allocs=11306 maxImb=7.11e-15 loopSteps=4320 meanSweeps=2.617 maxSweeps=60 nonConv=20 maxRes=0.278 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=27.82
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ node /home/claude/swmm5-kw/tools/wasm_check.js /home/claude/work/kwb2 /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
-swmm524kw.wasm vs native musl: 52/52 byte-identical
-swmm524.wasm (stock) vs native musl: 13/13 byte-identical
-modes off vs on identical in 8/13 models (expect exactly the models with nothing to split or loop)
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
+rc=0 split=1 back=0 allocs=4320 maxImb=4.09e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=29.06
+
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
+rc=0 split=1 back=0 allocs=4320 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
+rc=0 split=1 back=0 allocs=4320 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
+rc=0 split=1 back=0 allocs=4320 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=29.06
+
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
+rc=0 split=1 back=0 allocs=4320 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /home/claude/kwbuild/fix/kwswmm /home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp /tmp/tmph4thqu17/c.rpt /tmp/tmph4thqu17/c.out
+rc=0 split=1 back=0 allocs=4320 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/fanout_check.py /home/claude/kwbuild/fix/kwswmm
+n= 64 STEADY  split=2: capped outlet at positions (1, 64): ok
+n= 64 STEADY  split=3: capped outlet at positions (1, 64): ok
+n= 64 STEADY  split=1: capped outlet at positions (1, 64): ok
+n= 64 KINWAVE split=2: capped outlet at positions (1, 64): ok
+n= 64 KINWAVE split=3: capped outlet at positions (1, 64): ok
+n= 64 KINWAVE split=1: capped outlet at positions (1, 64): ok
+n= 65 STEADY  split=2: capped outlet at positions (1, 64, 65): ok
+n= 65 STEADY  split=3: capped outlet at positions (1, 64, 65): ok
+n= 65 STEADY  split=1: capped outlet at positions (1, 64, 65): ok
+n= 65 KINWAVE split=2: capped outlet at positions (1, 64, 65): ok
+n= 65 KINWAVE split=3: capped outlet at positions (1, 64, 65): ok
+n= 65 KINWAVE split=1: capped outlet at positions (1, 64, 65): ok
+n= 66 STEADY  split=2: capped outlet at positions (1, 65, 66): ok
+n= 66 STEADY  split=3: capped outlet at positions (1, 65, 66): ok
+n= 66 STEADY  split=1: capped outlet at positions (1, 65, 66): ok
+n= 66 KINWAVE split=2: capped outlet at positions (1, 65, 66): ok
+n= 66 KINWAVE split=3: capped outlet at positions (1, 65, 66): ok
+n= 66 KINWAVE split=1: capped outlet at positions (1, 65, 66): ok
+n=130 STEADY  split=2: capped outlet at positions (1, 64, 65, 129, 130): ok
+n=130 STEADY  split=3: capped outlet at positions (1, 64, 65, 129, 130): ok
+n=130 STEADY  split=1: capped outlet at positions (1, 64, 65, 129, 130): ok
+n=130 KINWAVE split=2: capped outlet at positions (1, 64, 65, 129, 130): ok
+n=130 KINWAVE split=3: capped outlet at positions (1, 64, 65, 129, 130): ok
+n=130 KINWAVE split=1: capped outlet at positions (1, 64, 65, 129, 130): ok
+fan-out gate: 78 runs, 0 failures, largest allocation gap 1.17e-13 cfs, largest change in any outlet peak with the capped outlet moved 0 cfs
+
+$ node /home/claude/swmm5-kw/tools/wasm_check.js /home/claude/kwbuild/fix /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp /home/claude/swmm5-kw/tests/fanout/fanout65_limited_1.inp /home/claude/swmm5-kw/tests/fanout/fanout65_limited_65.inp
+swmm524kw.wasm vs native musl: 60/60 byte-identical
+swmm524.wasm (stock) vs native musl: 15/15 byte-identical
+modes off vs on identical in 8/15 models (expect exactly the models with nothing to split or loop)
 
 $ bash /home/claude/swmm5-kw/tools/check_patch.sh
 src/ = pristine v5.2.4 + patch, byte for byte (7 files)
+Note: switching to '7952ca837988b1c32f791812eccc9fd64547e093'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+

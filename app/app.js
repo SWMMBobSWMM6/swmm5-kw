@@ -8,7 +8,7 @@ const RESULTS = JSON.parse($('#results-json').textContent);
 const MOD = { kw: null, stock: null };
 const RULES = { 0: 'off', 1: 'HEAD', 2: 'CAPACITY', 3: 'AREA' };
 const UNITS = ['CFS', 'GPM', 'MGD', 'CMS', 'LPS', 'MLD'];
-let CUR = null, RUN = null, STOP = false, BUSY = false, RPTSEL = 'kw';
+let CUR = null, RUN = null, STOP = false, BUSY = false, RPTSEL = 'kw', RUNSEQ = 0;
 
 function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
 function fmt(x, d = 3) { if (x == null || !isFinite(x)) return '–'; const a = Math.abs(x); if (a !== 0 && (a < 1e-3 || a >= 1e6)) return x.toExponential(2); return x.toFixed(d); }
@@ -81,6 +81,18 @@ function durationDays(inp) {
   const a = d(o.START_DATE, o.START_TIME), b = d(o.END_DATE || o.START_DATE, o.END_TIME);
   return (a != null && b != null && b > a) ? (b - a) / 864e5 : 0;
 }
+function reportPeriods(inp) {   // reporting periods a complete run writes: (END - REPORT_START) / REPORT_STEP
+  const o = {}; let sec = '';
+  for (const raw of inp.split(/\r?\n/)) {
+    const s = raw.split(';')[0].trim(); if (!s) continue;
+    if (s[0] === '[') { sec = s.toUpperCase(); continue; }
+    if (sec === '[OPTIONS]') { const p = s.split(/\s+/); if (p.length > 1) o[p[0].toUpperCase()] = p[1]; }
+  }
+  const d = (ds, ts) => { const m = /^(\d+)\/(\d+)\/(\d+)$/.exec(ds || ''); if (!m) return null; const t = (ts || '0:0:0').split(':').map(Number); return Date.UTC(+m[3], +m[1] - 1, +m[2], t[0] || 0, t[1] || 0, t[2] || 0); };
+  const st = (ts, def) => { if (!ts) return def; const t = ts.split(':').map(Number); return (t[0] || 0) * 3600 + (t[1] || 0) * 60 + (t[2] || 0); };
+  const a = d(o.REPORT_START_DATE || o.START_DATE, o.REPORT_START_TIME || o.START_TIME), b = d(o.END_DATE || o.START_DATE, o.END_TIME), step = st(o.REPORT_STEP, 900);
+  return (a != null && b != null && b > a && step > 0) ? Math.floor((b - a) / 1000 / step + 1e-9) : null;
+}
 function topology(inp) {   // link -> [from, to, kind], from the five link sections
   const T = {}; let sec = '';
   const kinds = { '[CONDUITS]': 'conduit', '[PUMPS]': 'pump', '[ORIFICES]': 'orifice', '[WEIRS]': 'weir', '[OUTLETS]': 'outlet' };
@@ -113,7 +125,11 @@ function readOut(u8) {
   const start = dv.getFloat64(o, true); o += 8; const step = I(o);
   const rec = 8 + 4 * (nSub * nSV + nNode * nNV + nLink * nLV + nYV);
   const linkIx = new Map(links.map((id, i) => [id.toUpperCase(), i]));
-  return { dv, nSub, nNode, nLink, nPoll, flowUnits, subs, nodes, links, linkIx, nP, outPos, rec, nSV, nNV, nLV, nYV, start, step };
+  // the time of every reporting period, in hours from the report start, read from the records themselves:
+  // the first record is one report step after the start, not at it (v1.0 plotted sample p at p steps)
+  const hours = new Float64Array(nP);
+  for (let p = 0; p < nP; p++) hours[p] = (dv.getFloat64(outPos + p * rec, true) - start) * 24;
+  return { dv, nSub, nNode, nLink, nPoll, flowUnits, subs, nodes, links, linkIx, nP, outPos, rec, nSV, nNV, nLV, nYV, start, step, hours };
 }
 function linkSeries(O, li, v = 0) {
   const a = new Float32Array(O.nP), base = 8 + 4 * (O.nSub * O.nSV + O.nNode * O.nNV + li * O.nLV + v);
@@ -141,10 +157,28 @@ function readRpt(t) {
   return out;
 }
 
+/* ---------------------------------------------------------------- run identity
+   Every result on the page belongs to the run that made it. RUN.meta is fixed when the run starts;
+   when the inputs on the left no longer match it, the results are marked stale and the export keeps
+   the run's own name. (v1.0 named the CSV after whatever model was selected at export time.) */
+function inputs() {
+  return { name: CUR ? CUR.name : '', text: CUR ? CUR.text : '', routingSel: $('#routingSel').value, split: +$('#splitSel').value, loop: $('#loopOn').checked ? 1 : 0, dw: $('#dwOn').checked ? 1 : 0 };
+}
+const sameInputs = (a, b) => a && b && a.name === b.name && a.text === b.text && a.routingSel === b.routingSel && a.split === b.split && a.loop === b.loop && a.dw === b.dw;
+function runLabel(m) { return `${m.name}, ${m.routing}, split ${RULES[m.split]}, loops ${m.loop ? 'iterated' : 'off'}`; }
+function markStale() {
+  const n = $('#staleNote'); if (!n) return;
+  const stale = !!(RUN && !sameInputs(RUN.meta.inputs, inputs()));
+  n.classList.toggle('hidden', !stale); $('#results').classList.toggle('stale', stale);
+  if (stale) n.innerHTML = `<b>These results are from run ${RUN.meta.id}: ${esc(runLabel(RUN.meta))}.</b> The inputs have changed since${CUR && CUR.name !== RUN.meta.name ? ` (now ${esc(CUR.name)})` : ''}; run again to see results for them. Export CSV still saves run ${RUN.meta.id}, under its own name.`;
+}
+['#routingSel', '#splitSel', '#loopOn', '#dwOn'].forEach(id => $(id).addEventListener('change', markStale));
+
 /* ---------------------------------------------------------------- model picker */
 function setModel(name, text, desc) {
   CUR = { name, text };
   $('#modelDesc').textContent = desc || (name + ' · ' + routingOf(text) + ' · ' + text.length.toLocaleString() + ' characters');
+  markStale();
 }
 function fillModels() {
   const sel = $('#modelSel');
@@ -187,9 +221,10 @@ function engCards(st) {
       <div class="prog"><span style="background:${e.color};width:${Math.round(100 * (s.prog || 0))}%"></span></div><dl>${dl}</dl></div>`;
   }).join('');
 }
+function progressText(r) { return r.expected ? `${(r.O ? r.O.nP : 0).toLocaleString('en-US')} of ${r.expected.toLocaleString('en-US')} reporting periods` : `${(r.O ? r.O.nP : 0).toLocaleString('en-US')} reporting periods`; }
 function statusTag(r) {
   if (!r) return '<span class="tag panel">not run</span>';
-  if (r.stopped) return '<span class="tag hi">stopped</span>';
+  if (r.stopped) return `<span class="tag hi">stopped after ${progressText(r)}</span>`;
   if (r.R.errs.length) return `<span class="tag warn">ERROR ${r.R.errs.map(e => e.code).filter((c, i, a) => a.indexOf(c) === i).join(', ')}</span>`;
   if (r.rc) return `<span class="tag warn">code ${r.rc}</span>`;
   return '<span class="tag ok">ran</span>';
@@ -200,7 +235,8 @@ async function runOne(key, mod, inp, opts, total, st) {
   st[key] = Object.assign(st[key] || {}, { prog: 0.02 }); engCards(st);
   const r = await new KWEngine(mod).run(inp, opts, f => { st[key].prog = f; const b = $(`#eng-${key} .prog span`); if (b) b.style.width = Math.round(100 * f) + '%'; }, () => STOP);
   r.R = readRpt(r.rpt); r.O = r.out && r.out.length ? readOut(r.out) : null; r.sha = r.out && r.out.length ? await sha256(r.out) : null;
-  st[key].prog = 1; return r;
+  r.expected = reportPeriods(inp);
+  st[key].prog = r.stopped ? st[key].prog : 1; return r;
 }
 async function runAll() {
   if (BUSY || !CUR) return;
@@ -208,14 +244,17 @@ async function runAll() {
   const rmode = $('#routingSel').value, inp = rmode === 'file' ? CUR.text : setRouting(CUR.text, rmode);
   const routing = routingOf(inp), split = +$('#splitSel').value, loop = $('#loopOn').checked ? 1 : 0;
   const total = durationDays(inp), withDW = $('#dwOn').checked && routing !== 'DYNWAVE';
+  const meta = { id: ++RUNSEQ, name: CUR.name, routing, split, loop, withDW, inputs: inputs(), at: new Date().toISOString() };
   const st = { stock: { what: 'FLOW_ROUTING ' + routing }, kw: { what: `FLOW_ROUTING ${routing} · split ${RULES[split]} · loops ${loop ? 'iterated' : 'off'}` }, dw: { what: withDW ? ENG.dw.what : (routing === 'DYNWAVE' ? 'not needed: the file already routes DYNWAVE' : 'switched off') } };
   engCards(st); ['verdict', 'kwCard', 'chartCard', 'splitCard', 'linksCard', 'rptCard'].forEach(id => $('#' + id).classList.add('hidden'));
+  RUN = null; LINKROWS = []; markStale();
   try {
-    const out = { inp, routing, split, loop, topo: topology(inp) };
+    const out = { meta, inp, routing, split, loop, topo: topology(inp) };
     out.stock = await runOne('stock', MOD.stock, inp, {}, total, st);
     if (!STOP) out.kw = await runOne('kw', MOD.kw, inp, { split, loop, totalDays: total }, total, st);
     if (!STOP && withDW) out.dw = await runOne('dw', MOD.stock, setRouting(inp, 'DYNWAVE'), { totalDays: total }, total, st);
-    RUN = out; render(st);
+    out.wantDW = withDW;
+    RUN = out; render(st); markStale();
   } catch (e) {
     const v = $('#verdict'); v.className = 'box warn'; v.innerHTML = `<p><b>The run failed inside the engine host:</b> ${esc(e.message || e)}</p>`;
   } finally {
@@ -234,12 +273,23 @@ function render(st) {
     st[k].rows = [['Routing continuity', r.R.routing != null ? r.R.routing + ' %' : '–'], ['Runoff continuity', r.R.runoff != null ? r.R.runoff + ' %' : '–'], ['Run time', r.ms + ' ms'], ['.out SHA-256', r.sha ? r.sha.slice(0, 12) : 'no output']];
   }
   engCards(st);
-  // verdict
+  // verdict. Completion comes first: a run that was stopped part-way, or never started, decides nothing,
+  // and no comparison is drawn from it. (v1.0 judged a stopped swmm5-kw run by its missing error
+  // lines and could print "Stock EPA refuses this network; swmm5-kw routes it.")
   const v = $('#verdict'), s = R.stock, k = R.kw; v.classList.remove('hidden');
   const sCodes = s ? s.R.errs.map(e => e.code) : [], kCodes = k ? k.R.errs.map(e => e.code) : [];
   const refused = sCodes.some(c => c === 131 || c === 133);
-  if (!k) { v.className = 'box hi'; v.innerHTML = '<p><b>Stopped.</b> Run again to see the comparison.</p>'; }
-  else if (s && s.sha && k.sha && s.sha === k.sha && !k.R.kw) {
+  const NAMES = { stock: 'Stock EPA 5.2.4', kw: 'swmm5-kw', dw: 'The dynamic-wave reference' };
+  const missing = ['stock', 'kw'].concat(R.wantDW ? ['dw'] : []).filter(key => !R[key]);
+  const stopped = ['stock', 'kw', 'dw'].filter(key => R[key] && R[key].stopped);
+  R.complete = !stopped.length && !missing.length;
+  if (!R.complete) {
+    const said = stopped.map(key => `${NAMES[key]} was stopped after ${progressText(R[key])}.`)
+      .concat(missing.map(key => `${NAMES[key]} did not run.`));
+    v.className = 'box hi'; v.innerHTML = `<p><b>Stopped before the end.</b> ${esc(said.join(' '))}</p><p>No comparison is drawn from a partial run, and there is nothing to export. Run again and let all three finish.</p>`;
+    reports(); return;
+  }
+  if (s && s.sha && k.sha && s.sha === k.sha && !k.R.kw) {
     v.className = 'box ok'; v.innerHTML = `<p><b>Byte for byte the same as stock.</b> This network has nothing to split or loop, so swmm5-kw wrote exactly the <code>.out</code> stock EPA 5.2.4 wrote (SHA-256 <code>${s.sha.slice(0, 16)}…</code>). That is the extension's first promise: where it has no work, it does nothing.</p>`;
   } else if (refused && !kCodes.length) {
     const why = s.R.errs.filter(e => e.code === 131 || e.code === 133).map(e => `ERROR ${e.code}: ${esc(e.text)}`).join('<br>');
@@ -274,6 +324,16 @@ function render(st) {
   splitTable(); linksTable(); fillLinkSel(); drawChart(); reports();
 }
 
+/* Peak statistics of one series. null when the run wrote no series for the link (a refused run, a
+   link it never reached), so a missing value stays missing. (v1.0 started a signed maximum at
+   -Infinity, exported that for empty series, and showed 0 for a pipe that only ran backwards.) */
+function flowStats(run, id) {
+  const s = seriesOf(run, id); if (!s || !s.length) return null;
+  let max = -Infinity, min = Infinity; for (const x of s) { if (x > max) max = x; if (x < min) min = x; }
+  const abs = Math.max(Math.abs(max), Math.abs(min));
+  return { max, min, abs, reverses: min < -Math.max(1e-6, 1e-3 * abs) };
+}
+
 function seriesOf(run, id) { if (!run || !run.O) return null; const i = run.O.linkIx.get(id.toUpperCase()); return i == null ? null : linkSeries(run.O, i, 0); }
 function splitInfo() {
   const R = RUN, kw = R.kw && R.kw.R.kw; if (!kw || !kw.split.length) return [];
@@ -283,7 +343,7 @@ function splitInfo() {
 function shareAtPeak(run, outs) {
   const S = outs.map(id => seriesOf(run, id)); if (S.some(x => !x)) return null;
   let best = -1, bi = 0; for (let p = 0; p < S[0].length; p++) { let t = 0; for (const s of S) t += Math.max(0, s[p]); if (t > best) { best = t; bi = p; } }
-  return { total: best, share: S.map(s => best > 0 ? Math.max(0, s[bi]) / best : null), peaks: S.map(s => s.reduce((m, x) => Math.max(m, x), -Infinity)) };
+  return { total: best, share: S.map(s => best > 0 ? Math.max(0, s[bi]) / best : null), stats: outs.map(id => flowStats(run, id)) };
 }
 function splitTable() {
   const info = splitInfo(); if (!info.length) return;
@@ -291,21 +351,27 @@ function splitTable() {
   const R = RUN, rows = [];
   for (const { j, outs } of info.slice(0, 60)) {
     const a = shareAtPeak(R.kw, outs), b = R.dw ? shareAtPeak(R.dw, outs) : null;
-    outs.forEach((id, i) => rows.push(`<tr><td>${i ? '' : `<b>${esc(j)}</b>`}</td><td>${esc(id)}</td><td class="num">${a ? fmt(a.peaks[i], 2) : '–'}</td><td class="num">${b ? fmt(b.peaks[i], 2) : '–'}</td><td class="num">${a && a.share[i] != null ? (100 * a.share[i]).toFixed(1) + '%' : '–'}</td><td class="num">${b && b.share[i] != null ? (100 * b.share[i]).toFixed(1) + '%' : '–'}</td></tr>`));
+    const pk = (x, i) => { const q = x && x.stats[i]; return q ? fmt(q.abs, 2) + (q.reverses ? ` <span class="tag hi" title="runs backwards: minimum ${fmt(q.min, 3)}">reverses</span>` : '') : '–'; };
+    outs.forEach((id, i) => rows.push(`<tr><td>${i ? '' : `<b>${esc(j)}</b>`}</td><td>${esc(id)}</td><td class="num">${pk(a, i)}</td><td class="num">${pk(b, i)}</td><td class="num">${a && a.share[i] != null ? (100 * a.share[i]).toFixed(1) + '%' : '–'}</td><td class="num">${b && b.share[i] != null ? (100 * b.share[i]).toFixed(1) + '%' : '–'}</td></tr>`));
   }
   const fu = R.kw.O ? UNITS[R.kw.O.flowUnits] : '';
-  $('#splitTable').innerHTML = `<thead><tr><th>Junction</th><th>Outlet</th><th class="num">Peak, swmm5-kw (${fu})</th><th class="num">Peak, DYNWAVE</th><th class="num">Share, swmm5-kw</th><th class="num">Share, DYNWAVE</th></tr></thead><tbody>${rows.join('')}</tbody>`;
+  $('#splitTable').innerHTML = `<thead><tr><th>Junction</th><th>Outlet</th><th class="num">|Peak|, swmm5-kw (${fu})</th><th class="num">|Peak|, DYNWAVE</th><th class="num">Share, swmm5-kw</th><th class="num">Share, DYNWAVE</th></tr></thead><tbody>${rows.join('')}</tbody>`;
 }
 let LINKROWS = [];
 function linksTable() {
   const R = RUN, base = (R.kw && R.kw.O) || (R.stock && R.stock.O); if (!base) return;
   $('#linksCard').classList.remove('hidden');
-  const fu = UNITS[base.flowUnits], peak = (run, id) => { const s = seriesOf(run, id); if (!s) return null; let m = -Infinity; for (const x of s) if (x > m) m = x; return m; };
-  LINKROWS = base.links.map(id => { const k = peak(R.kw, id), d = peak(R.dw, id), s = peak(R.stock, id); return { id, k, d, s, diff: (k != null && d != null && Math.abs(d) > 1e-6) ? 100 * (k - d) / Math.abs(d) : null }; });
-  LINKROWS.sort((a, b) => Math.abs(b.diff ?? 0) - Math.abs(a.diff ?? 0));
-  $('#linksTable').innerHTML = `<thead><tr><th>Link</th><th class="num">swmm5-kw (${fu})</th><th class="num">DYNWAVE</th><th class="num">Stock, same routing</th><th class="num">swmm5-kw vs DYNWAVE</th></tr></thead><tbody>` +
-    LINKROWS.slice(0, 500).map(r => `<tr><td>${esc(r.id)}</td><td class="num">${fmt(r.k, 3)}</td><td class="num">${fmt(r.d, 3)}</td><td class="num">${fmt(r.s, 3)}</td><td class="num">${r.diff == null ? '–' : (r.diff > 0 ? '+' : '') + r.diff.toFixed(1) + '%'}</td></tr>`).join('') +
-    (LINKROWS.length > 500 ? `<tr><td colspan="5" class="muted">${LINKROWS.length - 500} more in the CSV export</td></tr>` : '') + '</tbody>';
+  const fu = UNITS[base.flowUnits];
+  LINKROWS = base.links.map(id => {
+    const k = flowStats(R.kw, id), d = flowStats(R.dw, id), s = flowStats(R.stock, id);
+    const rev = [['swmm5-kw', k], ['DYNWAVE', d], ['stock', s]].filter(x => x[1] && x[1].reverses).map(x => x[0]);
+    return { id, k, d, s, rev, diff: (k && d && d.abs > 1e-6) ? 100 * (k.abs - d.abs) / d.abs : null };
+  });
+  LINKROWS.sort((a, b) => (b.rev.length - a.rev.length) || (Math.abs(b.diff ?? 0) - Math.abs(a.diff ?? 0)));
+  const mx = q => q ? fmt(q.max, 3) : '–', mn = q => q ? (q.reverses ? `<b>${fmt(q.min, 3)}</b>` : fmt(q.min, 3)) : '–';
+  $('#linksTable').innerHTML = `<thead><tr><th>Link</th><th>Reverses in</th><th class="num">swmm5-kw max (${fu})</th><th class="num">swmm5-kw min</th><th class="num">DYNWAVE max</th><th class="num">DYNWAVE min</th><th class="num">Stock max</th><th class="num">Stock min</th><th class="num">|Peak| swmm5-kw vs DYNWAVE</th></tr></thead><tbody>` +
+    LINKROWS.slice(0, 500).map(r => `<tr><td>${esc(r.id)}</td><td>${r.rev.length ? r.rev.map(x => `<span class="tag hi">${x}</span>`).join(' ') : ''}</td><td class="num">${mx(r.k)}</td><td class="num">${mn(r.k)}</td><td class="num">${mx(r.d)}</td><td class="num">${mn(r.d)}</td><td class="num">${mx(r.s)}</td><td class="num">${mn(r.s)}</td><td class="num">${r.diff == null ? '–' : (r.diff > 0 ? '+' : '') + r.diff.toFixed(1) + '%'}</td></tr>`).join('') +
+    (LINKROWS.length > 500 ? `<tr><td colspan="9" class="muted">${LINKROWS.length - 500} more in the CSV export</td></tr>` : '') + '</tbody>';
 }
 function fillLinkSel() {
   const R = RUN, base = (R.kw && R.kw.O) || (R.stock && R.stock.O), sel = $('#linkSel'); if (!base) return;
@@ -328,14 +394,15 @@ function drawChart() {
   ids.forEach((id, i) => runs.forEach(([k, dash]) => { const s = seriesOf(R[k], id); if (!s) return; for (const x of s) { if (x > ymax) ymax = x; if (x < ymin) ymin = x; } series.push({ id, k, dash, s, c: pal[i % pal.length] }); }));
   if (ymax === ymin) ymax = ymin + 1;
   { const span = ymax - ymin, st = Math.pow(10, Math.floor(Math.log10(span / 5))), e = span / 5 / st, step = st * (e >= 5 ? 10 : e >= 2 ? 5 : e >= 1 ? 2 : 1); ymax = Math.ceil((ymax + 0.02 * span) / step) * step; if (ymin < 0) ymin = Math.floor((ymin - 0.02 * span) / step) * step; }
-  const nP = base.nP, hours = nP * base.step / 3600, X = p => L + (W - L - Rm) * p / Math.max(1, nP - 1), Y = y => T + (H - T - B) * (1 - (y - ymin) / (ymax - ymin));
+  // x is time: each sample at its recorded hour, the axis from the report start to the last sample
+  const tEnd = Math.max(...series.map(s => { const O = R[s.k].O; return O.hours[O.nP - 1] || 0; }), 1e-9);
+  const X = t => L + (W - L - Rm) * t / tEnd, Y = y => T + (H - T - B) * (1 - (y - ymin) / (ymax - ymin));
   const nice = (lo, hi, n) => { const span = hi - lo, st = Math.pow(10, Math.floor(Math.log10(span / n))), e = span / n / st, step = st * (e >= 5 ? 10 : e >= 2 ? 5 : e >= 1 ? 2 : 1); const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(10)); return out; };
   let g = '';
   for (const yv of nice(ymin, ymax, 5)) g += `<line x1="${L}" x2="${W - Rm}" y1="${Y(yv)}" y2="${Y(yv)}" stroke="${grid}" stroke-width="1"/><text x="${L - 6}" y="${Y(yv) + 4}" fill="${ink}" font-size="11" text-anchor="end">${+yv.toPrecision(4)}</text>`;
-  for (const hv of nice(0, hours, 6)) { const p = hv * 3600 / base.step; if (p > nP) continue; g += `<text x="${X(p)}" y="${H - B + 16}" fill="${ink}" font-size="11" text-anchor="middle">${+hv.toPrecision(4)}</text>`; }
+  for (const hv of nice(0, tEnd, 6)) g += `<text x="${X(hv).toFixed(1)}" y="${H - B + 16}" fill="${ink}" font-size="11" text-anchor="middle">${+hv.toPrecision(4)}</text>`;
   g += `<text x="${(L + W - Rm) / 2}" y="${H - 6}" fill="${ink}" font-size="11" text-anchor="middle">hours from the start of the report</text><text x="14" y="${(T + H - B) / 2}" fill="${ink}" font-size="11" text-anchor="middle" transform="rotate(-90 14 ${(T + H - B) / 2})">flow (${UNITS[base.flowUnits]})</text>`;
-  const stride = Math.max(1, Math.floor(nP / 1500));
-  for (const s of series) { let d = ''; for (let p = 0; p < s.s.length; p += stride) d += (d ? 'L' : 'M') + X(p).toFixed(1) + ' ' + Y(s.s[p]).toFixed(1); g += `<path d="${d}" fill="none" stroke="${s.c}" stroke-width="${s.k === 'kw' ? 2.2 : 1.6}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`; }
+  for (const s of series) { const hrs = R[s.k].O.hours, stride = Math.max(1, Math.floor(s.s.length / 1500)); let d = ''; for (let p = 0; p < s.s.length; p += stride) d += (d ? 'L' : 'M') + X(hrs[p]).toFixed(1) + ' ' + Y(s.s[p]).toFixed(1); g += `<path d="${d}" fill="none" stroke="${s.c}" stroke-width="${s.k === 'kw' ? 2.2 : 1.6}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`; }
   svg.innerHTML = g;
   $('#chartTitle').textContent = ids.length > 1 ? 'Flow in ' + ids.join(', ') : 'Flow in ' + ids[0];
   $('#chartLegend').innerHTML = ids.map((id, i) => `<span><svg width="22" height="8"><line x1="0" x2="22" y1="4" y2="4" stroke="${pal[i % pal.length]}" stroke-width="3"/></svg>${esc(id)}</span>`).join('') +
@@ -352,10 +419,18 @@ function reports() {
 
 /* ---------------------------------------------------------------- export */
 $('#exportBtn').addEventListener('click', () => {
-  if (!RUN || !LINKROWS.length) { toast('Run a model first.'); return; }
-  const lines = ['link,peak_swmm5kw,peak_dynwave,peak_stock,pct_diff_kw_vs_dw'];
-  for (const r of LINKROWS) lines.push([r.id, r.k, r.d, r.s, r.diff == null ? '' : r.diff.toFixed(3)].map(x => x == null ? '' : x).join(','));
-  save((CUR.name || 'model').replace(/\.inp$/i, '') + '_swmm5kw_peaks.csv', lines.join('\n') + '\n', 'text/csv');
+  if (!RUN) { toast('Run a model first.'); return; }
+  if (!RUN.complete) { toast('The last run was stopped before the end: nothing to export.'); return; }
+  if (!LINKROWS.length) { toast('The last run wrote no link results.'); return; }
+  const m = RUN.meta, num = x => x == null || !isFinite(x) ? '' : String(+x.toPrecision(7));
+  const lines = [`# swmm5-kw run ${m.id}: ${m.name}, FLOW_ROUTING ${m.routing}, split ${RULES[m.split]}, loops ${m.loop ? 'iterated' : 'off'}, DYNWAVE reference ${RUN.dw ? 'run' : 'not run'}, started ${m.at}`,
+    '# flows in ' + UNITS[((RUN.kw && RUN.kw.O) || (RUN.stock && RUN.stock.O)).flowUnits] + '; max and min are signed, abs_peak = max(|max|, |min|); blank = that run wrote no series for the link',
+    'link,kw_max,kw_min,kw_abs_peak,dw_max,dw_min,dw_abs_peak,stock_max,stock_min,stock_abs_peak,pct_diff_abs_peak_kw_vs_dw,reverses_in'];
+  const q = st => st ? [num(st.max), num(st.min), num(st.abs)] : ['', '', ''];
+  for (const r of LINKROWS) lines.push([r.id, ...q(r.k), ...q(r.d), ...q(r.s), r.diff == null ? '' : r.diff.toFixed(3), r.rev.join(' ')].join(','));
+  const file = m.name.replace(/\.inp$/i, '') + '_swmm5kw_peaks.csv';
+  save(file, lines.join('\n') + '\n', 'text/csv');
+  if (!sameInputs(m.inputs, inputs())) toast(`Saved run ${m.id} (${m.name}), not the inputs now selected`);
 });
 
 /* ---------------------------------------------------------------- in-browser gates */

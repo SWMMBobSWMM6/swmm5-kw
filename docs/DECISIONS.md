@@ -19,4 +19,6 @@
    outlet's capacity, HEAD can hand out up to about 1.5e-6 cfs more than arrived (seen on 20 corpus
    networks switched to KINWAVE; never on the shipped networks). The fix changes nothing on
    `models/`. Applying it changes the wasm, so the apps that embed `swmm524kw.wasm` would need the
-   new file and the gates rerun ([DESIGN.md](DESIGN.md), "Open defect").
+   new file and the gates rerun ([DESIGN.md](DESIGN.md), "Open defect"). v1.1 (31 October)
+   changed the wasm for the fan-out fix, so the apps need the new file anyway; this fix was
+   still left unapplied, because applying it is this decision.

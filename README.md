@@ -7,7 +7,7 @@ Stock SWMM routes KINWAVE and STEADY in one upstream-to-downstream pass, so it n
 | | |
 |---|---|
 | Base | EPA SWMM 5.2.4, [USEPA/Stormwater-Management-Model](https://github.com/USEPA/Stormwater-Management-Model/tree/v5.2.4) tag `v5.2.4` (commit 7952ca8), imported unchanged as this repository's first commit, `4cbd1eb` |
-| Change | the second commit, `5c6c060`: one new file (`src/solver/kwmod.c`) and edits to six, 622 lines added (587 not blank), 4 removed. `git diff 4cbd1eb 5c6c060` is the whole extension; [`patch/swmm524-kw.patch`](patch/swmm524-kw.patch) is the same change as a file |
+| Change | the second commit, `5c6c060`: one new file (`src/solver/kwmod.c`) and edits to six, 622 lines added (587 not blank), 4 removed. `git diff 4cbd1eb 5c6c060` is the whole extension; [`patch/swmm524-kw.patch`](patch/swmm524-kw.patch) is the same change as a file (v1.1, 31 October 2026, changed the CAPACITY and AREA water-filling in `kwmod.c`: [Second outside review](#second-outside-review-v11-31-october-2026)) |
 | API | `swmm_setKwOptions(split, loop)` before `swmm_start`; `swmm_getKwStats(double v[10])` after `swmm_end` |
 | Gates | see [Results](#results) |
 | WebAssembly | [`wasm/swmm524kw.wasm`](wasm/) (the extension) and `wasm/swmm524.wasm` (stock), wasm32-wasi reactors, rebuilt byte for byte by `tools/build.sh`; [`wasm/kwengine.js`](wasm/kwengine.js) runs either in a browser or Node |
@@ -40,16 +40,17 @@ Kinematic wave cannot run a pipe backwards, cannot surcharge it, and has no back
 <!-- RESULTS -->
 Written by `tools/update_readme.py` from `results/`; the app's Verify tab and the Doc essay read the same files.
 
-**Shipped test networks** (`python3 tools/gates.py build/kw`, 2026-10-29):
+**Shipped test networks** (`python3 tools/gates.py build/kw`, 2026-10-31):
 
 | Gate | Result | |
 |---|---|---|
 | Null effect: networks with nothing to split or loop, modes 0/0, 1/1, 2/1, 3/1 against stock | 32 runs on 8 networks, 0 differences (.out bytes, .rpt bar clock lines) | pass |
-| Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network | 10 cases (ERROR 133: 6, ERROR 131: 4), KINWAVE and STEADY, all as expected | pass |
-| Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops | 5 of 5 networks: link peaks and continuity identical | pass |
-| Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules | 7.1e-15 cfs over 15 runs | pass |
-| WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode | 52 of 52 .out files byte-identical | pass |
-| WebAssembly: swmm524.wasm (stock) against native musl stock | 13 of 13 .out files byte-identical | pass |
+| Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network | 14 cases (ERROR 133: 10, ERROR 131: 4), KINWAVE and STEADY, all as expected | pass |
+| Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops | 7 of 7 networks: link peaks and continuity identical | pass |
+| Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules | 6e-14 cfs over 21 runs | pass |
+| Fan-out: 64, 65, 66 and 130 outlets from one junction, one capped by a flow limit and moved through the list, three rules, KINWAVE and STEADY | 78 runs, 0 failures: largest allocation gap 1.2e-13 cfs, no flooding, outlet peaks unchanged by position (largest change 0 cfs) | pass |
+| WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode | 60 of 60 .out files byte-identical | pass |
+| WebAssembly: swmm524.wasm (stock) against native musl stock | 15 of 15 .out files byte-identical | pass |
 | Reproducible build: swmm524kw.wasm rebuilt by tools/build.sh | byte-identical to wasm/swmm524kw.wasm | pass |
 | Reproducible build: swmm524.wasm rebuilt by tools/build.sh | byte-identical to wasm/swmm524.wasm | pass |
 | Patch: patch/swmm524-kw.patch on pristine EPA v5.2.4 reproduces src/ | src/ = pristine v5.2.4 + patch, byte for byte (7 files) | pass |
@@ -106,19 +107,53 @@ All three appear in unmodified EPA 5.2.4 on networks with nothing to split or lo
 
 ## Corrections to the September 2026 write-up
 
-The engine is the same binary as on 29 September 2026 (the wasm's SHA-256 is unchanged). Rerunning everything for this repository corrected four things the September write-up (by Claude) said about it:
+Until v1.1 the engine was the same binary as on 29 September 2026. Rerunning everything for this repository corrected four things the September write-up (by Claude) said about it:
 
 1. **The relief loop.** It compared R1's 0.51 cfs under swmm5-kw with 3.34 cfs under dynamic wave and called both recirculation. Under dynamic wave R1 runs backwards (J1 → J3) all storm; the 3.34 cfs is flow the other way. See [The limit that matters](#the-limit-that-matters).
 2. **The continuity finding.** It sampled three inflows and reported −1.6% at 34 cfs as the problem. A sweep finds −10.2% at 37.5 cfs.
 3. **The split table.** It listed HEAD on `split.inp` as 14.78 and 5.66 cfs (72.3%). Today's runs give 14.78 and 5.49 cfs as the peaks under HEAD (5.66 is AREA's), and the 1.5 ft pipe sits at its 5.25 cfs capacity through the plateau under both. The table above shows flows at the moment of peak total outflow, which avoids the brief peaks at the plateau's ends.
 4. **"Allocations never create water."** True on every shipped network (largest gap 7.1e-15 cfs), not in general. On corpus networks switched to KINWAVE, HEAD can hand out up to 1.48e-6 cfs more than arrived when a junction's inflow sits within the bisection tolerance of one outlet's capacity. The cause, with the code: [docs/DESIGN.md](docs/DESIGN.md), "Open defect". A one-branch fix, `patch/kw-v1.1-head-overshoot.patch`, is checked but **not applied** ([DECISIONS.md](docs/DECISIONS.md), item 5).
 
+## Second outside review (v1.1, 31 October 2026)
+
+A second outside review graded v1.0 82/100 (B−). It confirmed the stock-parity and order checks and found five faults, one in the engine and four in the app. All five were reproduced before any change; each now has a check that fails on v1.0 and passes on v1.1 ([docs/VERIFICATION.md](docs/VERIFICATION.md)).
+
+1. **A capped outlet listed 65th or later was misallocated (CAPACITY and AREA).** The water-filling kept its "full" marks in a fixed array, guarded so it could not overrun:
+   ```c
+   char done[64];
+   ...
+   if ( idx < 64 && done[idx] ) continue;
+   ...
+   if ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }
+   ```
+   An outlet past the 64th could be capped but never marked, so the next pass shared water to it again and the cap cut it back. In the review's junction (65 outlets, 12 in, 400 ft, 1%, 20 cfs in, one outlet limited to 0.1 cfs, AREA, STEADY) the junction came up 0.0399 cfs short and flooded when the limited outlet was listed 65th, and was exact when it was listed first. Global continuity still printed 0.000%: water held back, not created. v1.1 keeps the marks per link (`AllocFull`, sized to the link count). `tools/fanout_check.py` runs 64, 65, 66 and 130 outlets with the capped outlet moved through the boundary positions, three rules, KINWAVE and STEADY: 12 of 78 runs failed on v1.0, 0 on v1.1. On `models/`, v1.0 and v1.1 write identical `.out` files in every mode (78 of 78). The corpus was not rerun: a census (`results/outlet_census.json`) finds one node in 3,759 models with more than 64 outlets, in a DYNWAVE model that never routes with the extension, and v1.0 and v1.1 write identical files for it.
+2. **An export could carry another model's name.** Run `split.inp`, select `diamond.inp`, export: the file was `diamond_swmm5kw_peaks.csv` holding split's results, because the name came from the current selection:
+   ```js
+   save((CUR.name || 'model').replace(/\.inp$/i, '') + '_swmm5kw_peaks.csv', lines.join('\n') + '\n', 'text/csv');
+   ```
+   Each run now keeps a record made when it starts (model, routing, rule, loops, time). Results dim and a note names their run as soon as the inputs change; the export takes the run's name and writes its settings in a header.
+3. **A stopped run could get the success headline.** The verdict looked for error lines, and a stopped run has none, so this branch fired:
+   ```js
+   } else if (refused && !kCodes.length) {
+   ```
+   Completion now comes first: a run that did not finish gets a "Stopped" verdict with the reporting periods written out of those the file asks for, and no comparison, chart or export.
+4. **Peaks: `-Infinity` for runs with no output, 0 for a pipe that only ran backwards.** The peak was a signed maximum started at minus infinity:
+   ```js
+   let m = -Infinity; for (const x of s) if (x > m) m = x; return m;
+   ```
+   The table and CSV now carry each run's signed maximum, signed minimum and absolute peak, compare on the absolute peak, flag reversals (R1 in `loopactive.inp`: −3.33956 cfs under DYNWAVE), and leave a missing series blank.
+5. **The time axis was shifted by one report step.** Sample *p* was drawn at *p* steps, `X = p => L + (W - L - Rm) * p / Math.max(1, nP - 1)`, though SWMM writes the first period at the end of the first step; the last tick could land outside the chart. Each sample is now drawn at the time stored with it in the `.out`.
+
+Not done: the HEAD overshoot fix is still a decision ([DECISIONS.md](docs/DECISIONS.md), item 5), although v1.1 already changes the wasm.
+
 ## Building
 
 ```sh
 tools/build.sh build/kw                       # kwswmm, stockseq, musl twins, both wasm (see the script for the toolchain)
 KWSPLIT=1 KWLOOP=1 build/kw/kwswmm model.inp model.rpt model.out
-python3 tools/gates.py build/kw               # every gate on models/, writes results/gates.json
+python3 tools/gates.py build/kw               # every gate on models/ and tests/fanout/, writes results/gates.json
+python3 tools/fanout_check.py build/kw/kwswmm # the fan-out gate alone (64, 65, 66, 130 outlets)
+node tests/app/review2.test.js                # the app checks from the second review (Playwright + Chromium)
 python3 tools/corpus_gate.py build/kw /path/to/1729-SWMM5-Models-2030 results/gate_kwsf.jsonl \
         --list results/corpus_set.txt --routing KINWAVE,STEADY,STEADYFLOW --modes 00,11,21,31
 python3 tools/summarize.py && python3 tools/update_readme.py
@@ -138,6 +173,7 @@ Browser, Replit or Node: `wasm/swmm524kw.wasm` + `wasm/wasi-shim.iife.js` + `was
 | `src/` | EPA's source tree with the extension applied (EPA's `README.md` is kept as `README-EPA.md`; `Build.md`, `CMakeLists.txt`, `bindings/`, `tests/` are EPA's, untouched) |
 | `patch/` | the extension as a patch against pristine v5.2.4 |
 | `models/` | 13 test networks: splits, loops, chains, storage, and dynamic-wave twins |
+| `tests/fanout/`, `tests/app/` | the second review's 65-outlet networks; the browser checks of the app |
 | `tools/` | build, gates, corpus gate, figure runs, the two command-line drivers |
 | `wasm/` | the two WebAssembly engines and their JavaScript driver |
 | `results/` | every gate record, the figure data, and summaries ([results/README.md](results/README.md)) |
@@ -151,7 +187,7 @@ A runtime switch (today) or an `[OPTIONS]` keyword; a version stamp such as `5.2
 
 ## AI use
 
-This repository was produced with Claude, Anthropic's AI model, at the request of Robert (Bob) Dickinson, who asked for kinematic wave and steady flow that run loops and node bifurcations, asked for the AREA rule first, chose to keep the work in its own repository, and supplies the model corpus. Claude designed and wrote the C changes on 29 September 2026; on 29 October 2026 (Claude Opus 5.5) it rebuilt everything from EPA's tag in a fresh workspace, wrote the gate tools and ran the corpus gate, wrote the app, the figures, the essay and these documents, and found and corrected the three errors in its own September write-up listed above. The checks are mechanical: byte comparison against stock 5.2.4 built from the official tag, on the test networks and the corpus, and of the wasm against native builds. No person has yet reviewed the C changes line by line or rerun the gates on another machine.
+This repository was produced with Claude, Anthropic's AI model, at the request of Robert (Bob) Dickinson, who asked for kinematic wave and steady flow that run loops and node bifurcations, asked for the AREA rule first, chose to keep the work in its own repository, and supplies the model corpus. Claude designed and wrote the C changes on 29 September 2026; on 29 October 2026 (Claude Opus 5.5) it rebuilt everything from EPA's tag in a fresh workspace, wrote the gate tools and ran the corpus gate, wrote the app, the figures, the essay and these documents, and found and corrected the three errors in its own September write-up listed above. On 31 October 2026, for v1.1, it reproduced the five faults in the second outside review Bob supplied, fixed the allocator (its own September code) and the app, and wrote the fan-out gate, the corpus outlet census, the browser checks and the v1.1 documentation. The checks are mechanical: byte comparison against stock 5.2.4 built from the official tag, on the test networks and the corpus, and of the wasm against native builds. No person has yet reviewed the C changes line by line or rerun the gates on another machine.
 
 ## License and credit
 

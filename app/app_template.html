@@ -114,6 +114,7 @@ main{padding-block:var(--gap) 32px}
 .box{border-radius:10px;padding:12px 14px;border:1px solid;min-width:0}
 .box.panel{background:var(--panel);border-color:var(--panel-line);color:var(--panel-ink)}
 .box.hi{background:var(--hi-bg);border-color:var(--hi-line);color:var(--hi-ink)}
+#results.stale #verdict,#results.stale #kwCard,#results.stale #chartCard,#results.stale #splitCard,#results.stale #linksCard,#results.stale #rptCard{opacity:.5}
 .box.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-ink)}
 .box.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
 .box b{color:inherit} .box p{margin:0 0 6px} .box p:last-child{margin:0}
@@ -211,7 +212,7 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
         <h1>swmm5-kw</h1>
         <div class="sub">EPA SWMM 5.2.4 &middot; kinematic wave and steady flow that split and loop</div>
       </div>
-      <span class="pill">v1.0 &middot; 5.2.4 + kw</span>
+      <span class="pill">v1.1 &middot; 5.2.4 + kw</span>
     </div>
     <div class="cluster">
       <div class="seg" id="theme-toggle" role="group" aria-label="Colour theme">
@@ -276,12 +277,13 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
       </div>
     </div>
 
-    <div class="stack">
+    <div class="stack" id="results">
       <div class="card">
         <p class="kicker">Three runs</p>
         <h2 id="runTitle">Stock EPA 5.2.4, swmm5-kw, and the dynamic-wave reference</h2>
         <div class="engines" id="engCards"></div>
       </div>
+      <div class="box hi hidden" id="staleNote" role="status"></div>
       <div class="box hidden" id="verdict"></div>
       <div class="card hidden" id="kwCard">
         <p class="kicker">Inside the swmm5-kw run</p>
@@ -382,12 +384,24 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
         <div class="box hi"><p><b>A modified engine.</b> Results from swmm5-kw with either option on are not stock EPA SWMM results. Its report says so in a <code>KW/SF extension</code> block; keep that block with any result you pass on.</p></div>
       </div>
       <div class="card">
+        <h2>What changed in 1.1</h2>
+        <p>A second outside review of v1.0 (31 October 2026) found five faults. Each was reproduced first, then fixed, and each now has a check that fails on v1.0:</p>
+        <ol style="margin:0;padding-left:18px">
+          <li><b>Engine.</b> CAPACITY and AREA kept their "outlet is full" marks in <code>char done[64]</code>, so at a junction with more than 64 outlets a capped outlet listed 65th or later was never marked: the junction came up short and flooded (0.04 cfs in the review's case). The marks are now per link. A new fan-out gate runs 64, 65, 66 and 130 outlets; no corpus result changes (the one corpus node with 65 outlets is in a model the extension never routes).</li>
+          <li><b>Stale exports.</b> Exporting after picking another model named the file after the new model while it held the old run's numbers. Every run now keeps its own record; results dim when the inputs change, and the export uses the run's name and states its settings.</li>
+          <li><b>Stopped runs.</b> A stopped swmm5-kw run still got the green "routes it" headline. A run that did not finish now gets a "Stopped" verdict saying how far it got, and no comparison or export.</li>
+          <li><b>Peaks.</b> Refused runs exported <code>-Infinity</code>, and a pipe that only ran backwards showed a peak of 0. The table and CSV now give the signed maximum, the signed minimum and the absolute peak, flag reversals, and leave missing values blank.</li>
+          <li><b>Time axis.</b> Samples were drawn one report step early and the last tick could fall outside the chart. Each sample is now drawn at the time stored with it.</li>
+        </ol>
+      </div>
+      <div class="card">
         <h2>Open decisions</h2>
         <ul style="margin:0;padding-left:18px">
           <li>A runtime switch (today) or an <code>[OPTIONS]</code> keyword such as <code>NODE_SPLIT NONE|HEAD|AREA|CAPACITY</code>.</li>
           <li>A version stamp such as <code>5.2.4-kw</code> in the report header.</li>
           <li>HEAD or AREA as the default rule (the first ask was AREA).</li>
           <li>Whether apps start with the extension on (this page) while the engine defaults to off.</li>
+          <li>Whether to apply the HEAD overshoot fix (<code>patch/kw-v1.1-head-overshoot.patch</code>), now that v1.1 changes the engine anyway.</li>
         </ul>
       </div>
     </div>
@@ -395,8 +409,8 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
       <div class="card" id="aiUse">
         <h2>AI use</h2>
         <p>The extension, this page, its tests and the Doc essay were made with Claude, Anthropic's AI model, under the direction of Robert (Bob) Dickinson: the engine in a session on 28 and 29 September 2026, the repository, this page and the essay on 29 October 2026 (Claude Opus 5.5). Bob asked for KW and steady flow that run loops and bifurcations, chose to keep the work in its own repository, and supplies the model corpus it was tested on. Responsibility for publishing the work is his.</p>
-        <p><b>What Claude did:</b> designed and wrote the allocator (<code>kwmod.c</code>) and the changes to <code>flowrout.c</code>, <code>toposort.c</code>, <code>node.c</code> and <code>swmm5.c</code>; wrote the test networks, the drivers and the gates; built both WebAssembly engines and the JavaScript that runs them; rebuilt everything from EPA's tag in a fresh workspace for this repository; ran the corpus gate; wrote this page, its figures and the essay.</p>
-        <p><b>How it was checked:</b> mechanically. Byte comparison of <code>.out</code> and <code>.rpt</code> files against stock 5.2.4 built from the official tag, on the shipped networks and on Bob's corpus; the wasm engines against native builds; the patch against a fresh checkout. <b>Not yet checked by a person:</b> the C changes have not been reviewed line by line by Bob, and the split rules have been compared with dynamic wave on five small test networks only.</p>
+        <p><b>What Claude did:</b> designed and wrote the allocator (<code>kwmod.c</code>) and the changes to <code>flowrout.c</code>, <code>toposort.c</code>, <code>node.c</code> and <code>swmm5.c</code>; wrote the test networks, the drivers and the gates; built both WebAssembly engines and the JavaScript that runs them; rebuilt everything from EPA's tag in a fresh workspace for this repository; ran the corpus gate; wrote this page, its figures and the essay. On 31 October 2026, for v1.1, it reproduced the five faults in the second outside review Bob supplied, fixed the allocator (its own September code) and this page, and added the fan-out gate, the corpus outlet census and the browser checks.</p>
+        <p><b>How it was checked:</b> mechanically. Byte comparison of <code>.out</code> and <code>.rpt</code> files against stock 5.2.4 built from the official tag, on the shipped networks and on Bob's corpus; the wasm engines against native builds; the patch against a fresh checkout; this page driven in headless Chromium for the v1.1 checks. The corpus was not rerun through v1.1; a census shows no corpus junction where v1.0 and v1.1 can differ. <b>Not yet checked by a person:</b> the C changes have not been reviewed line by line by Bob, and the split rules have been compared with dynamic wave on five small test networks only.</p>
       </div>
       <div class="card">
         <h2>Sources</h2>

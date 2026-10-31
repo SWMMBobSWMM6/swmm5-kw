@@ -71,7 +71,11 @@ or 141.
   S(A)/S_full passes 1 at y/D = 0.820 and peaks at 1.076 at y/D = 0.938. The last residual is
   spread only over outlets **below** their cap.
 - **CAPACITY** (mode 2): in proportion to `cap_k`, water-filled (an outlet that reaches its cap
-  is removed and the rest redistributed).
+  is marked full and the rest redistributed). The full marks are per link (`AllocFull`, sized
+  `Nobjects[LINK]` in `kwmod_init`). v1.0 kept them in `char done[64]` per call, guarded with
+  `idx < 64`, so a capped outlet listed 65th or later was never marked: the next pass handed it a
+  share again, the cap cut it back, and the junction came up short (0.04 cfs and flooding in the
+  second review's 65-outlet case). `tools/fanout_check.py` now gates 64, 65, 66 and 130 outlets.
 - **AREA** (mode 3): in proportion to `barrels·Conduit.a1` from the previous step, water-filled;
   falls back to CAPACITY when every weight is zero (the cold start).
 - All outlets of a node are computed together at the first request in a sweep and cached under
