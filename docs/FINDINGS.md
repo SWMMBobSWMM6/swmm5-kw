@@ -1,11 +1,16 @@
 # Three behaviours of stock EPA SWMM 5.2.4
 
+A note on sign. SWMM reports the routing continuity error as (inflow − outflow) ÷ inflow, where
+outflow includes flooding, losses and the change in storage. A **negative** error means the run
+reports more water leaving than ever entered: water made, not lost. All three behaviours below
+make water.
+
 All three surfaced while building and gating the extension. None is caused by it: each appears
 in unmodified 5.2.4 on a network with nothing to split and no loop. F1 and F2 were remeasured
 on 29 October 2026 with the builds from `tools/build.sh` (the three September points match); F3
 was found on 31 October.
 
-## F1. Kinematic wave loses continuity when a pipe runs right at capacity
+## F1. Kinematic wave makes water when a pipe runs at or just above capacity
 
 `models/chain30.inp`, `chain34.inp`, `chain40.inp`: three 3 ft circular pipes in series, full-flow
 capacity 33.35 cfs, an inflow that ramps to 30, 34 or 40 cfs, holds for 2.5 hours and recedes.
@@ -28,7 +33,16 @@ had missed the worst of it:
 
 Below capacity the error is a tenth of a percent. From 33.5 cfs it grows steadily to −10.2% at
 37.5 cfs, four cfs above capacity, then falls back to half a percent at 38 cfs. A model whose
-peak happens to sit in that band reports losing a tenth of its water.
+peak happens to sit in that band reports a tenth more water leaving than came in.
+
+The corpus what-if pass (DYNWAVE models switched to KINWAVE) shows how large this gets on real
+networks. `XPSWMM/UPWSH1.inp` switched to KINWAVE reports −10,066% under swmm5-kw. Made into a tree
+so that stock 5.2.4 will route it (`tools/tree_variant.py`, one outlet removed at its single split
+junction), stock reports −10,069%: conduit `DCH_HU`, at full capacity for all 4,320 steps, delivers
+39.6 million ft³ more than it receives (`tools/conduit_balance.sh`). `NCIMM_ROUTING/river.inp`:
+−62.3% under swmm5-kw, −63.4% from stock on the tree, nearly all of it in conduit `L15`, at capacity
+for 850 steps (`results/tree_tests.md`). F1 accounts for 18 of the 30 largest what-if continuity errors
+(`results/whatif_outliers.json`).
 
 Likely cause, from reading `kinwave.c`: `kinwave_execute` sets a conduit's inlet area to full
 when its inflow is at or above Qfull, and to the lower root of S(A) when the inflow is just
@@ -62,7 +76,7 @@ So a claim that two KW runs come from "the same engine" needs the libm named. Th
 this repository's wasm gate compares against native musl builds, and why
 [VERIFICATION.md](VERIFICATION.md) says which build each number comes from.
 
-## F3. Kinematic wave loses water in flat and nearly flat conduits
+## F3. Kinematic wave makes water in flat and nearly flat conduits
 
 Found on 31 October 2026 while explaining the large continuity errors in the corpus what-if pass
 (DYNWAVE models switched to KINWAVE, `docs/VERIFICATION.md`). One 1,000 ft trapezoidal channel
@@ -75,12 +89,13 @@ KINWAVE, musl build (`results/figdata.json`, `flat_channel`):
 | 0.1 ft | −2.48% | −1.08% | −0.54% |
 | 1.0 ft | −1.21% | −0.50% | −0.22% |
 
-The flatter the channel and the smaller the flow, the more water goes missing. In the what-if
-pass the same signature (losses in conduits that never reach capacity, in models where EPA writes
-WARNING 04) accounts for most of the largest continuity errors (`results/whatif_outliers.json`). On one of them, `XPSWMM/ATTEN.inp`,
+The flatter the channel and the smaller the flow, the more water appears from nowhere. In the
+what-if pass the same signature (conduits that never reach capacity delivering more than they
+receive, in models where EPA writes WARNING 04) accounts for 11 of the 30 largest continuity
+errors (`results/whatif_outliers.json`). On one of them, `XPSWMM/ATTEN.inp`,
 it was shown directly: with its two forks removed, so that stock 5.2.4 will route it, stock
-kinematic wave loses 21.86% of the routed water, and swmm5-kw with the forks in place loses
-20.96%. `tools/conduit_balance.sh` builds the per-conduit accounting used to find this. The
+kinematic wave reports a continuity error of −21.86%, and swmm5-kw with the forks in place −20.96%
+(`results/tree_tests.md`). `tools/conduit_balance.sh` builds the per-conduit accounting used to find this. The
 mechanism inside `kinwave.c` has not been traced.
 
 All three findings belong in a SWMM regression suite as invariants that stock 5.2.4 currently fails.

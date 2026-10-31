@@ -18,7 +18,7 @@ report differences that are not the extension's.
 | 1 | **Off means stock.** With both options off (the default) the bytes are stock 5.2.4, ERROR 133 and 131 included | Stock refusals reproduced with modes 0/0; corpus mode 00 identical on every KINWAVE/STEADY model | `tools/gates.py`, `tools/corpus_gate.py --modes 00,...` |
 | 2 | **On changes nothing it has no business changing.** A network with nothing to split or loop gives stock's bytes in every mode | Null gate on the tree networks; corpus modes 11, 21, 31 on every model stock runs | `tools/null_gate.sh`, `tools/corpus_gate.py` |
 | 3 | **No order dependence.** Shuffling `[JUNCTIONS]` and `[CONDUITS]` changes nothing | Three seeded shuffles of each split and loop network | `tools/order_check.py` |
-| 4 | **Conservation.** An allocation never creates water; a loop's leftover is booked. Holds to rounding on every shipped network; broken by up to about 1.5e-6 cfs on some corpus networks (HEAD overshoot, `docs/DESIGN.md` "Open defect"; fix proposed, not applied) | Largest gap between flow allocated and flow available, over every step and rule (`swmm_getKwStats` v[3]); `tools/head_fix_check.py` for the fix | `tools/gates.py`, `tools/head_fix_check.py` |
+| 4 | **Conservation.** An allocation never creates water; a loop's leftover is booked. Holds to rounding on every shipped network; broken by up to 1.48e-6 cfs on 20 corpus networks switched to KINWAVE (HEAD overshoot, `docs/DESIGN.md` "Open defect"; fix proposed, not applied) | Largest gap between flow allocated and flow available, over every step and rule (`swmm_getKwStats` v[3]); `tools/head_fix_check.py` for the fix | `tools/gates.py`, `tools/head_fix_check.py` |
 | 5 | **One engine, one answer.** The wasm engine is the same engine | `.out` bytes of `swmm524kw.wasm` against native musl, every network, every mode; the same for the stock wasm | `tools/wasm_check.js` |
 
 Plus two reproducibility checks: `tools/build.sh` rebuilds both `.wasm` files byte for byte, and
@@ -74,13 +74,16 @@ give stock's bytes.
 
 Large continuity errors among the networks swmm5-kw ran were traced one at a time with
 `tools/conduit_balance.sh`, a diagnostic build that keeps a volume balance for every conduit and
-lists the conduits that lost water, how many steps each spent at full capacity, and whether it
+lists the conduits whose volume balance fails worst (in every case seen, they delivered more than
+they received), how many steps each spent at full capacity, and whether it
 leaves a split junction. The 30 largest are classified in `results/whatif_outliers.json`:
-compared with stock DYNWAVE on the original file, and assigned to finding F1 (losses in conduits
-at capacity), F3 (losses in flat conduits that never fill, models with EPA's WARNING 04), the
+compared with stock DYNWAVE on the original file, and assigned to finding F1 (extra water from conduits
+at capacity), F3 (extra water from flat conduits that never fill, models with EPA's WARNING 04), the
 model itself (stock DYNWAVE fails too), or not attributed. The F3 attribution was shown directly
-on `XPSWMM/ATTEN.inp` by deleting its forks so stock 5.2.4 routes it (stock then loses more water
-than swmm5-kw); for the others it rests on the matching signature.
+on `XPSWMM/ATTEN.inp`, and F1 on `XPSWMM/UPWSH1.inp` and `NCIMM_ROUTING/river.inp`, by deleting
+forks (`tools/tree_variant.py`) so stock 5.2.4 routes the network: stock's continuity error is then
+as large as swmm5-kw's or larger (`results/tree_tests.md`, made by `tools/tree_tests.py`). For the
+others it rests on the matching signature.
 
 The same pass found the HEAD overshoot defect (`docs/DESIGN.md`, "Open defect").
 `tools/head_fix_check.py` runs every network swmm5-kw routed through the engine as it stands and

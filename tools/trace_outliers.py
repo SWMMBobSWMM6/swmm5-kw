@@ -6,11 +6,11 @@
 For the N (default 30) networks swmm5-kw routed with the largest |routing continuity error|:
   * run stock 5.2.4 (<build-dir>/stockseq) on the ORIGINAL file, as built (dynamic wave);
   * run the conduit-balance build (<kwbal>, from tools/conduit_balance.sh) on the copy switched to
-    KINWAVE, HEAD + loops, and keep the conduits that lost the most water, how many steps each
+    KINWAVE, HEAD + loops, and keep the conduits whose volume balance fails worst, how many steps each
     spent at full capacity, and whether its upstream node is a split junction;
   * count EPA's WARNING 04 (minimum elevation drop used) in that run's report.
 Cause, in order: the model itself if stock DYNWAVE also misses by more than 50%; F1 if a leading
-conduit spent steps at capacity; F3 if EPA wrote WARNING 04 and conduits lost water; otherwise
+conduit spent steps at capacity; F3 if EPA wrote WARNING 04 and conduits fail their balance; otherwise
 not attributed. This is a classification by signature, not a proof; see docs/VERIFICATION.md.
 """
 import json, os, re, subprocess, sys, tempfile

@@ -278,9 +278,10 @@ def fig_corpus(P, D):
             ww = max(3, w * v / r['n']); s += f'<rect x="{x:.1f}" y="{y}" width="{ww:.1f}" height="24" style="fill:{P[col]}"/>'; x += ww
         s += T(X0, y + 40, r['text'], P, 11.5, 'ink')
     y = 16 + 58 * len(C) + 8
-    s += f'<rect x="{X0}" y="{y}" width="12" height="12" style="fill:{P["kw"]}"/>' + T(X0 + 18, y + 10, 'byte-identical to stock', P, 11.5, 'dim')
-    s += f'<rect x="{X0 + 180}" y="{y}" width="12" height="12" style="fill:{P["a"]}"/>' + T(X0 + 198, y + 10, 'refused by stock, run by swmm5-kw', P, 11.5, 'dim')
-    s += f'<rect x="{X0 + 420}" y="{y}" width="12" height="12" style="fill:{P["dim"]}"/>' + T(X0 + 438, y + 10, 'stock crashes or never ends', P, 11.5, 'dim')
+    L0 = 40   # legend starts left of the bars so the last label fits inside the 760 px width
+    s += f'<rect x="{L0}" y="{y}" width="12" height="12" style="fill:{P["kw"]}"/>' + T(L0 + 18, y + 10, 'byte-identical to stock', P, 11.5, 'dim')
+    s += f'<rect x="{L0 + 210}" y="{y}" width="12" height="12" style="fill:{P["a"]}"/>' + T(L0 + 228, y + 10, 'refused by stock, run by swmm5-kw', P, 11.5, 'dim')
+    s += f'<rect x="{L0 + 470}" y="{y}" width="12" height="12" style="fill:{P["dim"]}"/>' + T(L0 + 488, y + 10, 'stock crashes or never ends', P, 11.5, 'dim')
     return _svg(W, H, s, 'The corpus gate')
 
 

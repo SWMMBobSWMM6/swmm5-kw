@@ -1,0 +1,1084 @@
+[
+ {
+  "inp": "XPSWMM/UPWSH1.inp",
+  "kw": "-10066.240",
+  "dw": "-3.750",
+  "warn04": 18,
+  "top": [
+   {
+    "link": "DCH_HU",
+    "imb_ft3": -39623348.2,
+    "steps_at_cap": 4320.0,
+    "upstream": "HU",
+    "split": false
+   },
+   {
+    "link": "DCH_FF",
+    "imb_ft3": -11247986.6,
+    "steps_at_cap": 4320.0,
+    "upstream": "FF",
+    "split": false
+   },
+   {
+    "link": "DCH_HL",
+    "imb_ft3": -4990051.1,
+    "steps_at_cap": 0.0,
+    "upstream": "HL",
+    "split": false
+   },
+   {
+    "link": "DCH_GU",
+    "imb_ft3": -2599884.1,
+    "steps_at_cap": 0.0,
+    "upstream": "GU",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/UPWSH2.inp",
+  "kw": "-10066.240",
+  "dw": "-3.750",
+  "warn04": 18,
+  "top": [
+   {
+    "link": "DCH_HU",
+    "imb_ft3": -39623348.2,
+    "steps_at_cap": 4320.0,
+    "upstream": "HU",
+    "split": false
+   },
+   {
+    "link": "DCH_FF",
+    "imb_ft3": -11247986.6,
+    "steps_at_cap": 4320.0,
+    "upstream": "FF",
+    "split": false
+   },
+   {
+    "link": "DCH_HL",
+    "imb_ft3": -4990051.1,
+    "steps_at_cap": 0.0,
+    "upstream": "HL",
+    "split": false
+   },
+   {
+    "link": "DCH_GU",
+    "imb_ft3": -2599884.1,
+    "steps_at_cap": 0.0,
+    "upstream": "GU",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/UPWSH3.inp",
+  "kw": "-10066.240",
+  "dw": "-3.750",
+  "warn04": 18,
+  "top": [
+   {
+    "link": "DCH_HU",
+    "imb_ft3": -39623348.2,
+    "steps_at_cap": 4320.0,
+    "upstream": "HU",
+    "split": false
+   },
+   {
+    "link": "DCH_FF",
+    "imb_ft3": -11247986.6,
+    "steps_at_cap": 4320.0,
+    "upstream": "FF",
+    "split": false
+   },
+   {
+    "link": "DCH_HL",
+    "imb_ft3": -4990051.1,
+    "steps_at_cap": 0.0,
+    "upstream": "HL",
+    "split": false
+   },
+   {
+    "link": "DCH_GU",
+    "imb_ft3": -2599884.1,
+    "steps_at_cap": 0.0,
+    "upstream": "GU",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/mod102.inp",
+  "kw": "-900.280",
+  "dw": "-900.084",
+  "warn04": 2,
+  "top": [
+   {
+    "link": "pipe",
+    "imb_ft3": -121.1,
+    "steps_at_cap": 4320.0,
+    "upstream": "2",
+    "split": true
+   },
+   {
+    "link": "7",
+    "imb_ft3": -121.1,
+    "steps_at_cap": 4320.0,
+    "upstream": "2",
+    "split": true
+   }
+  ],
+  "cause": "model (stock DW also fails)"
+ },
+ {
+  "inp": "NCIMM_ROUTING/river.inp",
+  "kw": "-62.264",
+  "dw": "1.070",
+  "warn04": 4,
+  "top": [
+   {
+    "link": "L15",
+    "imb_ft3": -3320643.9,
+    "steps_at_cap": 841.0,
+    "upstream": "G2026",
+    "split": false
+   },
+   {
+    "link": "CowRd",
+    "imb_ft3": -5889.1,
+    "steps_at_cap": 0.0,
+    "upstream": "G143",
+    "split": true
+   },
+   {
+    "link": "L16",
+    "imb_ft3": -5347.0,
+    "steps_at_cap": 0.0,
+    "upstream": "G2211",
+    "split": false
+   },
+   {
+    "link": "L10",
+    "imb_ft3": -3404.1,
+    "steps_at_cap": 0.0,
+    "upstream": "G1302",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/422x.inp",
+  "kw": "-30.287",
+  "dw": "11.842",
+  "warn04": 18,
+  "top": [
+   {
+    "link": "4302",
+    "imb_ft3": -4182.2,
+    "steps_at_cap": 21596.0,
+    "upstream": "J4302",
+    "split": false
+   },
+   {
+    "link": "PM-27",
+    "imb_ft3": -3.4,
+    "steps_at_cap": 0.0,
+    "upstream": "M-27",
+    "split": false
+   },
+   {
+    "link": "0422",
+    "imb_ft3": -1.1,
+    "steps_at_cap": 0.0,
+    "upstream": "J4443",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/422X1.inp",
+  "kw": "-30.285",
+  "dw": "10.472",
+  "warn04": 18,
+  "top": [
+   {
+    "link": "4302",
+    "imb_ft3": -4182.3,
+    "steps_at_cap": 4319.0,
+    "upstream": "J4302",
+    "split": false
+   },
+   {
+    "link": "PM-27",
+    "imb_ft3": -2.5,
+    "steps_at_cap": 0.0,
+    "upstream": "M-27",
+    "split": false
+   },
+   {
+    "link": "0422",
+    "imb_ft3": -1.1,
+    "steps_at_cap": 0.0,
+    "upstream": "J4443",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/ATTENA1.inp",
+  "kw": "-21.476",
+  "dw": "-0.410",
+  "warn04": 18,
+  "top": [
+   {
+    "link": "Aout",
+    "imb_ft3": -13568.8,
+    "steps_at_cap": 0.0,
+    "upstream": "A",
+    "split": true
+   },
+   {
+    "link": "206",
+    "imb_ft3": -2741.7,
+    "steps_at_cap": 0.0,
+    "upstream": "B",
+    "split": true
+   },
+   {
+    "link": "Bout",
+    "imb_ft3": -1313.3,
+    "steps_at_cap": 0.0,
+    "upstream": "B1",
+    "split": false
+   },
+   {
+    "link": "211",
+    "imb_ft3": -466.0,
+    "steps_at_cap": 0.0,
+    "upstream": "C",
+    "split": true
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/TEPA.inp",
+  "kw": "-21.085",
+  "dw": "-0.026",
+  "warn04": 9,
+  "top": [
+   {
+    "link": "203",
+    "imb_ft3": -8140.0,
+    "steps_at_cap": 2880.0,
+    "upstream": "Inflow",
+    "split": false
+   },
+   {
+    "link": "205",
+    "imb_ft3": -4807.5,
+    "steps_at_cap": 2862.0,
+    "upstream": "202",
+    "split": false
+   },
+   {
+    "link": "211",
+    "imb_ft3": -1158.9,
+    "steps_at_cap": 1301.0,
+    "upstream": "208",
+    "split": false
+   },
+   {
+    "link": "213",
+    "imb_ft3": -1094.3,
+    "steps_at_cap": 1302.0,
+    "upstream": "210",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/ATTEN.inp",
+  "kw": "-20.955",
+  "dw": "-0.519",
+  "warn04": 9,
+  "top": [
+   {
+    "link": "Aout",
+    "imb_ft3": -13280.2,
+    "steps_at_cap": 0.0,
+    "upstream": "A",
+    "split": true
+   },
+   {
+    "link": "206",
+    "imb_ft3": -2750.9,
+    "steps_at_cap": 0.0,
+    "upstream": "B",
+    "split": true
+   },
+   {
+    "link": "Bout",
+    "imb_ft3": -1325.7,
+    "steps_at_cap": 0.0,
+    "upstream": "B1",
+    "split": false
+   },
+   {
+    "link": "211",
+    "imb_ft3": -556.5,
+    "steps_at_cap": 0.0,
+    "upstream": "C",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/ATTENA.inp",
+  "kw": "-18.651",
+  "dw": "-0.495",
+  "warn04": 9,
+  "top": [
+   {
+    "link": "Aout",
+    "imb_ft3": -12056.5,
+    "steps_at_cap": 0.0,
+    "upstream": "A",
+    "split": true
+   },
+   {
+    "link": "206",
+    "imb_ft3": -2315.6,
+    "steps_at_cap": 0.0,
+    "upstream": "B",
+    "split": true
+   },
+   {
+    "link": "Bout",
+    "imb_ft3": -1138.0,
+    "steps_at_cap": 0.0,
+    "upstream": "B1",
+    "split": false
+   },
+   {
+    "link": "211",
+    "imb_ft3": -471.8,
+    "steps_at_cap": 0.0,
+    "upstream": "C",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/ATTENT.inp",
+  "kw": "-18.651",
+  "dw": "-0.495",
+  "warn04": 9,
+  "top": [
+   {
+    "link": "Aout",
+    "imb_ft3": -12056.5,
+    "steps_at_cap": 0.0,
+    "upstream": "A",
+    "split": true
+   },
+   {
+    "link": "206",
+    "imb_ft3": -2315.6,
+    "steps_at_cap": 0.0,
+    "upstream": "B",
+    "split": true
+   },
+   {
+    "link": "Bout",
+    "imb_ft3": -1138.0,
+    "steps_at_cap": 0.0,
+    "upstream": "B1",
+    "split": false
+   },
+   {
+    "link": "211",
+    "imb_ft3": -471.8,
+    "steps_at_cap": 0.0,
+    "upstream": "C",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/brownew.inp",
+  "kw": "-18.183",
+  "dw": "0.004",
+  "warn04": 30,
+  "top": [
+   {
+    "link": "IC-20",
+    "imb_ft3": -2576.3,
+    "steps_at_cap": 0.0,
+    "upstream": "PL239+00",
+    "split": true
+   },
+   {
+    "link": "IC-140",
+    "imb_ft3": -1497.4,
+    "steps_at_cap": 0.0,
+    "upstream": "PL340+69",
+    "split": true
+   },
+   {
+    "link": "IC-100",
+    "imb_ft3": -1466.4,
+    "steps_at_cap": 0.0,
+    "upstream": "PL302+11",
+    "split": true
+   },
+   {
+    "link": "IC-130",
+    "imb_ft3": -1358.8,
+    "steps_at_cap": 0.0,
+    "upstream": "PL331+30",
+    "split": true
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/OFFLINE6.inp",
+  "kw": "-18.040",
+  "dw": "-1.063",
+  "warn04": 6,
+  "top": [
+   {
+    "link": "standard",
+    "imb_ft3": -15609.9,
+    "steps_at_cap": 0.0,
+    "upstream": "262",
+    "split": true
+   },
+   {
+    "link": "never",
+    "imb_ft3": -15609.9,
+    "steps_at_cap": 0.0,
+    "upstream": "262a",
+    "split": true
+   },
+   {
+    "link": "always",
+    "imb_ft3": -15609.9,
+    "steps_at_cap": 0.0,
+    "upstream": "262b",
+    "split": true
+   },
+   {
+    "link": "263",
+    "imb_ft3": -811.3,
+    "steps_at_cap": 0.0,
+    "upstream": "261",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/OFFLINE7.inp",
+  "kw": "-18.040",
+  "dw": "-1.063",
+  "warn04": 6,
+  "top": [
+   {
+    "link": "standard",
+    "imb_ft3": -15609.9,
+    "steps_at_cap": 0.0,
+    "upstream": "262",
+    "split": true
+   },
+   {
+    "link": "never",
+    "imb_ft3": -15609.9,
+    "steps_at_cap": 0.0,
+    "upstream": "262a",
+    "split": true
+   },
+   {
+    "link": "always",
+    "imb_ft3": -15609.9,
+    "steps_at_cap": 0.0,
+    "upstream": "262b",
+    "split": true
+   },
+   {
+    "link": "263",
+    "imb_ft3": -811.3,
+    "steps_at_cap": 0.0,
+    "upstream": "261",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "Pumps/extran6_type1_control_rule.inp",
+  "kw": "-7.190",
+  "dw": "0.268",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10150.9,
+    "steps_at_cap": 349.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -4682.6,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2885.0,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -2073.4,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type3_control_rule.inp",
+  "kw": "-7.190",
+  "dw": "0.268",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10150.9,
+    "steps_at_cap": 349.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -4682.6,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2885.0,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -2073.4,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type4_control_rule.inp",
+  "kw": "-7.190",
+  "dw": "0.268",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10150.9,
+    "steps_at_cap": 349.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -4682.6,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2885.0,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -2073.4,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type1.inp",
+  "kw": "-6.932",
+  "dw": "0.148",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10325.0,
+    "steps_at_cap": 524.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -3536.8,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2791.7,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -1607.7,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type3.inp",
+  "kw": "-6.932",
+  "dw": "0.148",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10325.0,
+    "steps_at_cap": 524.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -3536.8,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2791.7,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -1607.7,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type4.inp",
+  "kw": "-6.932",
+  "dw": "0.148",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10325.0,
+    "steps_at_cap": 524.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -3536.8,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2791.7,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -1607.7,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type2.inp",
+  "kw": "-6.932",
+  "dw": "0.148",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10325.0,
+    "steps_at_cap": 524.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -3536.8,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2791.7,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -1607.7,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "OWA_EXTRAN/extran6_type1.inp",
+  "kw": "-6.932",
+  "dw": "0.148",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10325.0,
+    "steps_at_cap": 524.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -3536.8,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2791.7,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -1607.7,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "Pumps/extran6_type2_control_rule.inp",
+  "kw": "-6.932",
+  "dw": "0.148",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -10325.0,
+    "steps_at_cap": 524.0,
+    "upstream": "82309",
+    "split": true
+   },
+   {
+    "link": "8100",
+    "imb_ft3": -3536.8,
+    "steps_at_cap": 0.0,
+    "upstream": "81009",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": -2791.7,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": -1607.7,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/Alt1asa.inp",
+  "kw": "-6.492",
+  "dw": "17.208",
+  "warn04": 1,
+  "top": [
+   {
+    "link": "I-H",
+    "imb_ft3": -9556.8,
+    "steps_at_cap": 0.0,
+    "upstream": "I",
+    "split": false
+   },
+   {
+    "link": "C-B",
+    "imb_ft3": -8394.5,
+    "steps_at_cap": 0.0,
+    "upstream": "C",
+    "split": false
+   },
+   {
+    "link": "E-C_2",
+    "imb_ft3": -4056.8,
+    "steps_at_cap": 0.0,
+    "upstream": "Dcon",
+    "split": false
+   },
+   {
+    "link": "B-STWEast",
+    "imb_ft3": -3315.1,
+    "steps_at_cap": 0.0,
+    "upstream": "B",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/RAFTS1.inp",
+  "kw": "-4.865",
+  "dw": "-0.504",
+  "warn04": 5,
+  "top": [
+   {
+    "link": "channel",
+    "imb_ft3": -2910.6,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "pipe_2",
+    "imb_ft3": -804.9,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "210",
+    "imb_ft3": -349.9,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "pipe",
+    "imb_ft3": -286.5,
+    "steps_at_cap": 1440.0,
+    "upstream": "inlet",
+    "split": true
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/STRTMAS.inp",
+  "kw": "-4.343",
+  "dw": "-0.108",
+  "warn04": 6,
+  "top": [
+   {
+    "link": "215",
+    "imb_ft3": -5405.2,
+    "steps_at_cap": 4001.0,
+    "upstream": "BMPc",
+    "split": false
+   },
+   {
+    "link": "dc",
+    "imb_ft3": -883.3,
+    "steps_at_cap": 0.0,
+    "upstream": "BMPd",
+    "split": false
+   },
+   {
+    "link": "ab",
+    "imb_ft3": -883.3,
+    "steps_at_cap": 0.0,
+    "upstream": "BMPa",
+    "split": false
+   },
+   {
+    "link": "be",
+    "imb_ft3": -348.7,
+    "steps_at_cap": 0.0,
+    "upstream": "BMPb",
+    "split": false
+   }
+  ],
+  "cause": "F1 at capacity"
+ },
+ {
+  "inp": "XPSWMM/EXQ2A.inp",
+  "kw": "-3.953",
+  "dw": "-0.345",
+  "warn04": 4,
+  "top": [
+   {
+    "link": "link",
+    "imb_ft3": -1672.1,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "207",
+    "imb_ft3": -1672.1,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "208",
+    "imb_ft3": -217.5,
+    "steps_at_cap": 0.0,
+    "upstream": "206",
+    "split": false
+   },
+   {
+    "link": "link1",
+    "imb_ft3": 147.1,
+    "steps_at_cap": 0.0,
+    "upstream": "mid",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "XPSWMM/EXQ2B.inp",
+  "kw": "-3.953",
+  "dw": "-0.345",
+  "warn04": 4,
+  "top": [
+   {
+    "link": "link",
+    "imb_ft3": -1672.1,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "207",
+    "imb_ft3": -1672.1,
+    "steps_at_cap": 0.0,
+    "upstream": "inlet",
+    "split": true
+   },
+   {
+    "link": "208",
+    "imb_ft3": -217.5,
+    "steps_at_cap": 0.0,
+    "upstream": "206",
+    "split": false
+   },
+   {
+    "link": "link1",
+    "imb_ft3": 147.1,
+    "steps_at_cap": 0.0,
+    "upstream": "mid",
+    "split": false
+   }
+  ],
+  "cause": "F3 flat conduits"
+ },
+ {
+  "inp": "OWA_EXTRAN/bug_item8_link_seepage.inp",
+  "kw": "-3.950",
+  "dw": "0.019",
+  "warn04": 0,
+  "top": [
+   {
+    "link": "1602",
+    "imb_ft3": -35570.7,
+    "steps_at_cap": 535.0,
+    "upstream": "82309",
+    "split": false
+   },
+   {
+    "link": "1030",
+    "imb_ft3": 17403.4,
+    "steps_at_cap": 0.0,
+    "upstream": "10309",
+    "split": false
+   },
+   {
+    "link": "1570",
+    "imb_ft3": 10869.7,
+    "steps_at_cap": 0.0,
+    "upstream": "15009",
+    "split": false
+   },
+   {
+    "link": "8130",
+    "imb_ft3": 3904.5,
+    "steps_at_cap": 0.0,
+    "upstream": "81309",
+    "split": true
+   }
+  ],
+  "cause": "F1 at capacity"
+ }
+]

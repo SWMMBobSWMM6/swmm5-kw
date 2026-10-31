@@ -67,6 +67,22 @@ Written by `tools/update_readme.py` from `results/`; the app's Verify tab and th
 Refused by stock and run by swmm5-kw: `NCIMM_ROUTING/water.inp` (stock ERROR 131; swmm5-kw routing continuity -2.167% with HEAD).
 Inconclusive: `OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-huge/IO-02_end-time-1e30.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `NCIMM_Training/EPA-5.1.013-InfilTrench/infiltration5_longerm.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `SWMM5_NCIMM/1220_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/4190_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/669_Subs_4500_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/indy_small.inp` (stock run hit the time cap); `Simon_EPA/Session38_100_Control_Rules.inp` (stock run hit the time cap); `z1000Years/1000yearSimulation_Case6.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case1.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case0.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case0_wq.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical).
 
+**What-if: every DYNWAVE corpus model switched to KINWAVE** (`tools/corpus_gate.py --force-routing KINWAVE --modes 11`, interface-file models left out). Not how these models were built; it measures how often a real network has a fork or a loop.
+
+| | Models |
+|---|---|
+| Switched to KINWAVE | 3,218 |
+| Stock runs it | 1,412 (swmm5-kw identical in 1,412, different in 0) |
+| Stock stops on another input check (not a fork or loop) | 874 (swmm5-kw gives the same report) |
+| Stock refuses with ERROR 133 or 131 | 925 |
+| ... and swmm5-kw runs it to the end | 234 (per network, a median of 1 split junction and 0 loop-closing links, at most 15 and 8; routing continuity error beyond ±1% in 60) |
+| ... and swmm5-kw then stops on another check | 691 (ERROR 115 ×583, ERROR 139 ×357, ERROR 133 ×323, ERROR 141 ×12) |
+| Inconclusive or stock crashes | 7 |
+
+The 30 largest continuity errors among the switched models, traced with `tools/conduit_balance.sh` (`results/whatif_outliers.json`): 18 make water in conduits pinned at capacity (finding 1), 11 in flat conduits that never fill (finding 3), 1 fails under stock DYNWAVE as well, 0 not attributed. Three were made into trees and run through stock 5.2.4 (`results/tree_tests.md`).
+
+HEAD overshoot (open defect): in 20 of the 234 switched networks swmm5-kw routes, a junction handed out more than arrived, at most 1.48e-06 cfs. With `patch/kw-v1.1-head-overshoot.patch` (not applied) the largest gap is 1.8e-12 cfs, and output changes in 20 networks, all of them ones where the defect fired (0 elsewhere; `tools/head_fix_check.py`, `results/head_fix_check.json`).
+
 **Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):
 
 | Routing and rule | 3.0 ft pipe | 1.5 ft pipe | Routing continuity |
@@ -84,9 +100,9 @@ The full verification record, with what each gate proves and how to rerun it: [d
 
 All three appear in unmodified EPA 5.2.4 on networks with nothing to split or loop ([docs/FINDINGS.md](docs/FINDINGS.md)):
 
-1. **Kinematic wave leaks water just above pipe capacity.** Routing continuity is about 0.1% below the 33.35 cfs capacity, grows to **−10.18% at 37.5 cfs**, and drops back to −0.48% at 38 cfs.
+1. **Kinematic wave makes water at and just above pipe capacity.** On the three-pipe chain, routing continuity is about 0.1% below the 33.35 cfs capacity, grows to **−10.18% at 37.5 cfs**, and drops back to −0.48% at 38 cfs. (Negative means more water reported leaving than entered.) On a corpus model switched to KINWAVE and made into a tree, stock reports **−10,069%**: one conduit at capacity for every step delivers 39.6 million ft³ more than it receives.
 2. **Kinematic wave results depend on the maths library.** glibc and musl builds of the same source agree for 241 minutes of the 30 cfs chain, then differ by up to about 2%. Dynamic wave and steady flow are identical under both. The wasm engines match musl.
-3. **Kinematic wave loses water in flat channels.** One flat 1,000 ft trapezoidal channel at 0.03 cfs loses 11.0% of its water in a day (EPA's WARNING 04 case); with a 1 ft fall, 1.2%. This explains most of the large continuity errors in the what-if pass below.
+3. **Kinematic wave makes water in flat channels.** One flat 1,000 ft trapezoidal channel at 0.03 cfs reports a routing continuity error of −11.0% in a day (EPA's WARNING 04 case); with a 1 ft fall, −1.2%. Findings 1 and 3 account for 29 of the 30 largest continuity errors in the what-if pass above; the 30th is a deck that fails under stock dynamic wave too.
 
 ## Corrections to the September 2026 write-up
 

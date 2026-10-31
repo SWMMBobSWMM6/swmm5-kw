@@ -34,7 +34,7 @@ if Wf:
           f"| Stock runs it | {Wf['stock_ran']:,} (swmm5-kw identical in {Wf['identical']:,}, different in {Wf['different']}) |",
           f"| Stock stops on another input check (not a fork or loop) | {Wf['stock_other_errors']:,} (swmm5-kw gives the same report) |",
           f"| Stock refuses with ERROR 133 or 131 | {Wf['census']:,} |",
-          f"| ... and swmm5-kw runs it to the end | {Wf['census_ran']:,} (median {Wf['split_median']:g} split junctions and {Wf['loop_median']:g} loop links; routing continuity over 1% in {Wf['cont_over_1']}) |",
+          f"| ... and swmm5-kw runs it to the end | {Wf['census_ran']:,} (per network, a median of {Wf['split_median']:g} split junction{'' if Wf['split_median'] == 1 else 's'} and {Wf['loop_median']:g} loop-closing link{'' if Wf['loop_median'] == 1 else 's'}, at most {Wf['split_max']:g} and {Wf['loop_max']:g}; routing continuity error beyond ±1% in {Wf['cont_over_1']}) |",
           f"| ... and swmm5-kw then stops on another check | {Wf['census_error']:,}" + (f" ({codes})" if codes else '') + ' |',
           f"| Inconclusive or stock crashes | {Wf['inconclusive'] + Wf['crash_same']} |"]
 OL = os.path.join(R, 'results', 'whatif_outliers.json'); FXp = os.path.join(R, 'results', 'head_fix_check.json')
@@ -42,8 +42,8 @@ if Wf and os.path.exists(OL):
     import collections
     O = json.load(open(OL)); cc = collections.Counter(o['cause'] for o in O)
     L += ['', f"The {len(O)} largest continuity errors among the switched models, traced with `tools/conduit_balance.sh` (`results/whatif_outliers.json`): "
-          f"{cc.get('F3 flat conduits', 0)} lose their water in flat conduits that never fill (finding 3), {cc.get('F1 at capacity', 0)} in conduits pinned at capacity (finding 1), "
-          f"{cc.get('model (stock DW also fails)', 0)} also fail under stock DYNWAVE, {cc.get('not attributed (no conduit imbalance found)', 0)} not attributed."]
+          f"{cc.get('F1 at capacity', 0)} make water in conduits pinned at capacity (finding 1), {cc.get('F3 flat conduits', 0)} in flat conduits that never fill (finding 3), "
+          f"{cc.get('model (stock DW also fails)', 0)} {'fails' if cc.get('model (stock DW also fails)', 0) == 1 else 'fail'} under stock DYNWAVE as well, {cc.get('not attributed (no conduit imbalance found)', 0) + cc.get('not attributed', 0)} not attributed. Three were made into trees and run through stock 5.2.4 (`results/tree_tests.md`)."]
 if os.path.exists(FXp):
     X = json.load(open(FXp))['summary']
     L += ['', f"HEAD overshoot (open defect): in {X['defect_fired']} of the {X['networks']:,} switched networks swmm5-kw routes, a junction handed out more than arrived, at most {X['max_imb_current']:.2e} cfs. "

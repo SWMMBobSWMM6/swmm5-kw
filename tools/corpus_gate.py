@@ -149,7 +149,7 @@ def one_run(inp):
         rc, dt, r0, o0, _ = run(STOCK, inp, d)
         rec.update(rc_stock=rc, t_stock=round(dt, 4), out_bytes=o0[1], out_sha=o0[0][:16],
                    rpt_bytes=r0[1], stock_errors=errors(r0[2]))
-        census = bool(set(rec['stock_errors']) & {131, 133})
+        census = bool(set(rec['stock_errors']) & {131, 133}) or rc in (131, 133)   # rc: SWMM's error code
         rec['census'] = census
         if rc == 'timeout':                       # EPA itself did not finish: nothing to compare
             rec['inconclusive'] = 'stock run hit the time cap'
@@ -165,7 +165,7 @@ def one_run(inp):
                     if x != y:
                         sm['rpt_first_diff'] = [i, x.decode('latin-1')[:120], y.decode('latin-1')[:120]]; break
             if m != '00' and (census or not (sm['out_same'] and sm['rpt_same'])):
-                sm['errors'] = errors(r[2]); sm['continuity'] = continuity(r[2]); sm['stats'] = st
+                sm['errors'] = errors(r[2]) or ([rc] if isinstance(rc, int) and rc > 0 else []); sm['continuity'] = continuity(r[2]); sm['stats'] = st
                 sm['kw_block'] = kwblock(r[2])
             rec['m' + m] = sm
     return rec

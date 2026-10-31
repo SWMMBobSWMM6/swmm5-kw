@@ -52,9 +52,13 @@ for r in todo:
         os.remove(cp)
     rows.append(dict(inp=r['inp'], imb_current=a['imb'], imb_fixed=b['imb'], out_same=a['sha'] == b['sha'],
                      cont_current=a['cont'], cont_fixed=b['cont']))
-fired = [x for x in rows if (x['imb_current'] or 0) > 1e-12]
+# the defect fired where the fix narrows the gap; gaps it leaves alone (1e-13 to 2e-12 cfs on large
+# flows) are rounding, not this defect
+fired = [x for x in rows if (x['imb_fixed'] or 0) < (x['imb_current'] or 0)]
 summary = dict(networks=len(rows), defect_fired=len(fired),
                max_imb_current=max((x['imb_current'] or 0) for x in rows), max_imb_fixed=max((x['imb_fixed'] or 0) for x in rows),
+               min_imb_where_fired=min((x['imb_current'] or 0) for x in fired) if fired else 0,
+               max_imb_fixed_where_fired=max((x['imb_fixed'] or 0) for x in fired) if fired else 0,
                changed_where_defect_fired=sum(1 for x in fired if not x['out_same']),
                changed_elsewhere=sum(1 for x in rows if not x['out_same'] and x not in fired))
 json.dump(dict(summary=summary, rows=rows), open(OUT, 'w'), indent=1)

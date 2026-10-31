@@ -1,0 +1,1886 @@
+{
+ "summary": {
+  "networks": 234,
+  "defect_fired": 20,
+  "max_imb_current": 1.48e-06,
+  "max_imb_fixed": 1.82e-12,
+  "min_imb_where_fired": 2.25e-11,
+  "max_imb_fixed_where_fired": 2.22e-16,
+  "changed_where_defect_fired": 20,
+  "changed_elsewhere": 0
+ },
+ "rows": [
+  {
+   "inp": "OpenSWMM_Code_Review_2026/3-boundary/BND-07-culvert-inlet-control-adverse-slope/BND-07_reverse-positive.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "OpenSWMM_Code_Review_2026/4-io/IO-56-normal-flow-limited-when-dry/IO-56_overflow.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-0.451",
+   "cont_fixed": "-0.451"
+  },
+  {
+   "inp": "XPSWMM/GRAY1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.158",
+   "cont_fixed": "-1.158"
+  },
+  {
+   "inp": "XPSWMM/GRAY2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.158",
+   "cont_fixed": "-1.158"
+  },
+  {
+   "inp": "XPSWMM/basic2a.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.183",
+   "cont_fixed": "-0.183"
+  },
+  {
+   "inp": "XPSWMM/EXINT.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.151",
+   "cont_fixed": "-1.151"
+  },
+  {
+   "inp": "XPSWMM/trqsplit.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-0.307",
+   "cont_fixed": "-0.307"
+  },
+  {
+   "inp": "XPSWMM/RAFTEST1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.116",
+   "cont_fixed": "-0.116"
+  },
+  {
+   "inp": "XPSWMM/DAT.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-0.093",
+   "cont_fixed": "-0.093"
+  },
+  {
+   "inp": "XPSWMM/TRDESIGN.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-0.307",
+   "cont_fixed": "-0.307"
+  },
+  {
+   "inp": "XPSWMM/SCSTK.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.070",
+   "cont_fixed": "-0.070"
+  },
+  {
+   "inp": "XPSWMM/HASAN.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/HASAN1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/WESTON.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.088",
+   "cont_fixed": "-0.088"
+  },
+  {
+   "inp": "XPSWMM/Offline.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.208",
+   "cont_fixed": "-0.208"
+  },
+  {
+   "inp": "XPSWMM/INT1.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-1.279",
+   "cont_fixed": "-1.279"
+  },
+  {
+   "inp": "XPSWMM/SCS2.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-1.279",
+   "cont_fixed": "-1.279"
+  },
+  {
+   "inp": "XPSWMM/INTL2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.092",
+   "cont_fixed": "-0.092"
+  },
+  {
+   "inp": "XPSWMM/SCSL1.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-0.637",
+   "cont_fixed": "-0.637"
+  },
+  {
+   "inp": "XPSWMM/SCSL2.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-0.637",
+   "cont_fixed": "-0.637"
+  },
+  {
+   "inp": "XPSWMM/INT1A.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.139",
+   "cont_fixed": "-0.139"
+  },
+  {
+   "inp": "XPSWMM/FUBAR.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/ELEANOR_v6.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.022",
+   "cont_fixed": "-0.022"
+  },
+  {
+   "inp": "XPSWMM/RUNTEST.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.068",
+   "cont_fixed": "-0.068"
+  },
+  {
+   "inp": "XPSWMM/mod102.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-900.280",
+   "cont_fixed": "-900.280"
+  },
+  {
+   "inp": "XPSWMM/EXQ2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.827",
+   "cont_fixed": "-1.827"
+  },
+  {
+   "inp": "XPSWMM/EXQ2A.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-3.953",
+   "cont_fixed": "-3.953"
+  },
+  {
+   "inp": "XPSWMM/EXQ2B.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-3.953",
+   "cont_fixed": "-3.953"
+  },
+  {
+   "inp": "XPSWMM/EXQ2C.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.217",
+   "cont_fixed": "-0.217"
+  },
+  {
+   "inp": "XPSWMM/EXMGD1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.215",
+   "cont_fixed": "-0.215"
+  },
+  {
+   "inp": "XPSWMM/DWFMAST0.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.193",
+   "cont_fixed": "-0.193"
+  },
+  {
+   "inp": "XPSWMM/DWFMAST.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.193",
+   "cont_fixed": "-0.193"
+  },
+  {
+   "inp": "XPSWMM/DWFMAST1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.193",
+   "cont_fixed": "-0.193"
+  },
+  {
+   "inp": "XPSWMM/DWFMAST2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.193",
+   "cont_fixed": "-0.193"
+  },
+  {
+   "inp": "XPSWMM/TESTREG.inp",
+   "imb_current": 2.78e-17,
+   "imb_fixed": 2.78e-17,
+   "out_same": true,
+   "cont_current": "-0.901",
+   "cont_fixed": "-0.901"
+  },
+  {
+   "inp": "XPSWMM/SCS1A.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.103",
+   "cont_fixed": "-0.103"
+  },
+  {
+   "inp": "XPSWMM/NRH_TRY.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.010",
+   "cont_fixed": "0.010"
+  },
+  {
+   "inp": "XPSWMM/PETERKO.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/PUMPDEEP.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/Nrh_try7.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/PUMPWELL.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/mod93.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/pmpwell.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/pumpbyq.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.002",
+   "cont_fixed": "0.002"
+  },
+  {
+   "inp": "XPSWMM/TAMPA1.inp",
+   "imb_current": 6.94e-18,
+   "imb_fixed": 6.94e-18,
+   "out_same": true,
+   "cont_current": "-0.317",
+   "cont_fixed": "-0.317"
+  },
+  {
+   "inp": "XPSWMM/RAFTS1.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-4.865",
+   "cont_fixed": "-4.865"
+  },
+  {
+   "inp": "XPSWMM/STRTMAT.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-1.391",
+   "cont_fixed": "-1.391"
+  },
+  {
+   "inp": "XPSWMM/FLOOD3.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.757",
+   "cont_fixed": "-0.757"
+  },
+  {
+   "inp": "XPSWMM/EM0331.inp",
+   "imb_current": 8.88e-16,
+   "imb_fixed": 8.88e-16,
+   "out_same": true,
+   "cont_current": "-3.906",
+   "cont_fixed": "-3.906"
+  },
+  {
+   "inp": "XPSWMM/DATA2.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-1.156",
+   "cont_fixed": "-1.156"
+  },
+  {
+   "inp": "XPSWMM/FRED1-SC.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.096",
+   "cont_fixed": "-0.096"
+  },
+  {
+   "inp": "XPSWMM/T2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod23.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod23a.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod23_v5.1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod78a.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod96.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod96a.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/mod96b.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/variable_speed.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/TESTEXT2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.006",
+   "cont_fixed": "0.006"
+  },
+  {
+   "inp": "XPSWMM/TEST2EXT.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/SHEET.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.073",
+   "cont_fixed": "-0.073"
+  },
+  {
+   "inp": "XPSWMM/TEST2SWM.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.017",
+   "cont_fixed": "0.017"
+  },
+  {
+   "inp": "XPSWMM/BOBSCS.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.096",
+   "cont_fixed": "-0.096"
+  },
+  {
+   "inp": "XPSWMM/FRED-SCS.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.096",
+   "cont_fixed": "-0.096"
+  },
+  {
+   "inp": "XPSWMM/STRTMAS.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-4.343",
+   "cont_fixed": "-4.343"
+  },
+  {
+   "inp": "XPSWMM/EAXMPL2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.035",
+   "cont_fixed": "0.035"
+  },
+  {
+   "inp": "XPSWMM/note1a.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.034",
+   "cont_fixed": "-0.034"
+  },
+  {
+   "inp": "XPSWMM/note2a.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.034",
+   "cont_fixed": "-0.034"
+  },
+  {
+   "inp": "XPSWMM/TIDALS.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-1.609",
+   "cont_fixed": "-1.609"
+  },
+  {
+   "inp": "XPSWMM/Testext2A.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.173",
+   "cont_fixed": "0.173"
+  },
+  {
+   "inp": "XPSWMM/DUMMTEST.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/TCONFLU.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/RCONFLU.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/ERPONDS.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.017",
+   "cont_fixed": "0.017"
+  },
+  {
+   "inp": "XPSWMM/BENDDOWN.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/BENDWEIR.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "SWMM5_NCIMM/Inlets.inp",
+   "imb_current": 8.88e-16,
+   "imb_fixed": 8.88e-16,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "XPSWMM/FLOOD2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.402",
+   "cont_fixed": "-0.402"
+  },
+  {
+   "inp": "XPSWMM/T11VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.130",
+   "cont_fixed": "-0.130"
+  },
+  {
+   "inp": "XPSWMM/T15VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.130",
+   "cont_fixed": "-0.130"
+  },
+  {
+   "inp": "XPSWMM/T5VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.130",
+   "cont_fixed": "-0.130"
+  },
+  {
+   "inp": "XPSWMM/T10VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.112",
+   "cont_fixed": "-0.112"
+  },
+  {
+   "inp": "XPSWMM/T12VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.112",
+   "cont_fixed": "-0.112"
+  },
+  {
+   "inp": "XPSWMM/T14VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.112",
+   "cont_fixed": "-0.112"
+  },
+  {
+   "inp": "XPSWMM/T1VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.112",
+   "cont_fixed": "-0.112"
+  },
+  {
+   "inp": "XPSWMM/OUTFALLS.inp",
+   "imb_current": 8.88e-16,
+   "imb_fixed": 8.88e-16,
+   "out_same": true,
+   "cont_current": "-0.446",
+   "cont_fixed": "-0.446"
+  },
+  {
+   "inp": "XPSWMM/TEPA.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-21.085",
+   "cont_fixed": "-21.085"
+  },
+  {
+   "inp": "XPSWMM/SCSALL.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.135",
+   "cont_fixed": "-0.135"
+  },
+  {
+   "inp": "XPSWMM/SCSALL1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.135",
+   "cont_fixed": "-0.135"
+  },
+  {
+   "inp": "XPSWMM/EXTUT13.inp",
+   "imb_current": 3.02e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.043",
+   "cont_fixed": "-0.042"
+  },
+  {
+   "inp": "XPSWMM/EXTUT14.inp",
+   "imb_current": 3.02e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.043",
+   "cont_fixed": "-0.042"
+  },
+  {
+   "inp": "XPSWMM/EXTUT15.inp",
+   "imb_current": 1.12e-07,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.043",
+   "cont_fixed": "-0.042"
+  },
+  {
+   "inp": "XPSWMM/EXTUT18.inp",
+   "imb_current": 1.47e-06,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.048",
+   "cont_fixed": "-0.047"
+  },
+  {
+   "inp": "XPSWMM/IMPORTLL.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.617",
+   "cont_fixed": "-0.617"
+  },
+  {
+   "inp": "XPSWMM/STONER.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.617",
+   "cont_fixed": "-0.617"
+  },
+  {
+   "inp": "XPSWMM/T1X.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.617",
+   "cont_fixed": "-0.617"
+  },
+  {
+   "inp": "XPSWMM/ATTEN.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-20.955",
+   "cont_fixed": "-20.955"
+  },
+  {
+   "inp": "XPSWMM/ATTENA.inp",
+   "imb_current": 5.55e-17,
+   "imb_fixed": 5.55e-17,
+   "out_same": true,
+   "cont_current": "-18.651",
+   "cont_fixed": "-18.651"
+  },
+  {
+   "inp": "XPSWMM/EXTUT17.inp",
+   "imb_current": 1.48e-06,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.042",
+   "cont_fixed": "-0.041"
+  },
+  {
+   "inp": "XPSWMM/WQALL.inp",
+   "imb_current": 1.39e-17,
+   "imb_fixed": 1.39e-17,
+   "out_same": true,
+   "cont_current": "-0.107",
+   "cont_fixed": "-0.107"
+  },
+  {
+   "inp": "XPSWMM/TEST1EXT.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.617",
+   "cont_fixed": "-0.617"
+  },
+  {
+   "inp": "XPSWMM/TESTEXT1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.308",
+   "cont_fixed": "-1.308"
+  },
+  {
+   "inp": "XPSWMM/ATTENT.inp",
+   "imb_current": 5.55e-17,
+   "imb_fixed": 5.55e-17,
+   "out_same": true,
+   "cont_current": "-18.651",
+   "cont_fixed": "-18.651"
+  },
+  {
+   "inp": "XPSWMM/TESTEXTA.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.147",
+   "cont_fixed": "-1.147"
+  },
+  {
+   "inp": "XPSWMM/TESTSWM2.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.645",
+   "cont_fixed": "-0.645"
+  },
+  {
+   "inp": "XPSWMM/RTCflow.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.007",
+   "cont_fixed": "-0.007"
+  },
+  {
+   "inp": "XPSWMM/TESTEXTB.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.690",
+   "cont_fixed": "-0.690"
+  },
+  {
+   "inp": "XPSWMM/NOAH1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.690",
+   "cont_fixed": "-0.690"
+  },
+  {
+   "inp": "XPSWMM/TESTEXTC.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.690",
+   "cont_fixed": "-0.690"
+  },
+  {
+   "inp": "XPSWMM/T13VALVE.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-0.130",
+   "cont_fixed": "-0.130"
+  },
+  {
+   "inp": "XPSWMM/T17VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.484",
+   "cont_fixed": "-0.484"
+  },
+  {
+   "inp": "XPSWMM/T19VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.484",
+   "cont_fixed": "-0.484"
+  },
+  {
+   "inp": "XPSWMM/T21VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.484",
+   "cont_fixed": "-0.484"
+  },
+  {
+   "inp": "XPSWMM/T16VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/T18VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/T20VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/T4VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.491",
+   "cont_fixed": "-0.491"
+  },
+  {
+   "inp": "XPSWMM/T22VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/T23VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/T2VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/T3VALVE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.457",
+   "cont_fixed": "-0.457"
+  },
+  {
+   "inp": "XPSWMM/SCS_WA.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.617",
+   "cont_fixed": "-0.617"
+  },
+  {
+   "inp": "SWMM5_NCIMM/SurchargeModel.inp",
+   "imb_current": 1.82e-12,
+   "imb_fixed": 1.82e-12,
+   "out_same": true,
+   "cont_current": "-0.003",
+   "cont_fixed": "-0.003"
+  },
+  {
+   "inp": "SWMM5_NCIMM/m.inp",
+   "imb_current": 1.82e-12,
+   "imb_fixed": 1.82e-12,
+   "out_same": true,
+   "cont_current": "-0.003",
+   "cont_fixed": "-0.003"
+  },
+  {
+   "inp": "OWA_ROUTING/test4.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.084",
+   "cont_fixed": "-0.084"
+  },
+  {
+   "inp": "XPSWMM/OFFLINE2.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.922",
+   "cont_fixed": "-0.922"
+  },
+  {
+   "inp": "XPSWMM/OFFLINE3.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-1.317",
+   "cont_fixed": "-1.317"
+  },
+  {
+   "inp": "XPSWMM/OFFLINE5.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.922",
+   "cont_fixed": "-0.922"
+  },
+  {
+   "inp": "XPSWMM/PEBBLE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.093",
+   "cont_fixed": "-0.093"
+  },
+  {
+   "inp": "XPSWMM/OFFLINE6.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-18.040",
+   "cont_fixed": "-18.040"
+  },
+  {
+   "inp": "XPSWMM/Japan WQ Example.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-1.019",
+   "cont_fixed": "-1.019"
+  },
+  {
+   "inp": "XPSWMM/Japan WQ Example_v16.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-1.019",
+   "cont_fixed": "-1.019"
+  },
+  {
+   "inp": "XPSWMM/OFFLINE7.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-18.040",
+   "cont_fixed": "-18.040"
+  },
+  {
+   "inp": "XPSWMM/salmon_restoration.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.338",
+   "cont_fixed": "-0.338"
+  },
+  {
+   "inp": "XPSWMM/Japan WQ Example_v19.1.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-1.019",
+   "cont_fixed": "-1.019"
+  },
+  {
+   "inp": "XPSWMM/Japan WQ Example_v16_v16.inp",
+   "imb_current": 4.44e-16,
+   "imb_fixed": 4.44e-16,
+   "out_same": true,
+   "cont_current": "-1.019",
+   "cont_fixed": "-1.019"
+  },
+  {
+   "inp": "XPSWMM/BROWNEW2.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-1.882",
+   "cont_fixed": "-1.882"
+  },
+  {
+   "inp": "XPSWMM/EXTUT1.inp",
+   "imb_current": 3.26e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.054",
+   "cont_fixed": "-0.052"
+  },
+  {
+   "inp": "XPSWMM/TORONTO5.inp",
+   "imb_current": 3.47e-18,
+   "imb_fixed": 3.47e-18,
+   "out_same": true,
+   "cont_current": "0.057",
+   "cont_fixed": "0.057"
+  },
+  {
+   "inp": "XPSWMM/EXTUT3.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.050",
+   "cont_fixed": "-0.049"
+  },
+  {
+   "inp": "XPSWMM/EXTUT2A.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.050",
+   "cont_fixed": "-0.049"
+  },
+  {
+   "inp": "XPSWMM/EXTUT3A.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.050",
+   "cont_fixed": "-0.049"
+  },
+  {
+   "inp": "XPSWMM/EXTUT4.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.050",
+   "cont_fixed": "-0.049"
+  },
+  {
+   "inp": "XPSWMM/ALLORF.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.025",
+   "cont_fixed": "-0.025"
+  },
+  {
+   "inp": "Hydraulics/Normal_Flow_Froude_Number.inp",
+   "imb_current": 1.82e-12,
+   "imb_fixed": 1.82e-12,
+   "out_same": true,
+   "cont_current": "-0.003",
+   "cont_fixed": "-0.003"
+  },
+  {
+   "inp": "EPA/Normal_Flow_Froude_Number.inp",
+   "imb_current": 1.82e-12,
+   "imb_fixed": 1.82e-12,
+   "out_same": true,
+   "cont_current": "-0.003",
+   "cont_fixed": "-0.003"
+  },
+  {
+   "inp": "XPSWMM/EXTUT10.inp",
+   "imb_current": 3.51e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.057",
+   "cont_fixed": "-0.055"
+  },
+  {
+   "inp": "XPSWMM/EXTUT7.inp",
+   "imb_current": 3.46e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.056",
+   "cont_fixed": "-0.054"
+  },
+  {
+   "inp": "XPSWMM/EXTUT8.inp",
+   "imb_current": 3.51e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.057",
+   "cont_fixed": "-0.055"
+  },
+  {
+   "inp": "XPSWMM/EXTUT11.inp",
+   "imb_current": 3.26e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.004",
+   "cont_fixed": "-0.004"
+  },
+  {
+   "inp": "XPSWMM/EXTUT9.inp",
+   "imb_current": 3.46e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.056",
+   "cont_fixed": "-0.053"
+  },
+  {
+   "inp": "XPSWMM/EXTUT12.inp",
+   "imb_current": 3.26e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.004",
+   "cont_fixed": "-0.004"
+  },
+  {
+   "inp": "XPSWMM/EXTUT5.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.050",
+   "cont_fixed": "-0.049"
+  },
+  {
+   "inp": "XPSWMM/EXTUT6.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.050",
+   "cont_fixed": "-0.049"
+  },
+  {
+   "inp": "XPSWMM/ALLWEIR.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.014",
+   "cont_fixed": "0.014"
+  },
+  {
+   "inp": "XPSWMM/DUCKS.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.005",
+   "cont_fixed": "0.005"
+  },
+  {
+   "inp": "EPA/ALL_Outfall_Types_Model.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.066",
+   "cont_fixed": "0.066"
+  },
+  {
+   "inp": "Hydraulics/ALL_Outfall_Types_Model.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.066",
+   "cont_fixed": "0.066"
+  },
+  {
+   "inp": "SWMM5_NCIMM/ALL_Outfall_Types.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.066",
+   "cont_fixed": "0.066"
+  },
+  {
+   "inp": "XPSWMM/EXTUT2.inp",
+   "imb_current": 3.3e-08,
+   "imb_fixed": 1.39e-17,
+   "out_same": false,
+   "cont_current": "-0.067",
+   "cont_fixed": "-0.066"
+  },
+  {
+   "inp": "NCIMM_ROUTING/Session66_ALL_Outfall_Types.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.066",
+   "cont_fixed": "0.066"
+  },
+  {
+   "inp": "NCIMM_Training/Session_4_50_Examples/Session66_ALL_Outfall_Types.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.066",
+   "cont_fixed": "0.066"
+  },
+  {
+   "inp": "EPA/SurchargeTest.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.257",
+   "cont_fixed": "-0.257"
+  },
+  {
+   "inp": "Hydraulics/SurchargeTest.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.257",
+   "cont_fixed": "-0.257"
+  },
+  {
+   "inp": "XPSWMM/PEBBLA13.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.009",
+   "cont_fixed": "-0.009"
+  },
+  {
+   "inp": "XPSWMM/PEBBLA13_v1.01.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.009",
+   "cont_fixed": "-0.009"
+  },
+  {
+   "inp": "XPSWMM/PEBBLE13.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.009",
+   "cont_fixed": "-0.009"
+  },
+  {
+   "inp": "XPSWMM/PEBBLE13_v1.01.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.009",
+   "cont_fixed": "-0.009"
+  },
+  {
+   "inp": "EPA/pumps_activated_sludge.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.024",
+   "cont_fixed": "-0.024"
+  },
+  {
+   "inp": "Hydraulics/pumps_activated_sludge.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.024",
+   "cont_fixed": "-0.024"
+  },
+  {
+   "inp": "Viewer-Demo-Results/extran6.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-1.468",
+   "cont_fixed": "-1.468"
+  },
+  {
+   "inp": "XPSWMM/NCHANNEL.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.004",
+   "cont_fixed": "-0.004"
+  },
+  {
+   "inp": "Pumps/extran6_type1.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-6.932",
+   "cont_fixed": "-6.932"
+  },
+  {
+   "inp": "Pumps/extran6_type3.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-6.932",
+   "cont_fixed": "-6.932"
+  },
+  {
+   "inp": "Pumps/extran6_type4.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-6.932",
+   "cont_fixed": "-6.932"
+  },
+  {
+   "inp": "Simon_EPA/Session65_ALL_Outfall_Types.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.036",
+   "cont_fixed": "0.036"
+  },
+  {
+   "inp": "Training/Exercise6_ALL_Outfall_Types.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "0.036",
+   "cont_fixed": "0.036"
+  },
+  {
+   "inp": "Pumps/extran6_type2.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-6.932",
+   "cont_fixed": "-6.932"
+  },
+  {
+   "inp": "Pumps/extran6_type1_control_rule.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-7.190",
+   "cont_fixed": "-7.190"
+  },
+  {
+   "inp": "OWA_EXTRAN/extran6.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-1.468",
+   "cont_fixed": "-1.468"
+  },
+  {
+   "inp": "OWA_EXTRAN/extran6_type1.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-6.932",
+   "cont_fixed": "-6.932"
+  },
+  {
+   "inp": "Pumps/extran6_type2_control_rule.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-6.932",
+   "cont_fixed": "-6.932"
+  },
+  {
+   "inp": "Pumps/extran6_type3_control_rule.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-7.190",
+   "cont_fixed": "-7.190"
+  },
+  {
+   "inp": "Pumps/extran6_type4_control_rule.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-7.190",
+   "cont_fixed": "-7.190"
+  },
+  {
+   "inp": "OWA_EXTRAN/extran6_slot.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-1.468",
+   "cont_fixed": "-1.468"
+  },
+  {
+   "inp": "XPSWMM/HLAKE.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.575",
+   "cont_fixed": "0.575"
+  },
+  {
+   "inp": "15100/15100_ALL_Outfall_Types_Model.inp",
+   "imb_current": 1.07e-14,
+   "imb_fixed": 1.07e-14,
+   "out_same": true,
+   "cont_current": "-0.026",
+   "cont_fixed": "-0.026"
+  },
+  {
+   "inp": "OWA_EXTRAN/bug_item11_swmm5.1.014_more_links_than_nodes (1).inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-3.349",
+   "cont_fixed": "-3.349"
+  },
+  {
+   "inp": "OWA_EXTRAN/bug_item11_swmm5.1.014_more_links_than_nodes (2).inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-3.349",
+   "cont_fixed": "-3.349"
+  },
+  {
+   "inp": "OWA_EXTRAN/bug_item11_swmm5.1.014_more_links_than_nodes(1).inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-3.349",
+   "cont_fixed": "-3.349"
+  },
+  {
+   "inp": "OWA_EXTRAN/bug_item11_swmm5.1.014_more_links_than_nodes.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-3.349",
+   "cont_fixed": "-3.349"
+  },
+  {
+   "inp": "XPSWMM/ATTENA1.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-21.476",
+   "cont_fixed": "-21.476"
+  },
+  {
+   "inp": "XPSWMM/TORBEIN_v1.01.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.116",
+   "cont_fixed": "-0.116"
+  },
+  {
+   "inp": "15100/15100_ALL_Outfall_Types_Model_Duplicate_Outfalls.inp",
+   "imb_current": 1.07e-14,
+   "imb_fixed": 1.07e-14,
+   "out_same": true,
+   "cont_current": "-0.026",
+   "cont_fixed": "-0.026"
+  },
+  {
+   "inp": "XPSWMM/TORONTO.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-1.188",
+   "cont_fixed": "-1.188"
+  },
+  {
+   "inp": "XPSWMM/UPWSH1.inp",
+   "imb_current": 3.47e-18,
+   "imb_fixed": 3.47e-18,
+   "out_same": true,
+   "cont_current": "-10066.240",
+   "cont_fixed": "-10066.240"
+  },
+  {
+   "inp": "XPSWMM/UPWSH2.inp",
+   "imb_current": 3.47e-18,
+   "imb_fixed": 3.47e-18,
+   "out_same": true,
+   "cont_current": "-10066.240",
+   "cont_fixed": "-10066.240"
+  },
+  {
+   "inp": "XPSWMM/UPWSH3.inp",
+   "imb_current": 3.47e-18,
+   "imb_fixed": 3.47e-18,
+   "out_same": true,
+   "cont_current": "-10066.240",
+   "cont_fixed": "-10066.240"
+  },
+  {
+   "inp": "NCIMM_Training/Session_4_50_Examples/Session63_ALLORF.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.167",
+   "cont_fixed": "-0.167"
+  },
+  {
+   "inp": "Simon_EPA/Session63_ALLORF.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.167",
+   "cont_fixed": "-0.167"
+  },
+  {
+   "inp": "Training/Exercise3_ALLORF.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.167",
+   "cont_fixed": "-0.167"
+  },
+  {
+   "inp": "NCIMM_Training/Session_4_50_Examples/Session62_ALLWEIR.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.018",
+   "cont_fixed": "0.018"
+  },
+  {
+   "inp": "Simon_EPA/Session62_ALLWEIR.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.018",
+   "cont_fixed": "0.018"
+  },
+  {
+   "inp": "Training/Exercise2_ALLWEIR.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.018",
+   "cont_fixed": "0.018"
+  },
+  {
+   "inp": "OWA_EXTRAN/bug_item8_link_seepage.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-3.950",
+   "cont_fixed": "-3.950"
+  },
+  {
+   "inp": "XPSWMM/Alt1asa.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-6.492",
+   "cont_fixed": "-6.492"
+  },
+  {
+   "inp": "XPSWMM/SENSTVTY.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-1.601",
+   "cont_fixed": "-1.601"
+  },
+  {
+   "inp": "XPSWMM/422X1.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-30.285",
+   "cont_fixed": "-30.285"
+  },
+  {
+   "inp": "XPSWMM/422x.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-30.287",
+   "cont_fixed": "-30.287"
+  },
+  {
+   "inp": "NCIMM_ROUTING/Detentionpond.inp",
+   "imb_current": 8.88e-16,
+   "imb_fixed": 8.88e-16,
+   "out_same": true,
+   "cont_current": "-0.401",
+   "cont_fixed": "-0.401"
+  },
+  {
+   "inp": "XPSWMM/UMA.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-2.283",
+   "cont_fixed": "-2.283"
+  },
+  {
+   "inp": "SWMM5_NCIMM/30_H_Elements.inp",
+   "imb_current": 6.94e-18,
+   "imb_fixed": 6.94e-18,
+   "out_same": true,
+   "cont_current": "0.147",
+   "cont_fixed": "0.147"
+  },
+  {
+   "inp": "XPSWMM/brownew.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-18.183",
+   "cont_fixed": "-18.183"
+  },
+  {
+   "inp": "XPSWMM/TORONTO2.inp",
+   "imb_current": 3.47e-18,
+   "imb_fixed": 3.47e-18,
+   "out_same": true,
+   "cont_current": "-0.302",
+   "cont_fixed": "-0.302"
+  },
+  {
+   "inp": "XPSWMM/TORONTO1_v1.43.inp",
+   "imb_current": 3.47e-18,
+   "imb_fixed": 3.47e-18,
+   "out_same": true,
+   "cont_current": "-0.302",
+   "cont_fixed": "-0.302"
+  },
+  {
+   "inp": "XPSWMM/SW1.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "-0.396",
+   "cont_fixed": "-0.396"
+  },
+  {
+   "inp": "NCIMM_ROUTING/river.inp",
+   "imb_current": 4.55e-13,
+   "imb_fixed": 4.55e-13,
+   "out_same": true,
+   "cont_current": "-62.264",
+   "cont_fixed": "-62.264"
+  },
+  {
+   "inp": "NCIMM_Training/EPA-5.1.013-Hydraul/Hydraulic_a.inp",
+   "imb_current": 1.11e-16,
+   "imb_fixed": 1.11e-16,
+   "out_same": true,
+   "cont_current": "-0.069",
+   "cont_fixed": "-0.069"
+  },
+  {
+   "inp": "LEW_CHI_SWMM5.2/Tests_CHI/Example7-Final.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-0.585",
+   "cont_fixed": "-0.585"
+  },
+  {
+   "inp": "SWMM5_NCIMM/71_H&H_Elements_SI_Units.inp",
+   "imb_current": 2.27e-13,
+   "imb_fixed": 2.27e-13,
+   "out_same": true,
+   "cont_current": "-0.407",
+   "cont_fixed": "-0.407"
+  },
+  {
+   "inp": "Hydrology/7_Subs.inp",
+   "imb_current": 1.14e-13,
+   "imb_fixed": 1.14e-13,
+   "out_same": true,
+   "cont_current": "-0.407",
+   "cont_fixed": "-0.407"
+  },
+  {
+   "inp": "LEW_CHI_SWMM5.2/Tests_CHI/Example7-Inlets.inp",
+   "imb_current": 1.42e-14,
+   "imb_fixed": 1.42e-14,
+   "out_same": true,
+   "cont_current": "-0.565",
+   "cont_fixed": "-0.565"
+  },
+  {
+   "inp": "XPSWMM/EXIST.inp",
+   "imb_current": 2.25e-11,
+   "imb_fixed": 2.22e-16,
+   "out_same": false,
+   "cont_current": "-0.464",
+   "cont_fixed": "-0.464"
+  },
+  {
+   "inp": "Hydrology/OAK.inp",
+   "imb_current": 4.55e-13,
+   "imb_fixed": 4.55e-13,
+   "out_same": true,
+   "cont_current": "-0.174",
+   "cont_fixed": "-0.174"
+  },
+  {
+   "inp": "XPSWMM/TRY.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "-0.062",
+   "cont_fixed": "-0.062"
+  },
+  {
+   "inp": "XPSWMM/ESTERO C.inp",
+   "imb_current": 5.55e-17,
+   "imb_fixed": 5.55e-17,
+   "out_same": true,
+   "cont_current": "-1.310",
+   "cont_fixed": "-1.310"
+  },
+  {
+   "inp": "Hydrology/9_Subs.inp",
+   "imb_current": 3.55e-15,
+   "imb_fixed": 3.55e-15,
+   "out_same": true,
+   "cont_current": "-3.238",
+   "cont_fixed": "-3.238"
+  },
+  {
+   "inp": "Hydrology/FINAL FIX OKE SIMULASI EKSISTING KALIBRASI MODEL.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-0.163",
+   "cont_fixed": "-0.163"
+  },
+  {
+   "inp": "Hydrology/hydrology_100L.inp",
+   "imb_current": 7.11e-15,
+   "imb_fixed": 7.11e-15,
+   "out_same": true,
+   "cont_current": "-0.163",
+   "cont_fixed": "-0.163"
+  },
+  {
+   "inp": "EPA/empty_user4_extran_SW5.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  },
+  {
+   "inp": "OWA_USER/user4_arch_varied.inp",
+   "imb_current": 2.22e-16,
+   "imb_fixed": 2.22e-16,
+   "out_same": true,
+   "cont_current": "0.227",
+   "cont_fixed": "0.227"
+  },
+  {
+   "inp": "NCIMM_Training/Session_4_50_Examples/Session70_usgs_5_pollutants.inp",
+   "imb_current": 0.0,
+   "imb_fixed": 0.0,
+   "out_same": true,
+   "cont_current": "0.000",
+   "cont_fixed": "0.000"
+  }
+ ]
+}

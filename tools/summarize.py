@@ -12,7 +12,16 @@ R = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'results'))
 
 def load(name):
     p = os.path.join(R, name)
-    return [json.loads(l) for l in open(p)] if os.path.exists(p) else []
+    recs = [json.loads(l) for l in open(p)] if os.path.exists(p) else []
+    for r in recs:
+        # stockseq returns SWMM's error code; on a very large report the ERROR line can lie beyond
+        # the 400 KB the gate reads, so the return code decides as well as the text
+        if r['rc_stock'] in (131, 133) and not r['census']:
+            r['census'] = True; r['stock_errors'] = sorted(set(r['stock_errors']) | {r['rc_stock']})
+        for m in [k for k in r if k.startswith('m') and isinstance(r[k], dict)]:
+            if isinstance(r[m].get('rc'), int) and r[m]['rc'] > 0 and not r[m].get('errors'):
+                r[m]['errors'] = [r[m]['rc']]
+    return recs
 
 def same(sm): return sm and sm.get('rc') != 'timeout' and sm['out_same'] and sm['rpt_same']
 

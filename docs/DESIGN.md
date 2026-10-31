@@ -150,12 +150,16 @@ if ( sumFree > 0.0 && qT > sumCapped )
 ```
 
 Here `sumCapped` > `qT`, so no branch ran and the junction handed out 1.48e-6 cfs more than it
-had. The same thing happened in other corpus networks; `results/head_fix_check.json` lists every
-one. None of the shipped test networks reaches it (largest gap 7.1e-15 cfs).
+had. It happened in 20 of the 234 corpus networks swmm5-kw routed in the what-if pass, all of them
+XPSWMM tutorial decks (19 `EXTUT*` and `EXIST`), from 2.25e-11 to 1.48e-6 cfs. None of the shipped
+test networks reaches it (largest gap 7.1e-15 cfs).
 
 `patch/kw-v1.1-head-overshoot.patch` adds one branch after that test: when the capped outlets
-alone exceed what arrived, scale every outlet down to it, which can never break a cap. It brings
-EXTUT17's largest gap to 1.4e-17 cfs and leaves all 52 runs on `models/` byte-identical. It is
+alone exceed what arrived, scale every outlet down to it, which can never break a cap. On all 234
+networks (`tools/head_fix_check.py`, `results/head_fix_check.json`) it closes the gap to rounding
+(at most 2.2e-16 cfs) in the 20 where the defect fired and changes output in those 20 only; the
+largest gap left anywhere is 1.8e-12 cfs, which the fix does not touch and which is rounding on
+large flows. All 52 runs on `models/` stay byte-identical. It is
 **not applied**: the engine in `src/` is the one Bob's apps already embed, and changing it is
 his call ([DECISIONS.md](DECISIONS.md)).
 
