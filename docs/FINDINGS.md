@@ -1,9 +1,9 @@
-# Two behaviours of stock EPA SWMM 5.2.4
+# Three behaviours of stock EPA SWMM 5.2.4
 
-Both surfaced while building the extension. Neither is caused by it: they appear in
-unmodified 5.2.4 on plain three-pipe chains with nothing to split and no loop. Remeasured on
-29 October 2026 with the builds from `tools/build.sh`; the numbers match those first measured
-on 29 September.
+All three surfaced while building and gating the extension. None is caused by it: each appears
+in unmodified 5.2.4 on a network with nothing to split and no loop. F1 and F2 were remeasured
+on 29 October 2026 with the builds from `tools/build.sh` (the three September points match); F3
+was found on 31 October.
 
 ## F1. Kinematic wave loses continuity when a pipe runs right at capacity
 
@@ -62,4 +62,25 @@ So a claim that two KW runs come from "the same engine" needs the libm named. Th
 this repository's wasm gate compares against native musl builds, and why
 [VERIFICATION.md](VERIFICATION.md) says which build each number comes from.
 
-Both findings belong in a SWMM regression suite as invariants that stock 5.2.4 currently fails.
+## F3. Kinematic wave loses water in flat and nearly flat conduits
+
+Found on 31 October 2026 while explaining the large continuity errors in the corpus what-if pass
+(DYNWAVE models switched to KINWAVE, `docs/VERIFICATION.md`). One 1,000 ft trapezoidal channel
+(5 ft deep, 2 ft base, 1:1 sides, n 0.014), a constant inflow for one day, stock 5.2.4 with
+KINWAVE, musl build (`results/figdata.json`, `flat_channel`):
+
+| Drop over 1,000 ft | 0.03 cfs | 0.3 cfs | 3.0 cfs |
+|---|---|---|---|
+| 0 ft (EPA's WARNING 04: minimum elevation drop used) | **−11.01%** | −5.57% | −3.10% |
+| 0.1 ft | −2.48% | −1.08% | −0.54% |
+| 1.0 ft | −1.21% | −0.50% | −0.22% |
+
+The flatter the channel and the smaller the flow, the more water goes missing. In the what-if
+pass the same signature (losses in conduits that never reach capacity, in models where EPA writes
+WARNING 04) accounts for most of the largest continuity errors (`results/whatif_outliers.json`). On one of them, `XPSWMM/ATTEN.inp`,
+it was shown directly: with its two forks removed, so that stock 5.2.4 will route it, stock
+kinematic wave loses 21.86% of the routed water, and swmm5-kw with the forks in place loses
+20.96%. `tools/conduit_balance.sh` builds the per-conduit accounting used to find this. The
+mechanism inside `kinwave.c` has not been traced.
+
+All three findings belong in a SWMM regression suite as invariants that stock 5.2.4 currently fails.

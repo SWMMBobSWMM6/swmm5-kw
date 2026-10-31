@@ -18,7 +18,7 @@ report differences that are not the extension's.
 | 1 | **Off means stock.** With both options off (the default) the bytes are stock 5.2.4, ERROR 133 and 131 included | Stock refusals reproduced with modes 0/0; corpus mode 00 identical on every KINWAVE/STEADY model | `tools/gates.py`, `tools/corpus_gate.py --modes 00,...` |
 | 2 | **On changes nothing it has no business changing.** A network with nothing to split or loop gives stock's bytes in every mode | Null gate on the tree networks; corpus modes 11, 21, 31 on every model stock runs | `tools/null_gate.sh`, `tools/corpus_gate.py` |
 | 3 | **No order dependence.** Shuffling `[JUNCTIONS]` and `[CONDUITS]` changes nothing | Three seeded shuffles of each split and loop network | `tools/order_check.py` |
-| 4 | **Exact conservation.** An allocation never creates water; a loop's leftover is booked | Largest `|Σ allocated − min(available, Σ capacity)|` over every step, every rule (`swmm_getKwStats` v[3]) | `tools/gates.py` |
+| 4 | **Conservation.** An allocation never creates water; a loop's leftover is booked. Holds to rounding on every shipped network; broken by up to about 1.5e-6 cfs on some corpus networks (HEAD overshoot, `docs/DESIGN.md` "Open defect"; fix proposed, not applied) | Largest gap between flow allocated and flow available, over every step and rule (`swmm_getKwStats` v[3]); `tools/head_fix_check.py` for the fix | `tools/gates.py`, `tools/head_fix_check.py` |
 | 5 | **One engine, one answer.** The wasm engine is the same engine | `.out` bytes of `swmm524kw.wasm` against native musl, every network, every mode; the same for the stock wasm | `tools/wasm_check.js` |
 
 Plus two reproducibility checks: `tools/build.sh` rebuilds both `.wasm` files byte for byte, and
@@ -57,6 +57,34 @@ What it does not show: much about the extension itself. Real models that need a 
 under kinematic wave have long since been converted to dividers or to dynamic wave, so the
 corpus contains one model stock refuses for a loop and none it refuses for a fork. The evidence
 about the split rules is the five small networks in `models/`.
+
+## The what-if pass
+
+Because the corpus barely exercises the extension, a fourth pass asks a harder question:
+`tools/corpus_gate.py --force-routing KINWAVE --modes 11` copies each DYNWAVE model (interface-
+file models left out) beside the original with its routing switched to KINWAVE, and runs the
+copy through stock and through swmm5-kw. No one built those models for kinematic wave, so this
+measures how often real networks contain a fork or a loop, and whether swmm5-kw routes them. It
+does not measure whether the answers are right: those networks depend on the backwater that
+kinematic wave leaves out. The record is `results/gate_whatif.jsonl`; the counts are in the
+README's results block (`summary.json`, `whatif`). A 120 s cap per run applies.
+
+It also extends the null-effect test to every switched model stock can route: there swmm5-kw must
+give stock's bytes.
+
+Large continuity errors among the networks swmm5-kw ran were traced one at a time with
+`tools/conduit_balance.sh`, a diagnostic build that keeps a volume balance for every conduit and
+lists the conduits that lost water, how many steps each spent at full capacity, and whether it
+leaves a split junction. The 30 largest are classified in `results/whatif_outliers.json`:
+compared with stock DYNWAVE on the original file, and assigned to finding F1 (losses in conduits
+at capacity), F3 (losses in flat conduits that never fill, models with EPA's WARNING 04), the
+model itself (stock DYNWAVE fails too), or not attributed. The F3 attribution was shown directly
+on `XPSWMM/ATTEN.inp` by deleting its forks so stock 5.2.4 routes it (stock then loses more water
+than swmm5-kw); for the others it rests on the matching signature.
+
+The same pass found the HEAD overshoot defect (`docs/DESIGN.md`, "Open defect").
+`tools/head_fix_check.py` runs every network swmm5-kw routed through the engine as it stands and
+through the proposed fix, and writes `results/head_fix_check.json`.
 
 ## Comparison with dynamic wave
 

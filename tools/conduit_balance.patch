@@ -1,0 +1,63 @@
+--- a/src/solver/flowrout.c	2026-10-31 17:15:34.674825170 -0400
++++ b/src/solver/flowrout.c	2026-10-31 17:15:34.678875578 -0400
+@@ -135,6 +135,7 @@
+ //  Purpose: closes down routing method used.
+ //
+ {
++    dbgReport();
+     if ( routingModel == DW ) dynwave_close();
+     else
+     {
+@@ -201,6 +202,21 @@
+ 
+ //=============================================================================
+ 
++
++// ---- diagnostic (tools/conduit_balance.patch, not part of the engine): per-conduit volume balance ----
++static double *DbgQin = NULL, *DbgQout = NULL, *DbgImb = NULL, *DbgCapSteps = NULL;
++static void dbgInit(void) { int n = Nobjects[LINK]; if (DbgQin) return;
++  DbgQin = calloc(n, sizeof(double)); DbgQout = calloc(n, sizeof(double)); DbgImb = calloc(n, sizeof(double)); DbgCapSteps = calloc(n, sizeof(double)); }
++static void dbgBook(double dt) { int j; for (j = 0; j < Nobjects[LINK]; j++) { if (Link[j].type != CONDUIT) continue;
++  DbgImb[j] += (DbgQin[j] - DbgQout[j]) * dt - (Link[j].newVolume - Link[j].oldVolume);
++  if (Conduit[Link[j].subIndex].capacityLimited) DbgCapSteps[j] += 1; } }
++void dbgReport(void) { int j, k, n = Nobjects[LINK]; double tot = 0; if (!DbgImb) return;
++  for (j = 0; j < n; j++) tot += DbgImb[j];
++  fprintf(stderr, "DBG total conduit imbalance %.1f ft3\n", tot);
++  for (k = 0; k < 8; k++) { int b = -1; for (j = 0; j < n; j++) if (DbgImb[j] != 0 && (b < 0 || fabs(DbgImb[j]) > fabs(DbgImb[b]))) b = j;
++    if (b < 0 || fabs(DbgImb[b]) < 1) break;
++    fprintf(stderr, "DBG link %-12s imb %12.1f ft3  steps at cap %6.0f  upstream node %s%s\n", Link[b].ID, DbgImb[b], DbgCapSteps[b], Node[Link[b].node1].ID, kwmod_isSplitNode(Link[b].node1) ? " (SPLIT)" : "");
++    DbgImb[b] = 0; } }   /* listed: clear so the next pass finds the next largest */
+ int flowrout_execute(int links[], int routingModel, double tStep)
+ //
+ //  Input:   links = array of link indexes in topo-sorted order (per routing model)
+@@ -258,6 +274,7 @@
+         else
+             steps += kinwave_execute(j, &qin, &qout, tStep);
+         Link[j].newFlow = qout;
++        dbgInit(); DbgQin[j] = qin; DbgQout[j] = qout;
+ 
+         // adjust outflow at upstream node and inflow at downstream node
+         Node[ Link[j].node1 ].outflow += qin;
+@@ -268,6 +285,7 @@
+     // --- update state of each non-updated node and link
+     for ( j=0; j<Nobjects[NODE]; j++) setNewNodeState(j, tStep);
+     for ( j=0; j<Nobjects[LINK]; j++) setNewLinkState(j);
++    dbgBook(tStep);
+     return (int)(steps+0.5);
+ }
+ 
+@@ -964,6 +982,7 @@
+             else
+                 steps += kinwave_execute(j, &qin, &qout, tStep);
+             Link[j].newFlow = qout;
++            dbgInit(); DbgQin[j] = qin; DbgQout[j] = qout;
+             Node[ Link[j].node1 ].outflow += qin;
+             if ( KwBackEdge[j] ) routed[j] = qout;
+             else Node[ Link[j].node2 ].inflow += qout;
+@@ -994,5 +1013,6 @@
+     if ( nL > 0 ) steps /= nL;
+     for ( j = 0; j < nN; j++ ) setNewNodeState(j, tStep);
+     for ( j = 0; j < nL; j++ ) setNewLinkState(j);
++    dbgBook(tStep);
+     return (int)(steps + 0.5);
+ }

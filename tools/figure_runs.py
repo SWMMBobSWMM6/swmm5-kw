@@ -87,6 +87,40 @@ while q <= 46.0001:
     fig['chain_sweep'].append(dict(q=q, musl=run(ST, txt)['cont']))
     q += 0.5
 
+# 4b. stock KW on one 1,000 ft trapezoidal channel, flat or nearly so (finding F3)
+FLAT = """[TITLE]
+flat channel test
+[OPTIONS]
+FLOW_UNITS CFS
+FLOW_ROUTING KINWAVE
+MIN_SLOPE 0
+START_DATE 01/01/2026
+START_TIME 00:00:00
+REPORT_START_DATE 01/01/2026
+REPORT_START_TIME 00:00:00
+END_DATE 01/02/2026
+END_TIME 00:00:00
+REPORT_STEP 00:05:00
+WET_STEP 00:05:00
+DRY_STEP 01:00:00
+ROUTING_STEP 30
+[JUNCTIONS]
+A 10 0 0 0 0
+[OUTFALLS]
+O {zout} FREE NO
+[CONDUITS]
+C A O 1000 0.014 0 0 0 0
+[XSECTIONS]
+C TRAPEZOIDAL 5 2 1 1 1
+[INFLOWS]
+A FLOW "" FLOW 1.0 1.0 {q}
+"""
+fig['flat_channel'] = []
+for drop in (0.0, 0.1, 1.0):
+    for q in (0.03, 0.3, 3.0):
+        r = run(ST, FLAT.format(zout=10 - drop, q=q))
+        fig['flat_channel'].append(dict(drop_ft=drop, q_cfs=q, musl=r['cont']))
+
 # 5. circular section factor, analytic: S(y)/S_full with S = A R^(2/3)
 def S(t):   # t = central angle
     A = (t - math.sin(t)) / 8.0; P = t / 2.0; return A * (A / P) ** (2.0 / 3.0) if P > 0 else 0.0

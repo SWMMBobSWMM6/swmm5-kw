@@ -37,6 +37,17 @@ if Wf:
           f"| ... and swmm5-kw runs it to the end | {Wf['census_ran']:,} (median {Wf['split_median']:g} split junctions and {Wf['loop_median']:g} loop links; routing continuity over 1% in {Wf['cont_over_1']}) |",
           f"| ... and swmm5-kw then stops on another check | {Wf['census_error']:,}" + (f" ({codes})" if codes else '') + ' |',
           f"| Inconclusive or stock crashes | {Wf['inconclusive'] + Wf['crash_same']} |"]
+OL = os.path.join(R, 'results', 'whatif_outliers.json'); FXp = os.path.join(R, 'results', 'head_fix_check.json')
+if Wf and os.path.exists(OL):
+    import collections
+    O = json.load(open(OL)); cc = collections.Counter(o['cause'] for o in O)
+    L += ['', f"The {len(O)} largest continuity errors among the switched models, traced with `tools/conduit_balance.sh` (`results/whatif_outliers.json`): "
+          f"{cc.get('F3 flat conduits', 0)} lose their water in flat conduits that never fill (finding 3), {cc.get('F1 at capacity', 0)} in conduits pinned at capacity (finding 1), "
+          f"{cc.get('model (stock DW also fails)', 0)} also fail under stock DYNWAVE, {cc.get('not attributed (no conduit imbalance found)', 0)} not attributed."]
+if os.path.exists(FXp):
+    X = json.load(open(FXp))['summary']
+    L += ['', f"HEAD overshoot (open defect): in {X['defect_fired']} of the {X['networks']:,} switched networks swmm5-kw routes, a junction handed out more than arrived, at most {X['max_imb_current']:.2e} cfs. "
+          f"With `patch/kw-v1.1-head-overshoot.patch` (not applied) the largest gap is {X['max_imb_fixed']:.1e} cfs, and output changes in {X['changed_where_defect_fired']} networks, all of them ones where the defect fired ({X['changed_elsewhere']} elsewhere; `tools/head_fix_check.py`, `results/head_fix_check.json`)."]
 sh = {r['name']: r for r in F['split_shares']}
 L += ['', '**Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):', '',
       '| Routing and rule | 3.0 ft pipe | 1.5 ft pipe | Routing continuity |', '|---|---|---|---|']

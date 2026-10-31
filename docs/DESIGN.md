@@ -126,6 +126,39 @@ byte-identical to stock:
 
 The report header still says Build 5.2.4 (see [DECISIONS.md](DECISIONS.md)).
 
+## Open defect: HEAD can hand out slightly more than arrived
+
+Found on 31 October 2026 by the corpus what-if pass (`docs/VERIFICATION.md`), on
+`XPSWMM/EXTUT17.inp` switched to KINWAVE. Junction `inflow` has two outlets: conduit `37`, a 1 ft
+pipe with a full-flow capacity of 0.1126658 cfs, and `supernever`, a trapezoidal overflow channel
+whose invert is 100 ft up, with 14,812 cfs of capacity. At one step 0.1126642 cfs arrived, just
+under pipe 37's capacity. The bisection stops when
+
+```c
+if ( fabs(f) <= 1.0e-10 * capSum ) break;
+```
+
+and with `capSum` = 14,812 cfs that tolerance is 1.48e-6 cfs, coarser than the gap between the
+inflow and pipe 37's capacity. The bisection stopped just past that capacity, pipe 37 was capped
+at 0.1126658 cfs, and the correction that follows only rescales outlets below their caps:
+
+```c
+if ( AllocQ[L] >= cap ) sumCapped += AllocQ[L];
+else sumFree += AllocQ[L];
+...
+if ( sumFree > 0.0 && qT > sumCapped )
+```
+
+Here `sumCapped` > `qT`, so no branch ran and the junction handed out 1.48e-6 cfs more than it
+had. The same thing happened in other corpus networks; `results/head_fix_check.json` lists every
+one. None of the shipped test networks reaches it (largest gap 7.1e-15 cfs).
+
+`patch/kw-v1.1-head-overshoot.patch` adds one branch after that test: when the capped outlets
+alone exceed what arrived, scale every outlet down to it, which can never break a cap. It brings
+EXTUT17's largest gap to 1.4e-17 cfs and leaves all 52 runs on `models/` byte-identical. It is
+**not applied**: the engine in `src/` is the one Bob's apps already embed, and changing it is
+his call ([DECISIONS.md](DECISIONS.md)).
+
 ## Bugs caught while building (keep them fixed in any port)
 
 The HEAD residual used to be spread over every outlet:

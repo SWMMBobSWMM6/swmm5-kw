@@ -10,8 +10,11 @@ Every number in the README, the app and the essay is read from these files.
 | `gate_kwsf.jsonl`, `gate_kwsf.log` | `tools/corpus_gate.py` | KINWAVE and STEADY models, modes 00, 11, 21, 31 |
 | `gate_dw.jsonl`, `gate_dw.log` | `tools/corpus_gate.py` | DYNWAVE models (and routing keywords 5.2.4 rejects), mode 11 |
 | `gate_iface.jsonl`, `gate_iface.log` | `tools/corpus_gate.py` | interface-file models, modes 00 and 11, one at a time |
+| `gate_whatif.jsonl`, `gate_whatif.log` | `tools/corpus_gate.py --force-routing KINWAVE` | the what-if pass: DYNWAVE models copied with routing switched to KINWAVE, mode 11 |
+| `whatif_outliers.json` | `tools/trace_outliers.py` | the 30 largest what-if continuity errors, each with stock DYNWAVE's error on the original, the conduits that lost water and a cause |
+| `head_fix_check.json` | `tools/head_fix_check.py` | the proposed HEAD overshoot fix against the engine as it stands, on every network the what-if routed |
 | `summary.json` | `tools/summarize.py` | the three passes classified: identical, refused by stock and run, stock crashes, different, inconclusive |
-| `figdata.json` | `tools/figure_runs.py` | the runs behind every chart in the essay (musl builds) |
+| `figdata.json` | `tools/figure_runs.py` | the runs behind every chart in the essay and the flat-channel table (musl builds) |
 
 Each corpus record: `inp`, `routing` (from the file; absent means KINWAVE), `rc_stock`,
 `t_stock`, `out_sha` (first 16 hex of the stock `.out`), `stock_errors`, `census` (stock stopped

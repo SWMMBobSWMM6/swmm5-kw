@@ -284,5 +284,29 @@ def fig_corpus(P, D):
     return _svg(W, H, s, 'The corpus gate')
 
 
+# ---------------------------------------------------------------- 11. flat channels
+def fig_flat(P, D):
+    F = D['flat_channel']; W, H = 760, 300; X0, X1, Y0, Y1 = 70, 600, 20, 250
+    drops = sorted(set(c['drop_ft'] for c in F)); qs = sorted(set(c['q_cfs'] for c in F))
+    v = {(c['drop_ft'], c['q_cfs']): c['musl'] for c in F}
+    lo = -12; fy = lambda y: Y0 + (Y1 - Y0) * (0 - y) / (0 - lo)
+    s = ''
+    for g in (0, -2, -4, -6, -8, -10, -12):
+        s += line(X0, fy(g), X1, fy(g), P, 'line', 1) + T(X0 - 6, fy(g) + 4, f'{g}', P, 11, 'dim', 'end')
+    s += T(14, (Y0 + Y1) / 2, 'routing continuity error (%)', P, 11.5, 'dim', 'middle', extra=f'transform="rotate(-90 14 {(Y0 + Y1) / 2:.1f})"')
+    gw = (X1 - X0) / len(drops); bw = gw / (len(qs) + 1.5); cols = ['d', 'b', 'a']
+    for i, d in enumerate(drops):
+        for j, q in enumerate(qs):
+            x = X0 + i * gw + bw * (0.75 + j); y = v[(d, q)]
+            s += f'<rect x="{x:.1f}" y="{fy(0):.1f}" width="{bw - 4:.1f}" height="{fy(y) - fy(0):.1f}" style="fill:{P[cols[j]]}"/>'
+            s += T(x + (bw - 4) / 2, fy(y) + 14, f'{y:.1f}', P, 10.5, 'ink', 'middle')
+        s += T(X0 + i * gw + gw / 2, Y1 + 18, ('no fall (WARNING 04)' if d == 0 else f'{d:g} ft fall'), P, 11.5, 'ink', 'middle', 600)
+    s += line(X0, fy(0), X1, fy(0), P, 'dim', 1.2)
+    for j, q in enumerate(qs):
+        s += f'<rect x="{X1 + 24}" y="{40 + 22 * j}" width="12" height="12" style="fill:{P[cols[j]]}"/>' + T(X1 + 42, 50 + 22 * j, f'{q:g} cfs inflow', P, 11.5, 'ink')
+    s += T(X1 + 24, 130, 'one 1,000 ft trapezoidal', P, 11, 'dim') + T(X1 + 24, 145, 'channel, one day,', P, 11, 'dim') + T(X1 + 24, 160, 'stock 5.2.4 KINWAVE', P, 11, 'dim')
+    return _svg(W, H, s, 'Stock kinematic wave continuity in a flat channel')
+
+
 FIGS = dict(tree=fig_tree, head=fig_head, sfactor=fig_sfactor, shares=fig_shares, hydro=fig_hydro,
-            loopstep=fig_loopstep, backwards=fig_backwards, chain=fig_chain, peaks=fig_peaks, corpus=fig_corpus)
+            loopstep=fig_loopstep, backwards=fig_backwards, chain=fig_chain, peaks=fig_peaks, corpus=fig_corpus, flat=fig_flat)

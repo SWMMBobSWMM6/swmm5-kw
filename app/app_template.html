@@ -338,7 +338,7 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
           <li><b>Off means stock.</b> With both options off (the engine's default) the bytes are stock 5.2.4, ERROR 133 and 131 included.</li>
           <li><b>On changes nothing it has no business changing.</b> A network with nothing to split or loop gives the same bytes as stock in every mode.</li>
           <li><b>No order dependence.</b> Shuffling the file's junctions and conduits changes nothing.</li>
-          <li><b>Exact conservation.</b> An allocation never creates water; a loop's leftover is booked to the receiving node.</li>
+          <li><b>Conservation.</b> An allocation never creates water; a loop's leftover is booked to the receiving node. This holds to rounding on every shipped network. The corpus found one defect: HEAD can hand out up to 1.5e-6 cfs more than arrived when the inflow sits within the bisection tolerance of an outlet's capacity. A fix is proposed in the repository, not applied (Doc tab).</li>
           <li><b>One engine, one answer.</b> The wasm engine matches a native build of the same source and the same maths library byte for byte.</li>
         </ol>
       </div>

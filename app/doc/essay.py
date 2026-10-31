@@ -28,7 +28,9 @@ def blocks(D, S):
     kwp = P.get('gate_kwsf.jsonl', {}); dwp = P.get('gate_dw.jsonl', {}); ifp = P.get('gate_iface.jsonl', {})
     cen = S.get('census', [])
     cen_txt = ', '.join(f"`{c['inp']}`" for c in cen) or 'none'
-    imb = max([S.get('max_allocation_imbalance_cfs', 0.0)] + [n['stats'][3] for n in D['nets'].values()])
+    imb = max(n['stats'][3] for n in D['nets'].values())
+    OUTL = D.get('outliers') or []; FX = (D.get('fixcheck') or {}).get('summary')
+    flat = {(c['drop_ft'], c['q_cfs']): c['musl'] for c in D['flat_channel']}
 
     B = []
     h1 = lambda t: B.append(('h1', t)); deck = lambda t: B.append(('deck', t)); h2 = lambda t: B.append(('h2', t))
@@ -95,21 +97,36 @@ def blocks(D, S):
         p(f'So the corpus was asked a harder question. Each of its {W["models"]:,} dynamic-wave models was copied with its routing switched to KINWAVE and run through both engines. That is not how anyone built those models, and many fail kinematic wave\'s other checks first (a regulator that does not leave a storage unit, for one). But it shows how often a real network has a fork or a loop. Stock 5.2.4 refused {W["census"]:,} of them with ERROR 133 or 131. swmm5-kw ran {W["census_ran"]:,} of those to the end; {W["census_error"]:,} stopped on another kinematic-wave check once the fork or loop was no longer in the way. Of the {W["stock_ran"]:,} that stock could run under kinematic wave, {W["identical"]:,} gave identical bytes from swmm5-kw, {W["different"]} differed, and {W["inconclusive"] + W["crash_same"]} could not be compared.')
         if W.get('census_ran'):
             p(f'Among the networks swmm5-kw ran, the median had {W["split_median"]:g} split junctions and {W["loop_median"]:g} loop-closing links; the largest had {W["split_max"]:,} and {W["loop_max"]:,}. Their kinematic-wave routing continuity errors had a median magnitude of {W["cont_median_abs"]:.2f}%, and {W["cont_over_1"]} of {W["census_ran"]} exceeded 1%. That says the extension runs real networks. It says nothing about whether their answers are right: these models were built for dynamic wave, and the backwater they depend on is exactly what kinematic wave leaves out.')
+        if OUTL:
+            import collections
+            cc = collections.Counter(o['cause'] for o in OUTL)
+            p(f'The large continuity errors were run down one at a time, with a build that keeps a volume balance for every conduit (`tools/conduit_balance.sh`). Of the {len(OUTL)} largest, {cc.get("F3 flat conduits", 0)} lose their water in flat conduits that never fill, a stock kinematic-wave behaviour described below; {cc.get("F1 at capacity", 0)} lose it in conduits pinned at full capacity, the other stock behaviour below; {cc.get("model (stock DW also fails)", 0)} are decks that lose or make water under stock dynamic wave too (one pumps 5 cfs out of an empty wet well). {cc.get("not attributed (no conduit imbalance found)", 0)} could not be attributed. On one of them, `XPSWMM/ATTEN.inp`, the test was direct: with its two forks deleted, stock 5.2.4 routes it and loses more water than swmm5-kw does with the forks in place.')
     fig('corpus', 'The corpus gate. Every model stock 5.2.4 runs gives the same bytes from swmm5-kw, in every mode; the ones stock refuses for a loop or a fork, swmm5-kw runs.')
-    p(f'Three more checks ran on the shipped networks. Shuffling the order of junctions and conduits in the input file changed nothing, in five networks with three shuffles each. No allocation created or destroyed water: the largest difference between what a junction handed out and what it had was {imb:.1e} cfs, which is arithmetic rounding. And the WebAssembly engine this page runs gave the same bytes as a native build of the same source on all 52 runs, provided the native build uses the same maths library. That proviso turned out to be a finding of its own.')
+    p(f'Three more checks ran on the shipped networks. Shuffling the order of junctions and conduits in the input file changed nothing, in five networks with three shuffles each. On those networks no allocation created or destroyed water: the largest difference between what a junction handed out and what it had was {imb:.1e} cfs, which is arithmetic rounding. And the WebAssembly engine this page runs gave the same bytes as a native build of the same source on all 52 runs, provided the native build uses the same maths library. That proviso turned out to be a finding of its own.')
 
-    h2('Two things stock 5.2.4 does by itself')
-    p(f'Building this engine meant running a great many kinematic-wave models, and two behaviours of unmodified EPA 5.2.4 came to light. Neither has anything to do with the extension. Both show up on a plain chain of three 3 ft pipes with nothing to split and no loop.')
+    if FX:
+        p(f'The corpus found the one place where that is not true. In `XPSWMM/EXTUT17.inp` a junction feeds a 1 ft pipe that can carry 0.1126658 cfs and an overflow channel 100 ft up that can carry 14,812. At one step 0.1126642 cfs arrived, a hair under the small pipe\'s capacity. HEAD\'s bisection stops when it is within a tolerance set by the junction\'s total capacity:')
+        pre('if ( fabs(f) <= 1.0e-10 * capSum ) break;')
+        p(f'With 14,812 cfs of capacity, that tolerance is 1.48e-6 cfs, coarser than the gap between the inflow and the small pipe\'s capacity. The bisection stopped just past it, the pipe was marked full at 0.1126658 cfs, and the correction step that follows only adjusts outlets below their caps:')
+        pre('if ( sumFree > 0.0 && qT > sumCapped )')
+        p(f'Here the capped pipe alone was over the inflow, so nothing ran, and the junction handed out 1.48e-6 cfs it did not have. It happened in {FX["defect_fired"]} of the {FX["networks"]:,} corpus networks swmm5-kw routed, never more than {FX["max_imb_current"]:.2e} cfs. At its worst that is a rate of about five fluid ounces an hour. Still a defect: the engine promises never to make water. `patch/kw-v1.1-head-overshoot.patch` adds one branch, which scales every outlet down to the inflow when the capped ones alone exceed it. On all {FX["networks"]:,} networks it brings the largest gap to {FX["max_imb_fixed"]:.1e} cfs and changes output only where the defect fired. It is not applied, because the engine in this repository is the one already built into Bob\'s apps, and changing it is his decision.')
+
+    h2('Three things stock 5.2.4 does by itself')
+    p(f'Building and checking this engine meant running a great many kinematic-wave models, and three behaviours of unmodified EPA 5.2.4 came to light. None has anything to do with the extension. Each shows up on a network with nothing to split and no loop.')
     p(f'The first is a continuity leak at capacity. Feed the chain less than its full-pipe capacity of 33.35 cfs and the routing continuity error is about a tenth of a percent. Feed it a little more and the error grows, steadily, to {worst["musl"]:.2f}% at {worst["q"]:g} cfs, four cfs over capacity, then drops back to {ch[38.0]:.2f}% at 38 cfs. A model whose peak happens to sit in that band reports losing a tenth of its water. In September only three inflows were run, 30, 34 and 40 cfs, and the worst of the three was {ch[34.0]:.2f}%. The sweep found the band they had stepped over.')
     fig('chain', 'Stock EPA 5.2.4, kinematic wave, three 3 ft pipes in series: routing continuity error against the inflow held for two and a half hours. Measured every 0.5 cfs. The open rings are the three inflows measured in September.')
     p('The likely cause sits in `kinwave.c`. When a pipe\'s inflow reaches full-pipe flow, the solver sets its inlet area to full. Just below, it takes the lower of the two depths that carry that flow, because a circle carries full flow twice, once at 82% depth and once at 100%. A pipe hovering at capacity can flip between the two from one step to the next, a jump of about 18% of the full area, and every flip is booked as stored water that was never there. The sudden recovery at 38 cfs is not explained yet.')
     p('The second is that kinematic-wave answers depend on the maths library. The same source compiled against glibc and against musl agree for the first 241 minutes of a storm on the 30 cfs chain and then part company by up to 2% on the recession. Dynamic wave and steady flow gave identical answers under both libraries. So "the same engine" means little for kinematic wave unless you also say which `libm` it was linked against. The browser engine uses musl\'s mathematics, and its gate compares against a musl build for exactly that reason.')
+    p(f'The third came out of the corpus. Kinematic wave loses water in flat channels, and loses more the less water there is. Run one 1,000 ft trapezoidal channel with no fall at all and a steady 0.03 cfs for a day, and stock 5.2.4 reports a routing continuity error of {flat[(0.0, 0.03)]:.2f}%. EPA flags such a channel with WARNING 04 and gives it a minimum fall, but the leak stays. Give the channel a tenth of a foot of fall and the error is {flat[(0.1, 0.03)]:.2f}%; a full foot, {flat[(1.0, 0.03)]:.2f}%; at 3 cfs on a foot of fall, {flat[(1.0, 3.0)]:.2f}%. Old models converted from other programs are full of flat channels, which is why this showed up in the what-if pass. Where in `kinwave.c` the water goes has not been traced.')
+    fig('flat', 'Stock EPA 5.2.4, kinematic wave, one 1,000 ft trapezoidal channel, a steady inflow for one day: routing continuity error against the channel\'s fall, for three inflows. Measured.')
 
     h2('What this does not show')
     ul(['That kinematic wave can represent backwater, surcharge or flow reversal. It cannot, in a split or a loop or anywhere else. HEAD is an allocation at normal depth.',
         'That swmm5-kw\'s loop results are fit for design. Where a pipe in a loop would run backwards, the answer is wrong in direction, not just in size.',
         'How the three split rules compare across real networks. Five small test networks were compared with dynamic wave. The corpus contains one model the extension changes.',
         'Anything about dynamic wave, which the extension never touches.',
+        'That every large continuity error in the what-if pass is stock behaviour. The largest were traced one by one; one was not attributed, and the rest of the long tail was not examined.',
+        'That the HEAD overshoot fix is right for every network. It was checked on the networks the corpus routes and the shipped ones, and it is not applied.',
         'A Windows build. The engine was built and gated on Linux (GCC 13, musl 1.2.4) and as WebAssembly (Clang 18, wasi-libc). EPA\'s optional `.def` export file does not list the two new functions.',
         'A person\'s review of the C changes, line by line. The checks above are mechanical.'])
 
@@ -184,4 +201,7 @@ def load_data():
         txt = f"{p['identical']:,} identical" + (f" · {p['census_ran']} run" if p['census_ran'] else '') + (f" · {p.get('crash_same', 0)} crash as stock" if p.get('crash_same') else '') + (f" · {p['inconclusive']} inconclusive" if p['inconclusive'] else '') + (f" · {p['different']} DIFFERENT" if p['different'] else '')
         rows.append(dict(label=lab, n=p['models'], same=p['identical'], ran=p['census_ran'] + p['census_error'], inc=p['inconclusive'] + p.get('crash_same', 0), diff=p['different'], text=txt))
     D['corpus_fig'] = rows
+    for key, fn in (('outliers', 'whatif_outliers.json'), ('fixcheck', 'head_fix_check.json')):
+        fp = os.path.join(RES, fn)
+        if os.path.exists(fp): D[key] = json.load(open(fp))
     return D, S

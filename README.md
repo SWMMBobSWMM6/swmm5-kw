@@ -79,20 +79,22 @@ Inconclusive: `OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-
 
 The full verification record, with what each gate proves and how to rerun it: [docs/VERIFICATION.md](docs/VERIFICATION.md).
 
-## Two findings about stock 5.2.4
+## Three findings about stock 5.2.4
 
-Both appear in unmodified EPA 5.2.4 on a plain three-pipe chain with nothing to split or loop ([docs/FINDINGS.md](docs/FINDINGS.md)):
+All three appear in unmodified EPA 5.2.4 on networks with nothing to split or loop ([docs/FINDINGS.md](docs/FINDINGS.md)):
 
 1. **Kinematic wave leaks water just above pipe capacity.** Routing continuity is about 0.1% below the 33.35 cfs capacity, grows to **−10.18% at 37.5 cfs**, and drops back to −0.48% at 38 cfs.
 2. **Kinematic wave results depend on the maths library.** glibc and musl builds of the same source agree for 241 minutes of the 30 cfs chain, then differ by up to about 2%. Dynamic wave and steady flow are identical under both. The wasm engines match musl.
+3. **Kinematic wave loses water in flat channels.** One flat 1,000 ft trapezoidal channel at 0.03 cfs loses 11.0% of its water in a day (EPA's WARNING 04 case); with a 1 ft fall, 1.2%. This explains most of the large continuity errors in the what-if pass below.
 
 ## Corrections to the September 2026 write-up
 
-The engine is the same binary as on 29 September 2026 (the wasm's SHA-256 is unchanged). Rerunning everything for this repository corrected three things the September write-up (by Claude) said about it:
+The engine is the same binary as on 29 September 2026 (the wasm's SHA-256 is unchanged). Rerunning everything for this repository corrected four things the September write-up (by Claude) said about it:
 
 1. **The relief loop.** It compared R1's 0.51 cfs under swmm5-kw with 3.34 cfs under dynamic wave and called both recirculation. Under dynamic wave R1 runs backwards (J1 → J3) all storm; the 3.34 cfs is flow the other way. See [The limit that matters](#the-limit-that-matters).
 2. **The continuity finding.** It sampled three inflows and reported −1.6% at 34 cfs as the problem. A sweep finds −10.2% at 37.5 cfs.
 3. **The split table.** It listed HEAD on `split.inp` as 14.78 and 5.66 cfs (72.3%). Today's runs give 14.78 and 5.49 cfs as the peaks under HEAD (5.66 is AREA's), and the 1.5 ft pipe sits at its 5.25 cfs capacity through the plateau under both. The table above shows flows at the moment of peak total outflow, which avoids the brief peaks at the plateau's ends.
+4. **"Allocations never create water."** True on every shipped network (largest gap 7.1e-15 cfs), not in general. On corpus networks switched to KINWAVE, HEAD can hand out up to 1.48e-6 cfs more than arrived when a junction's inflow sits within the bisection tolerance of one outlet's capacity. The cause, with the code: [docs/DESIGN.md](docs/DESIGN.md), "Open defect". A one-branch fix, `patch/kw-v1.1-head-overshoot.patch`, is checked but **not applied** ([DECISIONS.md](docs/DECISIONS.md), item 5).
 
 ## Building
 
