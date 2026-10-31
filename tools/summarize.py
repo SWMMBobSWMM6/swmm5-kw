@@ -75,18 +75,22 @@ out['corpus_set'] = sum(1 for l in open(os.path.join(R, 'corpus_set.txt')) if l.
 W = load('gate_whatif.jsonl')
 if W:
     import statistics
-    c = collections.Counter(classify(r, ['11']) for r in W)
+    WM = [m for m in ('11', '21', '31') if any(('m' + m) in r for r in W)]   # v1 ran HEAD only; v1.1 all three rules
+    c = collections.Counter(classify(r, WM) for r in W)
     cen = [r for r in W if r['census']]
-    ran = [r for r in cen if classify(r, ['11']) == 'census_ran']
-    errs = collections.Counter(e for r in cen if classify(r, ['11']) == 'census_error' for e in (r['m11'].get('errors') or ['signal']))
+    ran = [r for r in cen if classify(r, WM) == 'census_ran']
+    errs = collections.Counter(e for r in cen if classify(r, WM) == 'census_error' for e in (r['m11'].get('errors') or ['signal']))
     sp_ = [r['m11']['stats']['split'] for r in ran if r['m11'].get('stats')]; lp_ = [r['m11']['stats']['back'] for r in ran if r['m11'].get('stats')]
     co = [abs(float(r['m11']['continuity'])) for r in ran if r['m11'].get('continuity') not in (None, 'nan', '-nan')]
     for r in ran:
-        st = r['m11'].get('stats')
-        if st: maximb = max(maximb, st['maxImb'])
-    out['whatif'] = dict(file='gate_whatif.jsonl', forced='KINWAVE', models=len(W), census=len(cen), census_ran=c['census_ran'], census_error=c['census_error'],
+        for m in WM:
+            st = r.get('m' + m, {}).get('stats')
+            if st: maximb = max(maximb, st['maxImb'])
+    rule_cont = {m: [abs(float(r['m' + m]['continuity'])) for r in ran if r.get('m' + m, {}).get('continuity') not in (None, 'nan', '-nan')] for m in WM}
+    out['whatif'] = dict(file='gate_whatif.jsonl', forced='KINWAVE', modes=WM, models=len(W),
+                         cont_over_1_by_rule={m: sum(1 for x in v if x > 1) for m, v in rule_cont.items()}, census=len(cen), census_ran=c['census_ran'], census_error=c['census_error'],
                          census_error_codes=dict(errs), stock_ran=sum(1 for r in W if not r['census'] and r['rc_stock'] == 0 and not r['stock_errors']),
-                         identical=sum(1 for r in W if not r['census'] and r['rc_stock'] == 0 and not r['stock_errors'] and classify(r, ['11']) == 'identical'),
+                         identical=sum(1 for r in W if not r['census'] and r['rc_stock'] == 0 and not r['stock_errors'] and classify(r, WM) == 'identical'),
                          stock_other_errors=sum(1 for r in W if not r['census'] and r['stock_errors']),
                          different=c['different'], inconclusive=c['inconclusive'], crash_same=c['crash_same'],
                          split_median=statistics.median(sp_) if sp_ else 0, loop_median=statistics.median(lp_) if lp_ else 0,
@@ -94,7 +98,7 @@ if W:
                          cont_median_abs=statistics.median(co) if co else 0, cont_over_1=sum(1 for x in co if x > 1),
                          ran=[dict(inp=r['inp'], split=r['m11']['stats']['split'] if r['m11'].get('stats') else None, loops=r['m11']['stats']['back'] if r['m11'].get('stats') else None,
                                    continuity=r['m11'].get('continuity')) for r in ran],
-                         different_list=[r['inp'] for r in W if classify(r, ['11']) == 'different'])
+                         different_list=[r['inp'] for r in W if classify(r, WM) == 'different'])
     out['max_allocation_imbalance_cfs'] = maximb
     print('whatif', {k: v for k, v in out['whatif'].items() if k not in ('ran', 'different_list')})
 out['max_allocation_imbalance_cfs'] = maximb

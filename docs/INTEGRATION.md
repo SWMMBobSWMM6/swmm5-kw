@@ -4,7 +4,7 @@
 
 | File | What it is |
 |---|---|
-| `wasm/swmm524kw.wasm` | EPA SWMM 5.2.4 + extension, wasm32-wasi **reactor**, 853,130 bytes, sha256 `e62aa56968febce741d56de2f6e73660ead09fa700bad5071117b962b4939918` |
+| `wasm/swmm524kw.wasm` | EPA SWMM 5.2.4 + extension v1.1, wasm32-wasi **reactor**, 853,429 bytes, sha256 `8d57faa0c4c9a7135430f13a0bc504b7c99a68430990ede87d62f57fce9373eb` (v1 was 853,130 bytes, `e62aa569…`; apps embedding v1 should take this file) |
 | `wasm/swmm524.wasm` | stock EPA SWMM 5.2.4, same toolchain and flags, 840,503 bytes, sha256 `9714657c0306f5673e287dbd1f71f371f8f3285fa8ad5542f0285db33f7f455f` |
 | `wasm/wasi-shim.iife.js` | @bjorn3/browser_wasi_shim 0.4.2 bundled to a 22 KB IIFE; sets `globalThis.WasiShim` |
 | `wasm/kwengine.js` | `new KWEngine(module).run(inpText, {split, loop, totalDays}, onProgress, shouldStop)` → `{rc, stopped, rpt, out, stats, ms}`; runs either wasm |

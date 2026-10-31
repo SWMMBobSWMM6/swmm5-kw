@@ -1,3 +1,5 @@
+diff --git a/src/solver/flowrout.c b/src/solver/flowrout.c
+index 73f5f67..4e78b96 100644
 --- a/src/solver/flowrout.c
 +++ b/src/solver/flowrout.c
 @@ -34,6 +34,8 @@
@@ -9,7 +11,7 @@
  #include "headers.h"
  
  //-----------------------------------------------------------------------------
-@@ -68,6 +70,8 @@
+@@ -68,6 +70,8 @@ static void   setNewLinkState(int link);
  static void   updateNodeDepth(int node, double y);
  static int    steadyflow_execute(int link, double* qin, double* qout,
                double tStep);
@@ -18,7 +20,7 @@
  
  
  //=============================================================================
-@@ -95,7 +99,27 @@
+@@ -95,7 +99,27 @@ void flowrout_init(int routingModel)
      }
  
      // --- validate network layout for kinematic wave routing
@@ -32,7 +34,7 @@
 +            static const char* modes[] = {"STOCK", "HEAD", "CAPACITY", "AREA"};
 +            report_writeLine("");
 +            report_writeLine("*******************************************");
-+            report_writeLine("KW/SF extension (modified engine, kwmod.c)");
++            report_writeLine("KW/SF extension v1.1 (modified engine, kwmod.c)");
 +            report_writeLine("*******************************************");
 +            snprintf(line, sizeof(line), "Multi-outlet junctions ... %d  (allocation %s)",
 +                     KwSplitNodeCount, modes[KwSplitMode & 3]);
@@ -47,7 +49,7 @@
  
      // --- initialize node & link volumes
      initNodes();
-@@ -112,6 +136,50 @@
+@@ -112,6 +136,50 @@ void  flowrout_close(int routingModel)
  //
  {
      if ( routingModel == DW ) dynwave_close();
@@ -98,7 +100,7 @@
  }
  
  //=============================================================================
-@@ -167,7 +235,12 @@
+@@ -167,7 +235,12 @@ int flowrout_execute(int links[], int routingModel, double tStep)
          return dynwave_execute(tStep);
      }
  
@@ -111,7 +113,7 @@
      steps = 0.0;
      for (i = 0; i < Nobjects[LINK]; i++)
      {
-@@ -234,11 +307,13 @@
+@@ -234,11 +307,13 @@ void validateTreeLayout()
            // --- storage nodes can have multiple outlets
            case STORAGE: break;
  
@@ -127,7 +129,7 @@
              }
          }
      }
-@@ -800,3 +875,124 @@
+@@ -800,3 +875,124 @@ int steadyflow_execute(int j, double* qin, double* qout, double tStep)
  }
  
  //=============================================================================
@@ -252,166 +254,15 @@
 +    for ( j = 0; j < nL; j++ ) setNewLinkState(j);
 +    return (int)(steps + 0.5);
 +}
---- a/src/solver/toposort.c
-+++ b/src/solver/toposort.c
-@@ -11,6 +11,7 @@
- #define _CRT_SECURE_NO_DEPRECATE
- 
- #include <stdlib.h>
-+#include <string.h>
- #include "headers.h"
- 
- //-----------------------------------------------------------------------------
-@@ -120,6 +121,7 @@
-         }
- 
-         // --- topo sort the links
-+        if ( !kwmod_init() ) report_writeErrorMsg(ERR_MEMORY, "");
-         n = topoSort(sortedLinks);
-     }   
- 
-@@ -228,10 +230,23 @@
- //  Output:  sortedLinks = array of sorted link indexes,
- //           returns number of links successfully sorted
- //  Purpose: performs a stack-based topo sort of the drainage network's links.
-+//           With KwLoopMode on, a directed cycle no longer stops the sort:
-+//           the unfinished node with the fewest unsorted inflow links is
-+//           forced onto the stack, and the links that then arrive at an
-+//           already-processed node are flagged as back edges.
- //
- {
-     int i, j, k, n;
-     int i1, i2, k1, k2;
-+    int* popOrder = NULL;
-+    char* pushed = NULL;
-+    int popCount = 0;
-+    if ( KwLoopMode )
-+    {
-+        popOrder = (int *) calloc(Nobjects[NODE], sizeof(int));
-+        pushed = (char *) calloc(Nobjects[NODE], sizeof(char));
-+        if ( !popOrder || !pushed ) { FREE(popOrder); FREE(pushed); }
-+    }
- 
-     // --- initialize a stack which contains nodes with zero in-degree
-     First = 0;
-@@ -242,12 +257,15 @@
-         {
-             Last++;
-             Stack[Last] = i;
-+            if ( pushed ) pushed[i] = 1;
-         }
-     }
- 
-     // --- traverse the stack, adding each node's outgoing link indexes
-     //     to the SortedLinks array in the order processed
-     n = 0;
-+    for (;;)
-+    {
-     while ( First <= Last )
-     {
-         // --- determine range of adjacency list indexes belonging to 
-@@ -272,10 +290,55 @@
-             {
-                 Last++;
-                 Stack[Last] = i2;
-+                if ( pushed ) pushed[i2] = 1;
-             }  
-         }
-+        if ( popOrder ) popOrder[i1] = popCount++;
-         First++;
-     }
-+    // --- loop mode: break a cycle and carry on sorting
-+    if ( n >= Nobjects[LINK] || !pushed ) break;
-+    {
-+        // --- choose the node to force: fewest unsorted inflow links, then
-+        //     most inflow links already sorted (an entry point of the cycle),
-+        //     then the smallest ID, so the choice never depends on how the
-+        //     input file happens to number nodes or links
-+        int best = -1, fed, bestFed = -1;
-+        for ( i = 0; i < Nobjects[NODE]; i++ )
-+        {
-+            if ( pushed[i] || InDegree[i] <= 0 || Node[i].degree == 0 ) continue;
-+            fed = 0;
-+            for ( j = 0; j < Nobjects[LINK]; j++ )
-+                if ( Link[j].node2 == i && pushed[Link[j].node1] ) fed++;
-+            if ( best < 0 || InDegree[i] < InDegree[best] ||
-+                 (InDegree[i] == InDegree[best] && fed > bestFed) ||
-+                 (InDegree[i] == InDegree[best] && fed == bestFed &&
-+                  strcmp(Node[i].ID, Node[best].ID) < 0) )
-+            { best = i; bestFed = fed; }
-+        }
-+        if ( best < 0 ) break;
-+        InDegree[best] = 0;
-+        Last++;
-+        Stack[Last] = best;
-+        pushed[best] = 1;
-+    }
-+    }
-+
-+    // --- flag back edges: links whose downstream node was processed first
-+    if ( popOrder && KwBackEdge && n >= Nobjects[LINK] )
-+    {
-+        for ( j = 0; j < Nobjects[LINK]; j++ )
-+        {
-+            if ( popOrder[Link[j].node2] <= popOrder[Link[j].node1] &&
-+                 Node[Link[j].node2].type != OUTFALL )
-+            {
-+                KwBackEdge[j] = 1;
-+                KwBackEdgeCount++;
-+            }
-+        }
-+    }
-+    FREE(popOrder);
-+    FREE(pushed);
-     return n;
- }
- 
---- a/src/solver/node.c
-+++ b/src/solver/node.c
-@@ -409,7 +409,9 @@
-     {
-       case DIVIDER: return divider_getOutflow(j, k);
-       case STORAGE: return storage_getOutflow(j, k);
--      default:      return Node[j].inflow + Node[j].overflow;
-+      default:
-+        if ( kwmod_isSplitNode(j) ) return kwmod_getOutflow(j, k);
-+        return Node[j].inflow + Node[j].overflow;
-     }
- }
- 
---- a/src/solver/swmm5.c
-+++ b/src/solver/swmm5.c
-@@ -1719,3 +1719,24 @@
-     return rc;
- }
- #endif
-+
-+//=============================================================================
-+//  KW/SF extension API (modified engine)
-+//=============================================================================
-+int DLLEXPORT swmm_setKwOptions(int splitMode, int loopMode)
-+//  splitMode: 0 stock (ERROR 133), 1 HEAD, 2 CAPACITY, 3 AREA
-+//  loopMode:  0 stock (ERROR 131), 1 iterate directed loops each step
-+//  Call before swmm_start (validation happens when routing opens).
-+{
-+    KwSplitMode = (splitMode >= 0 && splitMode <= 3) ? splitMode : 0;
-+    KwLoopMode  = loopMode ? 1 : 0;
-+    return 0;
-+}
-+
-+int DLLEXPORT swmm_getKwStats(double* v)
-+//  Fills v[0..9]; see kwmod_getStats. Valid after swmm_end.
-+{
-+    kwmod_getStats(v);
-+    return 0;
-+}
-+
+diff --git a/src/solver/funcs.h b/src/solver/funcs.h
+index f287483..0e0218b 100644
 --- a/src/solver/funcs.h
 +++ b/src/solver/funcs.h
-@@ -216,6 +216,24 @@
+@@ -215,6 +215,24 @@ double  landuse_getWashoffLoad(int landuse, int p, double area,
+ double  landuse_getAvgBmpEffic(int j, int p);
  double  landuse_getCoPollutLoad(int p, double washoff[]);
  
- //-----------------------------------------------------------------------------
++//-----------------------------------------------------------------------------
 +//   KW/SF bifurcation + loop extensions (kwmod.c)
 +//-----------------------------------------------------------------------------
 +extern int   KwSplitMode;
@@ -429,13 +280,14 @@
 +void    kwmod_noteLoopStep(int sweeps, double residual, int converged);
 +void    kwmod_getStats(double* v);
 +
-+//-----------------------------------------------------------------------------
+ //-----------------------------------------------------------------------------
  //   Flow/Quality Routing Methods
  //-----------------------------------------------------------------------------
- void    flowrout_init(int routingModel);
+diff --git a/src/solver/include/swmm5.h b/src/solver/include/swmm5.h
+index e150a74..4d9cfa3 100644
 --- a/src/solver/include/swmm5.h
 +++ b/src/solver/include/swmm5.h
-@@ -127,6 +127,8 @@
+@@ -127,6 +127,8 @@ typedef enum {
  } swmm_FlowUnitsProperty;
  
  int    DLLEXPORT swmm_run(const char *f1, const char *f2, const char *f3);
@@ -444,9 +296,12 @@
  int    DLLEXPORT swmm_open(const char *f1, const char *f2, const char *f3);
  int    DLLEXPORT swmm_start(int saveFlag);
  int    DLLEXPORT swmm_step(double *elapsedTime);
---- a/src/solver/kwmod.c
+diff --git a/src/solver/kwmod.c b/src/solver/kwmod.c
+new file mode 100644
+index 0000000..2dfb64b
+--- /dev/null
 +++ b/src/solver/kwmod.c
-@@ -0,0 +1,316 @@
+@@ -0,0 +1,328 @@
 +//-----------------------------------------------------------------------------
 +//   kwmod.c
 +//
@@ -487,6 +342,7 @@
 +static int*    OutList    = NULL;
 +static long*   AllocStamp = NULL; // per node: sweep stamp of cached allocation
 +static double* AllocQ     = NULL; // per link: allocated inflow (cfs)
++static char*   Done       = NULL; // per CSR slot: outlet capped in water-filling
 +
 +// --- run statistics (exposed through swmm_getKwStats)
 +static double StatAllocs, StatMaxImbalance, StatLoopSteps, StatSweeps,
@@ -529,7 +385,8 @@
 +    OutList    = (int*)   calloc(Nobjects[LINK] + 1, sizeof(int));
 +    AllocQ     = (double*)calloc(Nobjects[LINK] + 1, sizeof(double));
 +    KwBackEdge = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
-+    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge )
++    Done       = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
++    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge || !Done )
 +        return 0;
 +    for ( j = 0; j < Nobjects[LINK]; j++ ) OutStart[Link[j].node1 + 1]++;
 +    for ( i = 0; i < n; i++ ) OutStart[i + 1] += OutStart[i];
@@ -551,7 +408,7 @@
 +void kwmod_close(void)
 +{
 +    FREE(SplitNode); FREE(OutStart); FREE(OutList);
-+    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge);
++    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge); FREE(Done);
 +}
 +
 +int kwmod_canSplit(int node)
@@ -654,6 +511,15 @@
 +                        AllocQ[L] = MIN(AllocQ[L] * (qT - sumCapped) / sumFree, branchCap(L));
 +                }
 +            }
++            else if ( sumCapped > qT )
++            {
++                // --- the bisection stopped just past an outlet's cap while Q is
++                //     just below it (its tolerance is relative to the junction's
++                //     total capacity): the capped outlets alone exceed Q, so scale
++                //     every outlet down to Q; reducing never breaks a cap
++                for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++                    AllocQ[OutList[m]] *= qT / (sumFree + sumCapped);
++            }
 +            else if ( sumFree + sumCapped <= 0.0 )
 +                for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
 +                {   L = OutList[m]; AllocQ[L] = qT * branchCap(L) / capSum; }
@@ -661,11 +527,12 @@
 +    }
 +    else
 +    {
-+        // --- proportional (CAPACITY or AREA) with water-filling at the caps
-+        char done[64];
++        // --- proportional (CAPACITY or AREA) with water-filling at the caps;
++        //     one capped flag per outlet, however many outlets the junction has
++        char* done = Done + OutStart[node];
 +        int  useArea = (KwSplitMode == 3);
 +        remaining = qT;
-+        memset(done, 0, sizeof(done));
++        memset(done, 0, nOut);
 +        if ( useArea )
 +        {
 +            wSum = 0.0;
@@ -685,7 +552,7 @@
 +            {
 +                int idx = m - OutStart[node];
 +                L = OutList[m];
-+                if ( idx < 64 && done[idx] ) continue;
++                if ( done[idx] ) continue;
 +                w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
 +                            : branchCap(L);
 +                if ( branchCap(L) <= 0.0 ) w = 0.0;
@@ -697,13 +564,13 @@
 +                int idx = m - OutStart[node];
 +                double cap;
 +                L = OutList[m];
-+                if ( idx < 64 && done[idx] ) continue;
++                if ( done[idx] ) continue;
 +                w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
 +                            : branchCap(L);
 +                cap = branchCap(L);
 +                if ( cap <= 0.0 ) w = 0.0;
 +                AllocQ[L] = remaining * w / wSum;
-+                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }
++                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; done[idx] = 1; capped = 1; }
 +            }
 +            if ( !capped ) break;
 +            // --- recompute what is left for the uncapped branches
@@ -711,7 +578,7 @@
 +            for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
 +            {
 +                int idx = m - OutStart[node];
-+                if ( idx < 64 && done[idx] ) remaining -= AllocQ[OutList[m]];
++                if ( done[idx] ) remaining -= AllocQ[OutList[m]];
 +            }
 +        }
 +    }
@@ -763,3 +630,163 @@
 +    v[8] = StatMaxResidual;
 +    v[9] = StatAllocs > 0 ? StatHeadIters / StatAllocs : 0.0;
 +}
+diff --git a/src/solver/node.c b/src/solver/node.c
+index 2c8fa25..ab3a8e0 100644
+--- a/src/solver/node.c
++++ b/src/solver/node.c
+@@ -409,7 +409,9 @@ double node_getOutflow(int j, int k)
+     {
+       case DIVIDER: return divider_getOutflow(j, k);
+       case STORAGE: return storage_getOutflow(j, k);
+-      default:      return Node[j].inflow + Node[j].overflow;
++      default:
++        if ( kwmod_isSplitNode(j) ) return kwmod_getOutflow(j, k);
++        return Node[j].inflow + Node[j].overflow;
+     }
+ }
+ 
+diff --git a/src/solver/swmm5.c b/src/solver/swmm5.c
+index 6ff8c9b..0da2e32 100644
+--- a/src/solver/swmm5.c
++++ b/src/solver/swmm5.c
+@@ -1719,3 +1719,24 @@ int xfilter(int xc, char* module, double elapsedTime, long step)
+     return rc;
+ }
+ #endif
++
++//=============================================================================
++//  KW/SF extension API (modified engine)
++//=============================================================================
++int DLLEXPORT swmm_setKwOptions(int splitMode, int loopMode)
++//  splitMode: 0 stock (ERROR 133), 1 HEAD, 2 CAPACITY, 3 AREA
++//  loopMode:  0 stock (ERROR 131), 1 iterate directed loops each step
++//  Call before swmm_start (validation happens when routing opens).
++{
++    KwSplitMode = (splitMode >= 0 && splitMode <= 3) ? splitMode : 0;
++    KwLoopMode  = loopMode ? 1 : 0;
++    return 0;
++}
++
++int DLLEXPORT swmm_getKwStats(double* v)
++//  Fills v[0..9]; see kwmod_getStats. Valid after swmm_end.
++{
++    kwmod_getStats(v);
++    return 0;
++}
++
+diff --git a/src/solver/toposort.c b/src/solver/toposort.c
+index d6c9116..a8b2287 100644
+--- a/src/solver/toposort.c
++++ b/src/solver/toposort.c
+@@ -11,6 +11,7 @@
+ #define _CRT_SECURE_NO_DEPRECATE
+ 
+ #include <stdlib.h>
++#include <string.h>
+ #include "headers.h"
+ 
+ //-----------------------------------------------------------------------------
+@@ -120,6 +121,7 @@ void toposort_sortLinks(int sortedLinks[])
+         }
+ 
+         // --- topo sort the links
++        if ( !kwmod_init() ) report_writeErrorMsg(ERR_MEMORY, "");
+         n = topoSort(sortedLinks);
+     }   
+ 
+@@ -228,10 +230,23 @@ int topoSort(int sortedLinks[])
+ //  Output:  sortedLinks = array of sorted link indexes,
+ //           returns number of links successfully sorted
+ //  Purpose: performs a stack-based topo sort of the drainage network's links.
++//           With KwLoopMode on, a directed cycle no longer stops the sort:
++//           the unfinished node with the fewest unsorted inflow links is
++//           forced onto the stack, and the links that then arrive at an
++//           already-processed node are flagged as back edges.
+ //
+ {
+     int i, j, k, n;
+     int i1, i2, k1, k2;
++    int* popOrder = NULL;
++    char* pushed = NULL;
++    int popCount = 0;
++    if ( KwLoopMode )
++    {
++        popOrder = (int *) calloc(Nobjects[NODE], sizeof(int));
++        pushed = (char *) calloc(Nobjects[NODE], sizeof(char));
++        if ( !popOrder || !pushed ) { FREE(popOrder); FREE(pushed); }
++    }
+ 
+     // --- initialize a stack which contains nodes with zero in-degree
+     First = 0;
+@@ -242,12 +257,15 @@ int topoSort(int sortedLinks[])
+         {
+             Last++;
+             Stack[Last] = i;
++            if ( pushed ) pushed[i] = 1;
+         }
+     }
+ 
+     // --- traverse the stack, adding each node's outgoing link indexes
+     //     to the SortedLinks array in the order processed
+     n = 0;
++    for (;;)
++    {
+     while ( First <= Last )
+     {
+         // --- determine range of adjacency list indexes belonging to 
+@@ -272,10 +290,55 @@ int topoSort(int sortedLinks[])
+             {
+                 Last++;
+                 Stack[Last] = i2;
++                if ( pushed ) pushed[i2] = 1;
+             }  
+         }
++        if ( popOrder ) popOrder[i1] = popCount++;
+         First++;
+     }
++    // --- loop mode: break a cycle and carry on sorting
++    if ( n >= Nobjects[LINK] || !pushed ) break;
++    {
++        // --- choose the node to force: fewest unsorted inflow links, then
++        //     most inflow links already sorted (an entry point of the cycle),
++        //     then the smallest ID, so the choice never depends on how the
++        //     input file happens to number nodes or links
++        int best = -1, fed, bestFed = -1;
++        for ( i = 0; i < Nobjects[NODE]; i++ )
++        {
++            if ( pushed[i] || InDegree[i] <= 0 || Node[i].degree == 0 ) continue;
++            fed = 0;
++            for ( j = 0; j < Nobjects[LINK]; j++ )
++                if ( Link[j].node2 == i && pushed[Link[j].node1] ) fed++;
++            if ( best < 0 || InDegree[i] < InDegree[best] ||
++                 (InDegree[i] == InDegree[best] && fed > bestFed) ||
++                 (InDegree[i] == InDegree[best] && fed == bestFed &&
++                  strcmp(Node[i].ID, Node[best].ID) < 0) )
++            { best = i; bestFed = fed; }
++        }
++        if ( best < 0 ) break;
++        InDegree[best] = 0;
++        Last++;
++        Stack[Last] = best;
++        pushed[best] = 1;
++    }
++    }
++
++    // --- flag back edges: links whose downstream node was processed first
++    if ( popOrder && KwBackEdge && n >= Nobjects[LINK] )
++    {
++        for ( j = 0; j < Nobjects[LINK]; j++ )
++        {
++            if ( popOrder[Link[j].node2] <= popOrder[Link[j].node1] &&
++                 Node[Link[j].node2].type != OUTFALL )
++            {
++                KwBackEdge[j] = 1;
++                KwBackEdgeCount++;
++            }
++        }
++    }
++    FREE(popOrder);
++    FREE(pushed);
+     return n;
+ }
+ 

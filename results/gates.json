@@ -1,6 +1,6 @@
 {
- "date": "2026-10-29",
- "build": "/home/claude/work/kwb2",
+ "date": "2026-10-31",
+ "build": "/home/claude/swmm5-kw/build/kw",
  "gates": [
   [
    "Null effect: networks with nothing to split or loop, modes 0/0, 1/1, 2/1, 3/1 against stock",
@@ -15,6 +15,11 @@
   [
    "Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops",
    "5 of 5 networks: link peaks and continuity identical",
+   true
+  ],
+  [
+   "Outlet count and position: one junction with 63, 64, 65, 66 and 130 outlets, a 0.1 cfs-limited outlet first, 64th, 65th and last, three rules, KINWAVE and STEADY",
+   "90 runs: largest allocation gap 1.1e-13 cfs, no flooding, outflow volume the same wherever the limited outlet sits",
    true
   ],
   [
@@ -51,13 +56,13 @@
  "engines": [
   [
    "kwswmm",
-   541240,
-   "9e4b5f68f3cea2d23ad144465382bd8cab809da2ebe039a2aaa0a39339972201"
+   541272,
+   "49f96d361f50a2d097f59b4acd5a0dc8e3d0f8ebb425103b22c3591661ce3b6f"
   ],
   [
    "kwswmm-musl",
-   534448,
-   "c280e5c8a37da717ebe9b7c2b5808412c50036c6a107ac004354fec4d796c057"
+   534480,
+   "4664710ce133e188317b865aaf6dd7c407f0a841f27b3bd43581a7fbfd9780c4"
   ],
   [
    "stockseq",
@@ -76,8 +81,8 @@
   ],
   [
    "swmm524kw.wasm",
-   853130,
-   "e62aa56968febce741d56de2f6e73660ead09fa700bad5071117b962b4939918"
+   853429,
+   "8d57faa0c4c9a7135430f13a0bc504b7c99a68430990ede87d62f57fce9373eb"
   ]
  ]
 }

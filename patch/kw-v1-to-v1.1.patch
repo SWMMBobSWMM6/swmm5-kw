@@ -1,0 +1,110 @@
+diff --git a/src/solver/flowrout.c b/src/solver/flowrout.c
+index 612147e..4e78b96 100644
+--- a/src/solver/flowrout.c
++++ b/src/solver/flowrout.c
+@@ -108,7 +108,7 @@ void flowrout_init(int routingModel)
+             static const char* modes[] = {"STOCK", "HEAD", "CAPACITY", "AREA"};
+             report_writeLine("");
+             report_writeLine("*******************************************");
+-            report_writeLine("KW/SF extension (modified engine, kwmod.c)");
++            report_writeLine("KW/SF extension v1.1 (modified engine, kwmod.c)");
+             report_writeLine("*******************************************");
+             snprintf(line, sizeof(line), "Multi-outlet junctions ... %d  (allocation %s)",
+                      KwSplitNodeCount, modes[KwSplitMode & 3]);
+diff --git a/src/solver/kwmod.c b/src/solver/kwmod.c
+index 6e3696e..2dfb64b 100644
+--- a/src/solver/kwmod.c
++++ b/src/solver/kwmod.c
+@@ -38,6 +38,7 @@ static int*    OutStart   = NULL; // CSR of conduit outlets per node
+ static int*    OutList    = NULL;
+ static long*   AllocStamp = NULL; // per node: sweep stamp of cached allocation
+ static double* AllocQ     = NULL; // per link: allocated inflow (cfs)
++static char*   Done       = NULL; // per CSR slot: outlet capped in water-filling
+ 
+ // --- run statistics (exposed through swmm_getKwStats)
+ static double StatAllocs, StatMaxImbalance, StatLoopSteps, StatSweeps,
+@@ -80,7 +81,8 @@ int kwmod_init(void)
+     OutList    = (int*)   calloc(Nobjects[LINK] + 1, sizeof(int));
+     AllocQ     = (double*)calloc(Nobjects[LINK] + 1, sizeof(double));
+     KwBackEdge = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
+-    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge )
++    Done       = (char*)  calloc(Nobjects[LINK] + 1, sizeof(char));
++    if ( !SplitNode || !OutStart || !AllocStamp || !OutList || !AllocQ || !KwBackEdge || !Done )
+         return 0;
+     for ( j = 0; j < Nobjects[LINK]; j++ ) OutStart[Link[j].node1 + 1]++;
+     for ( i = 0; i < n; i++ ) OutStart[i + 1] += OutStart[i];
+@@ -102,7 +104,7 @@ int kwmod_init(void)
+ void kwmod_close(void)
+ {
+     FREE(SplitNode); FREE(OutStart); FREE(OutList);
+-    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge);
++    FREE(AllocStamp); FREE(AllocQ); FREE(KwBackEdge); FREE(Done);
+ }
+ 
+ int kwmod_canSplit(int node)
+@@ -205,6 +207,15 @@ static void allocate(int node)
+                         AllocQ[L] = MIN(AllocQ[L] * (qT - sumCapped) / sumFree, branchCap(L));
+                 }
+             }
++            else if ( sumCapped > qT )
++            {
++                // --- the bisection stopped just past an outlet's cap while Q is
++                //     just below it (its tolerance is relative to the junction's
++                //     total capacity): the capped outlets alone exceed Q, so scale
++                //     every outlet down to Q; reducing never breaks a cap
++                for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
++                    AllocQ[OutList[m]] *= qT / (sumFree + sumCapped);
++            }
+             else if ( sumFree + sumCapped <= 0.0 )
+                 for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
+                 {   L = OutList[m]; AllocQ[L] = qT * branchCap(L) / capSum; }
+@@ -212,11 +223,12 @@ static void allocate(int node)
+     }
+     else
+     {
+-        // --- proportional (CAPACITY or AREA) with water-filling at the caps
+-        char done[64];
++        // --- proportional (CAPACITY or AREA) with water-filling at the caps;
++        //     one capped flag per outlet, however many outlets the junction has
++        char* done = Done + OutStart[node];
+         int  useArea = (KwSplitMode == 3);
+         remaining = qT;
+-        memset(done, 0, sizeof(done));
++        memset(done, 0, nOut);
+         if ( useArea )
+         {
+             wSum = 0.0;
+@@ -236,7 +248,7 @@ static void allocate(int node)
+             {
+                 int idx = m - OutStart[node];
+                 L = OutList[m];
+-                if ( idx < 64 && done[idx] ) continue;
++                if ( done[idx] ) continue;
+                 w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
+                             : branchCap(L);
+                 if ( branchCap(L) <= 0.0 ) w = 0.0;
+@@ -248,13 +260,13 @@ static void allocate(int node)
+                 int idx = m - OutStart[node];
+                 double cap;
+                 L = OutList[m];
+-                if ( idx < 64 && done[idx] ) continue;
++                if ( done[idx] ) continue;
+                 w = useArea ? Conduit[Link[L].subIndex].a1 * Conduit[Link[L].subIndex].barrels
+                             : branchCap(L);
+                 cap = branchCap(L);
+                 if ( cap <= 0.0 ) w = 0.0;
+                 AllocQ[L] = remaining * w / wSum;
+-                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }
++                if ( AllocQ[L] > cap ) { AllocQ[L] = cap; done[idx] = 1; capped = 1; }
+             }
+             if ( !capped ) break;
+             // --- recompute what is left for the uncapped branches
+@@ -262,7 +274,7 @@ static void allocate(int node)
+             for ( m = OutStart[node]; m < OutStart[node + 1]; m++ )
+             {
+                 int idx = m - OutStart[node];
+-                if ( idx < 64 && done[idx] ) remaining -= AllocQ[OutList[m]];
++                if ( done[idx] ) remaining -= AllocQ[OutList[m]];
+             }
+         }
+     }

@@ -126,13 +126,51 @@ byte-identical to stock:
 
 The report header still says Build 5.2.4 (see [DECISIONS.md](DECISIONS.md)).
 
-## Open defect: HEAD can hand out slightly more than arrived
+## Defects fixed in v1.1 (31 October 2026)
+
+v1 (commit `5c6c060`) had two allocation defects. v1.1 fixes both; `patch/kw-v1-to-v1.1.patch` is
+the whole change. On the 13 shipped networks v1 and v1.1 write byte-identical `.out` files in every
+mode (78 runs). `tools/version_check.py` runs v1 and v1.1 side by side, in all three rules, on every
+corpus network that swmm5-kw routes once switched to KINWAVE (`results/version_check.json`).
+
+### 1. CAPACITY and AREA lost track of capped outlets past the 64th
+
+Found by an outside review of the app on 31 October 2026. The water-filling loop shared by
+CAPACITY and AREA kept its "this outlet is capped" flags in a fixed array:
+
+```c
+char done[64];
+...
+if ( idx < 64 && done[idx] ) continue;
+...
+if ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }
+...
+if ( idx < 64 && done[idx] ) remaining -= AllocQ[OutList[m]];
+```
+
+An outlet at position 65 or later that hit its cap was clipped but never marked done, so its
+share was never taken out of `remaining` and the other outlets were never topped up: part of the
+junction's inflow stayed at the junction, and under kinematic wave that is flooding. One junction
+with 65 one-foot outlets and the 65th limited to 0.1 cfs (`tools/many_outlets.py 65 65`) left
+0.040 cfs behind under AREA and flooded for 2.67 hours; with the limited outlet first, nothing.
+The allocation depended on file order, breaking promise 3. HEAD does not use this loop.
+
+v1.1 keeps one flag per outlet in a buffer sized to the network's links at `kwmod_init`
+(`Done`, indexed by the junction's slot in the outlet list), so there is no limit on outlets.
+The new gate in `tools/gates.py` ("Outlet count and position") runs 63, 64, 65, 66 and 130
+outlets with the limited outlet first, 64th, 65th and last, under all three rules: it fails 16
+cases on v1 and passes all 90 runs on v1.1 (largest gap 1.1e-13 cfs, no flooding, the same
+outflow volume wherever the limited outlet sits). No corpus network reached the defect: four
+corpus models have a node with more than 64 conduit outlets, and the one of them that routes
+(`XPSWMM/AREA91.inp`, 166 outlets) gives byte-identical output under v1 and v1.1 in every rule.
+
+### 2. HEAD could hand out slightly more than arrived
 
 Found on 31 October 2026 by the corpus what-if pass (`docs/VERIFICATION.md`), on
 `XPSWMM/EXTUT17.inp` switched to KINWAVE. Junction `inflow` has two outlets: conduit `37`, a 1 ft
 pipe with a full-flow capacity of 0.1126658 cfs, and `supernever`, a trapezoidal overflow channel
 whose invert is 100 ft up, with 14,812 cfs of capacity. At one step 0.1126642 cfs arrived, just
-under pipe 37's capacity. The bisection stops when
+under pipe 37's capacity. The bisection stopped when
 
 ```c
 if ( fabs(f) <= 1.0e-10 * capSum ) break;
@@ -140,7 +178,7 @@ if ( fabs(f) <= 1.0e-10 * capSum ) break;
 
 and with `capSum` = 14,812 cfs that tolerance is 1.48e-6 cfs, coarser than the gap between the
 inflow and pipe 37's capacity. The bisection stopped just past that capacity, pipe 37 was capped
-at 0.1126658 cfs, and the correction that follows only rescales outlets below their caps:
+at 0.1126658 cfs, and the correction that followed only rescaled outlets below their caps:
 
 ```c
 if ( AllocQ[L] >= cap ) sumCapped += AllocQ[L];
@@ -150,18 +188,15 @@ if ( sumFree > 0.0 && qT > sumCapped )
 ```
 
 Here `sumCapped` > `qT`, so no branch ran and the junction handed out 1.48e-6 cfs more than it
-had. It happened in 20 of the 234 corpus networks swmm5-kw routed in the what-if pass, all of them
-XPSWMM tutorial decks (19 `EXTUT*` and `EXIST`), from 2.25e-11 to 1.48e-6 cfs. None of the shipped
-test networks reaches it (largest gap 7.1e-15 cfs).
+had. In v1 it happened in 20 of the 234 corpus networks swmm5-kw routed in the what-if pass, all
+of them XPSWMM tutorial decks (19 `EXTUT*` and `EXIST`), from 2.25e-11 to 1.48e-6 cfs. None of the
+shipped test networks reaches it (largest gap 7.1e-15 cfs).
 
-`patch/kw-v1.1-head-overshoot.patch` adds one branch after that test: when the capped outlets
-alone exceed what arrived, scale every outlet down to it, which can never break a cap. On all 234
-networks (`tools/head_fix_check.py`, `results/head_fix_check.json`) it closes the gap to rounding
-(at most 2.2e-16 cfs) in the 20 where the defect fired and changes output in those 20 only; the
-largest gap left anywhere is 1.8e-12 cfs, which the fix does not touch and which is rounding on
-large flows. All 52 runs on `models/` stay byte-identical. It is
-**not applied**: the engine in `src/` is the one Bob's apps already embed, and changing it is
-his call ([DECISIONS.md](DECISIONS.md)).
+v1.1 adds one branch after that test: when the capped outlets alone exceed what arrived, every
+outlet is scaled down to it, which can never break a cap. The evidence it was right before it was
+applied is `results/v1/head_fix_check.json` (closes the gap to at most 2.2e-16 cfs in those 20,
+changes output in those 20 only); `results/version_check.json` repeats the comparison for v1.1.
+Bob decided on 31 October 2026 to ship it with fix 1, since both change the wasm.
 
 ## Bugs caught while building (keep them fixed in any port)
 

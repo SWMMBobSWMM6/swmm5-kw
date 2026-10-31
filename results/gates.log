@@ -1,205 +1,205 @@
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=26.66
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/braid_dynwave.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/chain30.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/chain30.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/chain34.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/chain34.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/chain40.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/chain40.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=28.62
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/diamond_dynwave.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=1 back=1 allocs=9868 maxImb=8.88e-16 loopSteps=4320 meanSweeps=2.284 maxSweeps=60 nonConv=73 maxRes=0.363 headIt=22.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=1 back=1 allocs=6708 maxImb=3.55e-15 loopSteps=4320 meanSweeps=1.553 maxSweeps=60 nonConv=5 maxRes=0.00189 headIt=31.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loopactive_dynwave.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=27.82
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split_dynwave.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/split_dynwave.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/storage.inp /tmp/tmpumlyq81e/a.rpt /tmp/tmpumlyq81e/a.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/storage.inp /tmp/tmpnn3awn7p/a.rpt /tmp/tmpnn3awn7p/a.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ bash /home/claude/swmm5-kw/tools/null_gate.sh /home/claude/work/kwb2 /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
+$ bash /home/claude/swmm5-kw/tools/null_gate.sh /home/claude/swmm5-kw/build/kw /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
 null gate: 32 runs, 0 differences
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=26.66
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=21.27
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=28.62
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=22.10
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=1 allocs=9868 maxImb=8.88e-16 loopSteps=4320 meanSweeps=2.284 maxSweeps=60 nonConv=73 maxRes=0.363 headIt=22.11
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=1 allocs=4565 maxImb=8.88e-16 loopSteps=4320 meanSweeps=1.057 maxSweeps=60 nonConv=3 maxRes=0.0612 headIt=4.50
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=1 allocs=6708 maxImb=3.55e-15 loopSteps=4320 meanSweeps=1.553 maxSweeps=60 nonConv=5 maxRes=0.00189 headIt=31.11
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=131 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=1 allocs=5282 maxImb=7.11e-15 loopSteps=4320 meanSweeps=1.223 maxSweeps=4 nonConv=0 maxRes=1.03e-05 headIt=23.84
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=27.82
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=133 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=21.24
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/stockseq /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/stockseq /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /tmp/tmpumlyq81e/r.inp /tmp/tmpumlyq81e/r.rpt /tmp/tmpumlyq81e/r.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/r.inp /tmp/tmpnn3awn7p/r.rpt /tmp/tmpnn3awn7p/r.out
 rc=0 split=0 back=0 allocs=0 maxImb=0 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
 braid.inp KINWAVE: stock [133], off [133], on runs
@@ -212,59 +212,511 @@ loopactive.inp KINWAVE: stock [131], off [131], on runs
 loopactive.inp STEADY: stock [131], off [131], on runs
 split.inp KINWAVE: stock [133], off [133], on runs
 split.inp STEADY: stock [133], off [133], on runs
-$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/order_check.py /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/split.inp
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/order_check.py /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/split.inp
 /home/claude/swmm5-kw/models/braid.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/diamond.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/loop.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/loopactive.inp renumberings identical to original: 3 of 3
 /home/claude/swmm5-kw/models/split.inp renumberings identical to original: 3 of 3
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.33e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 63 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 63 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 63 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.33e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.33e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.97e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.97e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.97e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 66 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 66 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 66 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 130 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.1e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.46e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.82e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.82e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 130 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.82e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 1 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=9.95e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 64 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=9.95e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 65 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=9.95e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 130 /tmp/tmpnn3awn7p/mo.inp --routing STEADY
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=9.95e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.33e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 63 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 63 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=3.91e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 63 63 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.33e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.33e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.16
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 64 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.26e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 65 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.97e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 66 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=20.22
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 66 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=4.62e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=5.68e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 66 66 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=6.04e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 130 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.1e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=19.84
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.46e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.82e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.82e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 130 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=7.82e-14 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 1 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 64 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.03e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 65 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.03e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+$ /usr/local/bin/python3 /home/claude/swmm5-kw/tools/many_outlets.py 130 130 /tmp/tmpnn3awn7p/mo.inp --routing KINWAVE
+
+$ /home/claude/swmm5-kw/build/kw/kwswmm /tmp/tmpnn3awn7p/mo.inp /tmp/tmpnn3awn7p/mo.rpt /tmp/tmpnn3awn7p/mo.out
+rc=0 split=1 back=0 allocs=720 maxImb=1.07e-13 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
+
+outlet-count gate:
+no failures
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=26.66
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=2 back=0 allocs=8640 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/braid.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=2 back=0 allocs=8640 maxImb=1.78e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=28.62
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/diamond.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=1 allocs=9868 maxImb=8.88e-16 loopSteps=4320 meanSweeps=2.284 maxSweeps=60 nonConv=73 maxRes=0.363 headIt=22.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=1 allocs=18435 maxImb=1.78e-15 loopSteps=4320 meanSweeps=4.267 maxSweeps=60 nonConv=158 maxRes=0.281 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loop.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=1 allocs=14113 maxImb=1.78e-15 loopSteps=4320 meanSweeps=3.267 maxSweeps=60 nonConv=71 maxRes=0.34 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=1 allocs=6708 maxImb=3.55e-15 loopSteps=4320 meanSweeps=1.553 maxSweeps=60 nonConv=5 maxRes=0.00189 headIt=31.11
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=1 allocs=10769 maxImb=7.11e-15 loopSteps=4320 meanSweeps=2.493 maxSweeps=60 nonConv=26 maxRes=0.00337 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/loopactive.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=1 allocs=11306 maxImb=7.11e-15 loopSteps=4320 meanSweeps=2.617 maxSweeps=60 nonConv=20 maxRes=0.278 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=27.82
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ /home/claude/work/kwb2/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpumlyq81e/c.rpt /tmp/tmpumlyq81e/c.out
+$ /home/claude/swmm5-kw/build/kw/kwswmm /home/claude/swmm5-kw/models/split.inp /tmp/tmpnn3awn7p/c.rpt /tmp/tmpnn3awn7p/c.out
 rc=0 split=1 back=0 allocs=4320 maxImb=3.55e-15 loopSteps=0 meanSweeps=0.000 maxSweeps=0 nonConv=0 maxRes=0 headIt=0.00
 
-$ node /home/claude/swmm5-kw/tools/wasm_check.js /home/claude/work/kwb2 /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
+$ node /home/claude/swmm5-kw/tools/wasm_check.js /home/claude/swmm5-kw/build/kw /home/claude/swmm5-kw/models/braid.inp /home/claude/swmm5-kw/models/braid_dynwave.inp /home/claude/swmm5-kw/models/chain30.inp /home/claude/swmm5-kw/models/chain34.inp /home/claude/swmm5-kw/models/chain40.inp /home/claude/swmm5-kw/models/diamond.inp /home/claude/swmm5-kw/models/diamond_dynwave.inp /home/claude/swmm5-kw/models/loop.inp /home/claude/swmm5-kw/models/loopactive.inp /home/claude/swmm5-kw/models/loopactive_dynwave.inp /home/claude/swmm5-kw/models/split.inp /home/claude/swmm5-kw/models/split_dynwave.inp /home/claude/swmm5-kw/models/storage.inp
 swmm524kw.wasm vs native musl: 52/52 byte-identical
 swmm524.wasm (stock) vs native musl: 13/13 byte-identical
 modes off vs on identical in 8/13 models (expect exactly the models with nothing to split or loop)

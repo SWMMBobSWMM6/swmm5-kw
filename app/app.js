@@ -81,6 +81,18 @@ function durationDays(inp) {
   const a = d(o.START_DATE, o.START_TIME), b = d(o.END_DATE || o.START_DATE, o.END_TIME);
   return (a != null && b != null && b > a) ? (b - a) / 864e5 : 0;
 }
+function expectedPeriods(inp) {   // reporting periods a complete run writes: (END - REPORT_START) / REPORT_STEP
+  const o = {}; let sec = '';
+  for (const raw of inp.split(/\r?\n/)) {
+    const s = raw.split(';')[0].trim(); if (!s) continue;
+    if (s[0] === '[') { sec = s.toUpperCase(); continue; }
+    if (sec === '[OPTIONS]') { const p = s.split(/\s+/); if (p.length > 1) o[p[0].toUpperCase()] = p[1]; }
+  }
+  const d = (ds, ts) => { const m = /^(\d+)\/(\d+)\/(\d+)$/.exec(ds || ''); if (!m) return null; const t = (ts || '0:0:0').split(':').map(Number); return Date.UTC(+m[3], +m[1] - 1, +m[2], t[0] || 0, t[1] || 0, t[2] || 0); };
+  const st = (o.REPORT_STEP || '0:15:00').split(':').map(Number), step = 3600 * (st[0] || 0) + 60 * (st[1] || 0) + (st[2] || 0);
+  const a = d(o.REPORT_START_DATE || o.START_DATE, o.REPORT_START_TIME || o.START_TIME), b = d(o.END_DATE || o.START_DATE, o.END_TIME);
+  return (a != null && b != null && b > a && step > 0) ? Math.floor((b - a) / 1000 / step + 1e-9) : null;
+}
 function topology(inp) {   // link -> [from, to, kind], from the five link sections
   const T = {}; let sec = '';
   const kinds = { '[CONDUITS]': 'conduit', '[PUMPS]': 'pump', '[ORIFICES]': 'orifice', '[WEIRS]': 'weir', '[OUTLETS]': 'outlet' };
@@ -115,6 +127,10 @@ function readOut(u8) {
   const linkIx = new Map(links.map((id, i) => [id.toUpperCase(), i]));
   return { dv, nSub, nNode, nLink, nPoll, flowUnits, subs, nodes, links, linkIx, nP, outPos, rec, nSV, nNV, nLV, nYV, start, step };
 }
+function stampHours(O) {   // each reporting period carries its own date stamp; hours after the header's start date
+  if (!O.hours) { O.hours = new Float64Array(O.nP); for (let p = 0; p < O.nP; p++) O.hours[p] = (O.dv.getFloat64(O.outPos + p * O.rec, true) - O.start) * 24; }
+  return O.hours;
+}
 function linkSeries(O, li, v = 0) {
   const a = new Float32Array(O.nP), base = 8 + 4 * (O.nSub * O.nSV + O.nNode * O.nNV + li * O.nLV + v);
   for (let p = 0; p < O.nP; p++) a[p] = O.dv.getFloat32(O.outPos + p * O.rec + base, true);
@@ -124,7 +140,7 @@ function readRpt(t) {
   const errs = [...t.matchAll(/ERROR (\d+):?\s*([^\n]*)/g)].map(m => ({ code: +m[1], text: m[2].trim() }));
   const cont = label => { const i = t.indexOf(label); if (i < 0) return null; const m = /Continuity Error \(%\) \.+\s+(\S+)/.exec(t.slice(i)); return m ? m[1] : null; };
   const out = { errs, routing: cont('Flow Routing Continuity'), runoff: cont('Runoff Quantity Continuity'), kw: null, loopLine: null };
-  const k = t.indexOf('KW/SF extension (modified engine');
+  const k = t.indexOf('KW/SF extension');
   if (k >= 0) {
     const lines = t.slice(k).split('\n'); let mode = '', rule = '';
     const kw = { split: [], loops: [] };
@@ -143,7 +159,7 @@ function readRpt(t) {
 
 /* ---------------------------------------------------------------- model picker */
 function setModel(name, text, desc) {
-  CUR = { name, text };
+  CUR = { name, text }; setTimeout(markStale, 0);
   $('#modelDesc').textContent = desc || (name + ' · ' + routingOf(text) + ' · ' + text.length.toLocaleString() + ' characters');
 }
 function fillModels() {
@@ -209,12 +225,14 @@ async function runAll() {
   const routing = routingOf(inp), split = +$('#splitSel').value, loop = $('#loopOn').checked ? 1 : 0;
   const total = durationDays(inp), withDW = $('#dwOn').checked && routing !== 'DYNWAVE';
   const st = { stock: { what: 'FLOW_ROUTING ' + routing }, kw: { what: `FLOW_ROUTING ${routing} · split ${RULES[split]} · loops ${loop ? 'iterated' : 'off'}` }, dw: { what: withDW ? ENG.dw.what : (routing === 'DYNWAVE' ? 'not needed: the file already routes DYNWAVE' : 'switched off') } };
-  engCards(st); ['verdict', 'kwCard', 'chartCard', 'splitCard', 'linksCard', 'rptCard'].forEach(id => $('#' + id).classList.add('hidden'));
+  engCards(st); ['staleBar', 'verdict', 'kwCard', 'chartCard', 'splitCard', 'linksCard', 'rptCard'].forEach(id => $('#' + id).classList.add('hidden'));
   try {
-    const out = { inp, routing, split, loop, topo: topology(inp) };
+    const out = { inp, routing, split, loop, topo: topology(inp), expected: expectedPeriods(inp),
+                  meta: { name: CUR.name, text: CUR.text, rmode, routing, split, loop, dwOn: $('#dwOn').checked, at: new Date() } };
     out.stock = await runOne('stock', MOD.stock, inp, {}, total, st);
     if (!STOP) out.kw = await runOne('kw', MOD.kw, inp, { split, loop, totalDays: total }, total, st);
     if (!STOP && withDW) out.dw = await runOne('dw', MOD.stock, setRouting(inp, 'DYNWAVE'), { totalDays: total }, total, st);
+    out.stopped = STOP || ['stock', 'kw', 'dw'].some(k => out[k] && out[k].stopped);
     RUN = out; render(st);
   } catch (e) {
     const v = $('#verdict'); v.className = 'box warn'; v.innerHTML = `<p><b>The run failed inside the engine host:</b> ${esc(e.message || e)}</p>`;
@@ -224,6 +242,17 @@ async function runAll() {
 }
 $('#runBtn').addEventListener('click', runAll);
 $('#stopBtn').addEventListener('click', () => { STOP = true; });
+/* results belong to the run that made them: when the inputs change, say so */
+function inputsNow() { return { text: CUR ? CUR.text : null, rmode: $('#routingSel').value, split: +$('#splitSel').value, loop: $('#loopOn').checked ? 1 : 0, dwOn: $('#dwOn').checked }; }
+function runLabel(m) { return `${m.name} (${m.routing}, split ${RULES[m.split]}, loops ${m.loop ? 'iterated' : 'off'}), run at ${m.at.toLocaleTimeString()}`; }
+function markStale() {
+  const bar = $('#staleBar'); if (!RUN || !RUN.meta) { bar.classList.add('hidden'); return; }
+  const m = RUN.meta, n = inputsNow(), stale = n.text !== m.text || n.rmode !== m.rmode || n.split !== m.split || n.loop !== m.loop || n.dwOn !== m.dwOn;
+  bar.classList.toggle('hidden', !stale);
+  if (stale) bar.innerHTML = `<p><b>These results are out of date.</b> Everything below is for ${esc(runLabel(m))}. The inputs have changed since${CUR && CUR.name !== m.name ? ` (the picker now says ${esc(CUR.name)})` : ''}. Press <b>Run the three</b> to bring the results up to date; until then, Export CSV still exports ${esc(m.name)}.</p>`;
+  $('#exportBtn').title = 'Export the link peaks of ' + m.name;
+}
+['routingSel', 'splitSel', 'loopOn', 'dwOn'].forEach(id => $('#' + id).addEventListener('change', markStale));
 
 /* ---------------------------------------------------------------- render */
 function render(st) {
@@ -231,9 +260,21 @@ function render(st) {
   for (const k of ['stock', 'kw', 'dw']) {
     const r = R[k]; if (!r) continue;
     st[k].tag = statusTag(r);
-    st[k].rows = [['Routing continuity', r.R.routing != null ? r.R.routing + ' %' : '–'], ['Runoff continuity', r.R.runoff != null ? r.R.runoff + ' %' : '–'], ['Run time', r.ms + ' ms'], ['.out SHA-256', r.sha ? r.sha.slice(0, 12) : 'no output']];
+    const np = r.O ? r.O.nP : 0, ex = k === 'dw' ? expectedPeriods(setRouting(R.inp, 'DYNWAVE')) : R.expected;
+    st[k].rows = [['Reporting periods', ex ? `${np.toLocaleString()} of ${ex.toLocaleString()}` : np.toLocaleString()], ['Routing continuity', r.R.routing != null ? r.R.routing + ' %' : '–'], ['Runoff continuity', r.R.runoff != null ? r.R.runoff + ' %' : '–'], ['Run time', r.ms + ' ms'], ['.out SHA-256', r.sha ? r.sha.slice(0, 12) : 'no output']];
   }
   engCards(st);
+  // a stopped run is not a result: completion governs the verdict, and nothing is compared
+  if (R.stopped) {
+    const v = $('#verdict'); v.classList.remove('hidden'); v.className = 'box hi';
+    const part = ['stock', 'kw', 'dw'].filter(k => R[k]).map(k => { const r = R[k], who = k === 'kw' ? 'swmm5-kw' : k === 'stock' ? 'stock' : 'the DYNWAVE reference', n = `${(r.O ? r.O.nP : 0).toLocaleString()}${R.expected ? ' of ' + R.expected.toLocaleString() : ''} reporting periods`;
+      const codes = r.R.errs.map(e => e.code).filter((c, i, a) => a.indexOf(c) === i);
+      return r.stopped ? `${who} stopped after ${n}` : codes.length ? `${who} ended on ERROR ${codes.join(', ')}` : `${who} finished all ${n}`; });
+    const notRun = ['stock', 'kw'].filter(k => !R[k]).map(k => k === 'kw' ? 'swmm5-kw did not start' : 'stock did not start');
+    v.innerHTML = `<p><b>Stopped before the runs finished.</b> ${esc([...part, ...notRun].join('; '))}. A stopped run is not a result, so nothing is compared here. Run again and let it finish.</p>`;
+    ['kwCard', 'chartCard', 'splitCard', 'linksCard'].forEach(id => $('#' + id).classList.add('hidden'));
+    LINKROWS = []; reports(); markStale(); return;
+  }
   // verdict
   const v = $('#verdict'), s = R.stock, k = R.kw; v.classList.remove('hidden');
   const sCodes = s ? s.R.errs.map(e => e.code) : [], kCodes = k ? k.R.errs.map(e => e.code) : [];
@@ -271,10 +312,16 @@ function render(st) {
     const ids = a => a.length ? `<div class="idlist">${a.slice(0, 200).map(x => `<code>${esc(x)}</code>`).join('')}${a.length > 200 ? `<span class="faint">and ${a.length - 200} more</span>` : ''}</div>` : '<span class="faint">none</span>';
     $('#kwLists').innerHTML = kw ? `<h3>Split junctions (rule ${esc(kw.rule)})</h3>${ids(kw.split)}<h3>Loop-closing links</h3>${ids(kw.loops)}${k.R.loopLine ? `<p class="faint" style="margin-top:8px">${esc(k.R.loopLine)}</p>` : ''}` : '';
   }
-  splitTable(); linksTable(); fillLinkSel(); drawChart(); reports();
+  splitTable(); linksTable(); fillLinkSel(); drawChart(); reports(); markStale();
 }
 
-function seriesOf(run, id) { if (!run || !run.O) return null; const i = run.O.linkIx.get(id.toUpperCase()); return i == null ? null : linkSeries(run.O, i, 0); }
+function seriesOf(run, id) { if (!run || !run.O || !run.O.nP) return null; const i = run.O.linkIx.get(id.toUpperCase()); return i == null ? null : linkSeries(run.O, i, 0); }
+function flowStats(s) {   // null when the run wrote no periods for this link: never +/-Infinity
+  if (!s || !s.length) return null;
+  let max = -Infinity, min = Infinity; for (const x of s) { if (x > max) max = x; if (x < min) min = x; }
+  const peak = Math.abs(min) > Math.abs(max) ? min : max, tol = Math.max(1e-6, 1e-3 * Math.abs(peak));
+  return { max, min, peak, backward: min < -tol };
+}
 function splitInfo() {
   const R = RUN, kw = R.kw && R.kw.R.kw; if (!kw || !kw.split.length) return [];
   const outl = {}; for (const [id, [a, b, kind]] of Object.entries(R.topo)) { (outl[a.toUpperCase()] = outl[a.toUpperCase()] || []).push(id); }
@@ -283,7 +330,7 @@ function splitInfo() {
 function shareAtPeak(run, outs) {
   const S = outs.map(id => seriesOf(run, id)); if (S.some(x => !x)) return null;
   let best = -1, bi = 0; for (let p = 0; p < S[0].length; p++) { let t = 0; for (const s of S) t += Math.max(0, s[p]); if (t > best) { best = t; bi = p; } }
-  return { total: best, share: S.map(s => best > 0 ? Math.max(0, s[bi]) / best : null), peaks: S.map(s => s.reduce((m, x) => Math.max(m, x), -Infinity)) };
+  return { total: best, share: S.map(s => best > 0 ? Math.max(0, s[bi]) / best : null), peaks: S.map(s => { const f = flowStats(s); return f ? f.max : null; }) };
 }
 function splitTable() {
   const info = splitInfo(); if (!info.length) return;
@@ -300,12 +347,17 @@ let LINKROWS = [];
 function linksTable() {
   const R = RUN, base = (R.kw && R.kw.O) || (R.stock && R.stock.O); if (!base) return;
   $('#linksCard').classList.remove('hidden');
-  const fu = UNITS[base.flowUnits], peak = (run, id) => { const s = seriesOf(run, id); if (!s) return null; let m = -Infinity; for (const x of s) if (x > m) m = x; return m; };
-  LINKROWS = base.links.map(id => { const k = peak(R.kw, id), d = peak(R.dw, id), s = peak(R.stock, id); return { id, k, d, s, diff: (k != null && d != null && Math.abs(d) > 1e-6) ? 100 * (k - d) / Math.abs(d) : null }; });
-  LINKROWS.sort((a, b) => Math.abs(b.diff ?? 0) - Math.abs(a.diff ?? 0));
-  $('#linksTable').innerHTML = `<thead><tr><th>Link</th><th class="num">swmm5-kw (${fu})</th><th class="num">DYNWAVE</th><th class="num">Stock, same routing</th><th class="num">swmm5-kw vs DYNWAVE</th></tr></thead><tbody>` +
-    LINKROWS.slice(0, 500).map(r => `<tr><td>${esc(r.id)}</td><td class="num">${fmt(r.k, 3)}</td><td class="num">${fmt(r.d, 3)}</td><td class="num">${fmt(r.s, 3)}</td><td class="num">${r.diff == null ? '–' : (r.diff > 0 ? '+' : '') + r.diff.toFixed(1) + '%'}</td></tr>`).join('') +
-    (LINKROWS.length > 500 ? `<tr><td colspan="5" class="muted">${LINKROWS.length - 500} more in the CSV export</td></tr>` : '') + '</tbody>';
+  const fu = UNITS[base.flowUnits], fs = (run, id) => flowStats(seriesOf(run, id));
+  LINKROWS = base.links.map(id => {
+    const k = fs(R.kw, id), d = fs(R.dw, id), s = fs(R.stock, id);
+    return { id, k, d, s, diff: (k && d && Math.abs(d.peak) > 1e-6) ? 100 * (k.peak - d.peak) / Math.abs(d.peak) : null,
+             back: [['swmm5-kw', k], ['DYNWAVE', d], ['stock', s]].filter(([, f]) => f && f.backward).map(([n]) => n) };
+  });
+  LINKROWS.sort((a, b) => (b.back.length > 0) - (a.back.length > 0) || Math.abs(b.diff ?? 0) - Math.abs(a.diff ?? 0));
+  const cell = f => f ? `<td class="num">${fmt(f.peak, 3)}${f.backward ? `<div class="faint" style="font-size:10.5px">max ${fmt(f.max, 3)} · min ${fmt(f.min, 3)}</div>` : ''}</td>` : '<td class="num">–</td>';
+  $('#linksTable').innerHTML = `<thead><tr><th>Link</th><th class="num">swmm5-kw (${fu})</th><th class="num">DYNWAVE</th><th class="num">Stock, same routing</th><th class="num">swmm5-kw vs DYNWAVE</th><th>Runs backwards in</th></tr></thead><tbody>` +
+    LINKROWS.slice(0, 500).map(r => `<tr><td>${esc(r.id)}</td>${cell(r.k)}${cell(r.d)}${cell(r.s)}<td class="num">${r.diff == null ? '–' : (r.diff > 0 ? '+' : '') + r.diff.toFixed(1) + '%'}</td><td>${r.back.length ? r.back.map(n => `<span class="tag hi">${n}</span>`).join(' ') : ''}</td></tr>`).join('') +
+    (LINKROWS.length > 500 ? `<tr><td colspan="6" class="muted">${LINKROWS.length - 500} more in the CSV export</td></tr>` : '') + '</tbody>';
 }
 function fillLinkSel() {
   const R = RUN, base = (R.kw && R.kw.O) || (R.stock && R.stock.O), sel = $('#linkSel'); if (!base) return;
@@ -325,17 +377,17 @@ function drawChart() {
   const pal = ['--f-a', '--f-b', '--f-c', '--f-d', '--f-e', '--f-f'].map(cssv), ink = cssv('--f-dim'), grid = cssv('--f-line');
   const runs = [['kw', ''], ['dw', '7 5'], ['stock', '2 4']];
   const series = []; let ymax = 0, ymin = 0;
-  ids.forEach((id, i) => runs.forEach(([k, dash]) => { const s = seriesOf(R[k], id); if (!s) return; for (const x of s) { if (x > ymax) ymax = x; if (x < ymin) ymin = x; } series.push({ id, k, dash, s, c: pal[i % pal.length] }); }));
+  ids.forEach((id, i) => runs.forEach(([k, dash]) => { const s = seriesOf(R[k], id); if (!s) return; for (const x of s) { if (x > ymax) ymax = x; if (x < ymin) ymin = x; } series.push({ id, k, dash, s, t: stampHours(R[k].O), c: pal[i % pal.length] }); }));
+  if (!series.length) { svg.innerHTML = ''; return; }
   if (ymax === ymin) ymax = ymin + 1;
   { const span = ymax - ymin, st = Math.pow(10, Math.floor(Math.log10(span / 5))), e = span / 5 / st, step = st * (e >= 5 ? 10 : e >= 2 ? 5 : e >= 1 ? 2 : 1); ymax = Math.ceil((ymax + 0.02 * span) / step) * step; if (ymin < 0) ymin = Math.floor((ymin - 0.02 * span) / step) * step; }
-  const nP = base.nP, hours = nP * base.step / 3600, X = p => L + (W - L - Rm) * p / Math.max(1, nP - 1), Y = y => T + (H - T - B) * (1 - (y - ymin) / (ymax - ymin));
+  const tEnd = Math.max(...series.map(s => s.t.length ? s.t[s.t.length - 1] : 0), 1e-9), X = h => L + (W - L - Rm) * h / tEnd, Y = y => T + (H - T - B) * (1 - (y - ymin) / (ymax - ymin));
   const nice = (lo, hi, n) => { const span = hi - lo, st = Math.pow(10, Math.floor(Math.log10(span / n))), e = span / n / st, step = st * (e >= 5 ? 10 : e >= 2 ? 5 : e >= 1 ? 2 : 1); const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(+v.toFixed(10)); return out; };
   let g = '';
   for (const yv of nice(ymin, ymax, 5)) g += `<line x1="${L}" x2="${W - Rm}" y1="${Y(yv)}" y2="${Y(yv)}" stroke="${grid}" stroke-width="1"/><text x="${L - 6}" y="${Y(yv) + 4}" fill="${ink}" font-size="11" text-anchor="end">${+yv.toPrecision(4)}</text>`;
-  for (const hv of nice(0, hours, 6)) { const p = hv * 3600 / base.step; if (p > nP) continue; g += `<text x="${X(p)}" y="${H - B + 16}" fill="${ink}" font-size="11" text-anchor="middle">${+hv.toPrecision(4)}</text>`; }
-  g += `<text x="${(L + W - Rm) / 2}" y="${H - 6}" fill="${ink}" font-size="11" text-anchor="middle">hours from the start of the report</text><text x="14" y="${(T + H - B) / 2}" fill="${ink}" font-size="11" text-anchor="middle" transform="rotate(-90 14 ${(T + H - B) / 2})">flow (${UNITS[base.flowUnits]})</text>`;
-  const stride = Math.max(1, Math.floor(nP / 1500));
-  for (const s of series) { let d = ''; for (let p = 0; p < s.s.length; p += stride) d += (d ? 'L' : 'M') + X(p).toFixed(1) + ' ' + Y(s.s[p]).toFixed(1); g += `<path d="${d}" fill="none" stroke="${s.c}" stroke-width="${s.k === 'kw' ? 2.2 : 1.6}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`; }
+  for (const hv of nice(0, tEnd, 6)) { if (hv > tEnd + 1e-9) continue; g += `<line x1="${X(hv)}" x2="${X(hv)}" y1="${H - B}" y2="${H - B + 4}" stroke="${grid}"/><text x="${X(hv)}" y="${H - B + 16}" fill="${ink}" font-size="11" text-anchor="middle">${+hv.toPrecision(4)}</text>`; }
+  g += `<text x="${(L + W - Rm) / 2}" y="${H - 6}" fill="${ink}" font-size="11" text-anchor="middle">hours after the report start (each point at its recorded time)</text><text x="14" y="${(T + H - B) / 2}" fill="${ink}" font-size="11" text-anchor="middle" transform="rotate(-90 14 ${(T + H - B) / 2})">flow (${UNITS[base.flowUnits]})</text>`;
+  for (const s of series) { const n = s.s.length, stride = Math.max(1, Math.floor(n / 1500)); let d = ''; for (let p = 0; p < n; p += stride) d += (d ? 'L' : 'M') + X(s.t[p]).toFixed(1) + ' ' + Y(s.s[p]).toFixed(1); if ((n - 1) % stride) d += 'L' + X(s.t[n - 1]).toFixed(1) + ' ' + Y(s.s[n - 1]).toFixed(1); g += `<path d="${d}" fill="none" stroke="${s.c}" stroke-width="${s.k === 'kw' ? 2.2 : 1.6}" ${s.dash ? `stroke-dasharray="${s.dash}"` : ''} stroke-linejoin="round"/>`; }
   svg.innerHTML = g;
   $('#chartTitle').textContent = ids.length > 1 ? 'Flow in ' + ids.join(', ') : 'Flow in ' + ids[0];
   $('#chartLegend').innerHTML = ids.map((id, i) => `<span><svg width="22" height="8"><line x1="0" x2="22" y1="4" y2="4" stroke="${pal[i % pal.length]}" stroke-width="3"/></svg>${esc(id)}</span>`).join('') +
@@ -352,13 +404,25 @@ function reports() {
 
 /* ---------------------------------------------------------------- export */
 $('#exportBtn').addEventListener('click', () => {
-  if (!RUN || !LINKROWS.length) { toast('Run a model first.'); return; }
-  const lines = ['link,peak_swmm5kw,peak_dynwave,peak_stock,pct_diff_kw_vs_dw'];
-  for (const r of LINKROWS) lines.push([r.id, r.k, r.d, r.s, r.diff == null ? '' : r.diff.toFixed(3)].map(x => x == null ? '' : x).join(','));
-  save((CUR.name || 'model').replace(/\.inp$/i, '') + '_swmm5kw_peaks.csv', lines.join('\n') + '\n', 'text/csv');
+  if (!RUN || RUN.stopped || !LINKROWS.length) { toast(RUN && RUN.stopped ? 'That run was stopped: nothing to export.' : 'Run a model first.'); return; }
+  const m = RUN.meta, v = x => (x == null || (typeof x === 'number' && !isFinite(x))) ? '' : x;
+  const lines = [`# model ${m.name}; routing ${m.routing}; split ${RULES[m.split]}; loops ${m.loop ? 'iterated' : 'off'}; run ${m.at.toISOString()}; engine swmm5-kw v1.1 (swmm524kw.wasm); flow ${RUN.kw && RUN.kw.O ? UNITS[RUN.kw.O.flowUnits] : ''}`,
+    '# peak = the flow of largest magnitude, signed; negative means the link ran backwards. Blank = that run wrote no results.',
+    'link,peak_swmm5kw,max_swmm5kw,min_swmm5kw,peak_dynwave,max_dynwave,min_dynwave,peak_stock,max_stock,min_stock,pct_diff_kw_vs_dw,runs_backwards_in'];
+  for (const r of LINKROWS) lines.push([r.id, ...[r.k, r.d, r.s].flatMap(f => f ? [f.peak, f.max, f.min] : [null, null, null]), r.diff == null ? null : r.diff.toFixed(3), r.back.join(' ')].map(v).join(','));
+  save(m.name.replace(/\.inp$/i, '') + '_swmm5kw_peaks.csv', lines.join('\n') + '\n', 'text/csv');
 });
 
 /* ---------------------------------------------------------------- in-browser gates */
+function manyOutlets(n, pos) {   // tools/many_outlets.py in JS: one junction, n 12 in outlets, outlet pos limited to 0.1 cfs
+  const L = ['[OPTIONS]', 'FLOW_UNITS CFS', 'FLOW_ROUTING STEADY', 'START_DATE 01/01/2026', 'START_TIME 00:00:00', 'REPORT_START_DATE 01/01/2026', 'REPORT_START_TIME 00:00:00',
+    'END_DATE 01/01/2026', 'END_TIME 06:00:00', 'REPORT_STEP 00:01:00', 'ROUTING_STEP 0:00:30', 'ALLOW_PONDING NO', '', '[JUNCTIONS]', 'J 100 6 0 0 0', '', '[OUTFALLS]'];
+  for (let k = 1; k <= n; k++) L.push(`O${k} 96 FREE NO`);
+  L.push('', '[CONDUITS]'); for (let k = 1; k <= n; k++) L.push(`C${k} J O${k} 400 0.013 0 0 0 ${k === pos ? 0.1 : 0}`);
+  L.push('', '[XSECTIONS]'); for (let k = 1; k <= n; k++) L.push(`C${k} CIRCULAR 1 0 0 0 1`);
+  L.push('', '[INFLOWS]', 'J FLOW tri FLOW 1 1', '', '[TIMESERIES]', 'tri 0:00 0', 'tri 2:00 20', 'tri 4:00 0', 'tri 6:00 0', '');
+  return L.join('\n');
+}
 async function runGates() {
   if (BUSY) return; BUSY = true; $('#gateBtn').disabled = true; $('#runBtn').disabled = true;
   const rows = [], put = () => { $('#gateTable').innerHTML = '<thead><tr><th>Network</th><th>Routing</th><th>Stock</th><th>Off (0/0) = stock</th><th>HEAD · CAPACITY · AREA</th><th class="num">Max imbalance</th></tr></thead><tbody>' + rows.join('') + '</tbody>'; };
@@ -381,7 +445,17 @@ async function runGates() {
       rows.push(`<tr><td>${esc(m.name)}</td><td>${routingOf(m.text)}</td><td>${codes.length ? `<span class="tag hi">ERROR ${codes.join(', ')}</span>` : '<span class="tag panel">ran</span>'}</td><td>${offSame ? '<span class="tag ok">identical</span>' : '<span class="tag warn">differs</span>'}</td><td>${res.map(x => `<span class="tag ${/runs|same/.test(x) ? 'ok' : 'warn'}">${x}</span>`).join(' ')}</td><td class="num">${imb.toExponential(1)}</td></tr>`);
       put(); $('#gateNote').textContent = `${pass + fail} of ${MODELS.length} networks`;
     }
-    $('#gateNote').textContent = fail ? `${fail} of ${MODELS.length} networks failed a check` : `all ${MODELS.length} networks pass, ${MODELS.length * 4 + MODELS.length} runs`;
+    // the boundary v1 got wrong: 65 outlets, the 0.1 cfs-limited one first, then 65th
+    { const vol = t => { const i = t.indexOf('Flow Routing Continuity'), g = k => { const m = new RegExp(k + ' \\.+\\s+(\\S+)').exec(t.slice(i)); return m ? +m[1] : NaN; }; return [g('External Outflow'), g('Flooding Loss')]; };
+      const res = []; let imb = 0, ok = true;
+      for (const pos of [1, 65]) {
+        const r = await new KWEngine(MOD.kw).run(manyOutlets(65, pos), { split: 3, loop: 1 }), [out, fl] = vol(r.rpt);
+        imb = Math.max(imb, r.stats ? r.stats[3] : 1); res.push([out, fl]); ok = ok && fl === 0 && r.stats && r.stats[3] < 1e-9;
+      }
+      ok = ok && res[0][0] === res[1][0]; ok ? pass++ : fail++;
+      rows.push(`<tr><td>65 outlets, one limited (generated)</td><td>STEADY</td><td><span class="tag hi">ERROR 133</span></td><td>–</td><td><span class="tag ${ok ? 'ok' : 'warn'}">AREA: limited outlet 1st and 65th ${ok ? 'agree, no flooding' : 'DISAGREE'}</span></td><td class="num">${imb.toExponential(1)}</td></tr>`); put(); }
+    const N = MODELS.length + 1;
+    $('#gateNote').textContent = fail ? `${fail} of ${N} networks failed a check` : `all ${N} networks pass, ${MODELS.length * 5 + 2} runs`;
   } catch (e) { $('#gateNote').textContent = 'stopped: ' + (e.message || e); }
   finally { BUSY = false; $('#gateBtn').disabled = false; $('#runBtn').disabled = false; }
 }

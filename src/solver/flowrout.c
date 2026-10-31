@@ -108,7 +108,7 @@ void flowrout_init(int routingModel)
             static const char* modes[] = {"STOCK", "HEAD", "CAPACITY", "AREA"};
             report_writeLine("");
             report_writeLine("*******************************************");
-            report_writeLine("KW/SF extension (modified engine, kwmod.c)");
+            report_writeLine("KW/SF extension v1.1 (modified engine, kwmod.c)");
             report_writeLine("*******************************************");
             snprintf(line, sizeof(line), "Multi-outlet junctions ... %d  (allocation %s)",
                      KwSplitNodeCount, modes[KwSplitMode & 3]);

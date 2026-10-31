@@ -51,6 +51,29 @@ k = len(re.findall(r'identical to original: 3 of 3', p.stdout))
 gates.append(['Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops',
               f'{k} of {len(split_loop)} networks: link peaks and continuity identical', k == len(split_loop)])
 
+# 3b. outlet count and position: the boundary that kwmod.c v1 got wrong (char done[64])
+def continuity_lines(rpt):
+    t = open(rpt, encoding='latin-1').read(); i = t.find('Flow Routing Continuity')
+    g = lambda k: float(re.search(k + r' \.+\s+(\S+)', t[i:]).group(1))
+    return g('External Outflow'), g('Flooding Loss')
+bad = []; nrun = 0; mxb = 0.0
+for meth in ('STEADY', 'KINWAVE'):
+    for n in (63, 64, 65, 66, 130):
+        for s in ('1', '2', '3'):
+            outs = {}
+            for pos in sorted(set(p for p in (1, 64, 65, n) if p <= n)):
+                fi = os.path.join(TD, 'mo.inp')
+                sh([sys.executable, os.path.join(TOOLS, 'many_outlets.py'), str(n), str(pos), fi, '--routing', meth])
+                p = sh([os.path.join(B, 'kwswmm'), fi, os.path.join(TD, 'mo.rpt'), os.path.join(TD, 'mo.out')], env={'KWSPLIT': s, 'KWLOOP': '1'})
+                imb = float(re.search(r'maxImb=(\S+)', p.stdout).group(1)); out, flood = continuity_lines(os.path.join(TD, 'mo.rpt'))
+                nrun += 1; mxb = max(mxb, imb); outs[pos] = out
+                if imb >= 1e-9 or flood != 0.0: bad.append(f'{meth} n={n} rule {s} limited outlet {pos}: gap {imb:.3g} cfs, flooding {flood}')
+            if len(set(outs.values())) != 1: bad.append(f'{meth} n={n} rule {s}: outflow volume depends on position {outs}')
+log.append('outlet-count gate:\n' + ('\n'.join(bad) or 'no failures'))
+gates.append(['Outlet count and position: one junction with 63, 64, 65, 66 and 130 outlets, a 0.1 cfs-limited outlet first, 64th, 65th and last, three rules, KINWAVE and STEADY',
+              f'{nrun} runs: largest allocation gap {mxb:.2g} cfs, no flooding, outflow volume the same wherever the limited outlet sits' if not bad else f'FAILED in {len(bad)} cases: see gates.log',
+              not bad])
+
 # 4. conservation
 mx = 0.0
 for f in split_loop:

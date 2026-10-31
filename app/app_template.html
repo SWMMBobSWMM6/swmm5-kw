@@ -282,6 +282,7 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
         <h2 id="runTitle">Stock EPA 5.2.4, swmm5-kw, and the dynamic-wave reference</h2>
         <div class="engines" id="engCards"></div>
       </div>
+      <div class="box hi hidden" id="staleBar" role="status"></div>
       <div class="box hidden" id="verdict"></div>
       <div class="card hidden" id="kwCard">
         <p class="kicker">Inside the swmm5-kw run</p>
@@ -295,7 +296,7 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
         <div class="row" style="margin-bottom:8px">
           <label class="muted" for="linkSel" style="font-size:12px">Links</label>
           <select id="linkSel" multiple size="4" style="max-width:280px"></select>
-          <span class="faint">Ctrl or Cmd click for several. Solid: swmm5-kw. Dashed: DYNWAVE. Dotted: stock.</span>
+          <span class="faint">Ctrl or Cmd click for several. Solid: swmm5-kw. Dashed: DYNWAVE. Dotted: stock. Each point sits at the time its reporting period was recorded: the first one report step after the start.</span>
         </div>
         <div class="chartbox"><svg id="chart" viewBox="0 0 760 320" role="img" aria-label="Link flow time series"></svg></div>
         <div class="legend" id="chartLegend"></div>
@@ -309,6 +310,7 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
       <div class="card hidden" id="linksCard">
         <p class="kicker">Every link</p>
         <h2>Peak flows, run against run</h2>
+        <p class="faint" style="margin:-4px 0 8px">Each cell is the flow of largest magnitude in that run, with its sign: a negative peak means the link ran mostly backwards, from its downstream node to its upstream node. Where a run had any backward flow, its maximum and minimum are shown beneath. A dash means that run wrote no results for the link.</p>
         <div class="tablewrap" style="max-height:420px"><table class="t" id="linksTable"></table></div>
       </div>
       <div class="card hidden" id="rptCard">
@@ -337,8 +339,8 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
         <ol style="margin:0;padding-left:18px">
           <li><b>Off means stock.</b> With both options off (the engine's default) the bytes are stock 5.2.4, ERROR 133 and 131 included.</li>
           <li><b>On changes nothing it has no business changing.</b> A network with nothing to split or loop gives the same bytes as stock in every mode.</li>
-          <li><b>No order dependence.</b> Shuffling the file's junctions and conduits changes nothing.</li>
-          <li><b>Conservation.</b> An allocation never creates water; a loop's leftover is booked to the receiving node. This holds to rounding on every shipped network. The corpus found one defect: HEAD can hand out up to 1.5e-6 cfs more than arrived when the inflow sits within the bisection tolerance of an outlet's capacity. A fix is proposed in the repository, not applied (Doc tab).</li>
+          <li><b>No order dependence.</b> Shuffling the file's junctions and conduits changes nothing, and neither does where an outlet sits in the file. Engine v1 broke this at junctions with more than 64 outlets under CAPACITY and AREA; v1.1 fixes it (Doc tab).</li>
+          <li><b>Conservation.</b> A junction hands out exactly what arrived, up to its outlets' combined capacity; a loop's leftover is booked to the receiving node. In engine v1, HEAD could hand out up to 1.5e-6 cfs more than arrived (20 corpus networks); v1.1, the engine in this page, fixes it (Doc tab).</li>
           <li><b>One engine, one answer.</b> The wasm engine matches a native build of the same source and the same maths library byte for byte.</li>
         </ol>
       </div>
@@ -394,8 +396,8 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
     <div class="stack">
       <div class="card" id="aiUse">
         <h2>AI use</h2>
-        <p>The extension, this page, its tests and the Doc essay were made with Claude, Anthropic's AI model, under the direction of Robert (Bob) Dickinson: the engine in a session on 28 and 29 September 2026, the repository, this page and the essay on 29 October 2026 (Claude Opus 5.5). Bob asked for KW and steady flow that run loops and bifurcations, chose to keep the work in its own repository, and supplies the model corpus it was tested on. Responsibility for publishing the work is his.</p>
-        <p><b>What Claude did:</b> designed and wrote the allocator (<code>kwmod.c</code>) and the changes to <code>flowrout.c</code>, <code>toposort.c</code>, <code>node.c</code> and <code>swmm5.c</code>; wrote the test networks, the drivers and the gates; built both WebAssembly engines and the JavaScript that runs them; rebuilt everything from EPA's tag in a fresh workspace for this repository; ran the corpus gate; wrote this page, its figures and the essay.</p>
+        <p>The extension, this page, its tests and the Doc essay were made with Claude, Anthropic's AI model, under the direction of Robert (Bob) Dickinson: the engine in a session on 28 and 29 September 2026, the repository, this page and the essay on 29 October 2026, engine v1.1 and this page's fixes on 31 October 2026 after an outside review (Claude Opus 5.5). Bob asked for KW and steady flow that run loops and bifurcations, chose to keep the work in its own repository, and supplies the model corpus it was tested on. Responsibility for publishing the work is his.</p>
+        <p><b>What Claude did:</b> designed and wrote the allocator (<code>kwmod.c</code>) and the changes to <code>flowrout.c</code>, <code>toposort.c</code>, <code>node.c</code> and <code>swmm5.c</code>; wrote the test networks, the drivers and the gates; built both WebAssembly engines and the JavaScript that runs them; rebuilt everything from EPA's tag in a fresh workspace for this repository; ran the corpus gate; wrote this page, its figures and the essay. On 31 October 2026 it reproduced each finding of an outside review, fixed the two allocation defects in the engine (v1.1, on Bob's decision) and the five ways this page could misreport a run (stale results after a model change, a stopped run shown as a result, missing values exported as infinities, reversed flows shown as zero, and a hydrograph drawn one report step early), and added gates for them.</p>
         <p><b>How it was checked:</b> mechanically. Byte comparison of <code>.out</code> and <code>.rpt</code> files against stock 5.2.4 built from the official tag, on the shipped networks and on Bob's corpus; the wasm engines against native builds; the patch against a fresh checkout. <b>Not yet checked by a person:</b> the C changes have not been reviewed line by line by Bob, and the split rules have been compared with dynamic wave on five small test networks only.</p>
       </div>
       <div class="card">

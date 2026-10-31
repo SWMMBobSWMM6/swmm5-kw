@@ -15,6 +15,9 @@ for g in G['gates']: L.append(f'| {cell(g[0])} | {cell(g[1])} | {"pass" if g[2] 
 NSET = sum(1 for l in open(os.path.join(R, 'results', 'corpus_set.txt')) if l.strip())
 if S.get('passes'):
     T = S['total']
+    v1sum = os.path.join(R, 'results', 'v1', 'summary.json')
+    if os.path.exists(v1sum) and open(v1sum, 'rb').read() == open(os.path.join(R, 'results', 'summary.json'), 'rb').read():
+        L += ['', '*The corpus tables below were run on engine v1 (29 to 31 October 2026). The reruns on v1.1 are in progress and will replace them; v1 and v1.1 write identical bytes on the 13 test networks.*']
     L += ['', f'**Corpus** ([SWMMBobSWMM6/1729-SWMM5-Models-2030](https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030) at 9ee63bd, the {NSET:,}-model set swmm5-rust was gated on; `tools/corpus_gate.py`, {T["runs"]:,} engine runs):', '',
           '| Pass | Modes run through swmm5-kw | Models | Identical to stock | Refused by stock, run by swmm5-kw | Stock crashes, same crash | Different | Inconclusive |', '|---|---|---|---|---|---|---|---|']
     for p in S['passes']:
@@ -28,7 +31,7 @@ if S.get('passes'):
 Wf = S.get('whatif')
 if Wf:
     codes = ', '.join(f"ERROR {k} ×{v}" for k, v in sorted(Wf['census_error_codes'].items(), key=lambda kv: -kv[1]))
-    L += ['', f"**What-if: every DYNWAVE corpus model switched to KINWAVE** (`tools/corpus_gate.py --force-routing KINWAVE --modes 11`, interface-file models left out). Not how these models were built; it measures how often a real network has a fork or a loop.", '',
+    L += ['', f"**What-if: every DYNWAVE corpus model switched to KINWAVE** (`tools/corpus_gate.py --force-routing KINWAVE --modes {','.join(Wf.get('modes', ['11']))}`, interface-file models left out; rules {', '.join({'11': 'HEAD', '21': 'CAPACITY', '31': 'AREA'}[m] for m in Wf.get('modes', ['11']))}, loops iterated). Not how these models were built; it measures how often a real network has a fork or a loop.", '',
           '| | Models |', '|---|---|',
           f"| Switched to KINWAVE | {Wf['models']:,} |",
           f"| Stock runs it | {Wf['stock_ran']:,} (swmm5-kw identical in {Wf['identical']:,}, different in {Wf['different']}) |",
@@ -37,17 +40,18 @@ if Wf:
           f"| ... and swmm5-kw runs it to the end | {Wf['census_ran']:,} (per network, a median of {Wf['split_median']:g} split junction{'' if Wf['split_median'] == 1 else 's'} and {Wf['loop_median']:g} loop-closing link{'' if Wf['loop_median'] == 1 else 's'}, at most {Wf['split_max']:g} and {Wf['loop_max']:g}; routing continuity error beyond ±1% in {Wf['cont_over_1']}) |",
           f"| ... and swmm5-kw then stops on another check | {Wf['census_error']:,}" + (f" ({codes})" if codes else '') + ' |',
           f"| Inconclusive or stock crashes | {Wf['inconclusive'] + Wf['crash_same']} |"]
-OL = os.path.join(R, 'results', 'whatif_outliers.json'); FXp = os.path.join(R, 'results', 'head_fix_check.json')
+OL = os.path.join(R, 'results', 'whatif_outliers.json'); VCp = os.path.join(R, 'results', 'version_check.json')
 if Wf and os.path.exists(OL):
     import collections
     O = json.load(open(OL)); cc = collections.Counter(o['cause'] for o in O)
     L += ['', f"The {len(O)} largest continuity errors among the switched models, traced with `tools/conduit_balance.sh` (`results/whatif_outliers.json`): "
           f"{cc.get('F1 at capacity', 0)} make water in conduits pinned at capacity (finding 1), {cc.get('F3 flat conduits', 0)} in flat conduits that never fill (finding 3), "
           f"{cc.get('model (stock DW also fails)', 0)} {'fails' if cc.get('model (stock DW also fails)', 0) == 1 else 'fail'} under stock DYNWAVE as well, {cc.get('not attributed (no conduit imbalance found)', 0) + cc.get('not attributed', 0)} not attributed. Three were made into trees and run through stock 5.2.4 (`results/tree_tests.md`)."]
-if os.path.exists(FXp):
-    X = json.load(open(FXp))['summary']
-    L += ['', f"HEAD overshoot (open defect): in {X['defect_fired']} of the {X['networks']:,} switched networks swmm5-kw routes, a junction handed out more than arrived, at most {X['max_imb_current']:.2e} cfs. "
-          f"With `patch/kw-v1.1-head-overshoot.patch` (not applied) the largest gap is {X['max_imb_fixed']:.1e} cfs, and output changes in {X['changed_where_defect_fired']} networks, all of them ones where the defect fired ({X['changed_elsewhere']} elsewhere; `tools/head_fix_check.py`, `results/head_fix_check.json`)."]
+if os.path.exists(VCp):
+    V = json.load(open(VCp))['summary']; gap_old = max(V[k]['max_gap_old'] for k in ('HEAD', 'CAPACITY', 'AREA')); gap_new = max(V[k]['max_gap_new'] for k in ('HEAD', 'CAPACITY', 'AREA'))
+    L += ['', f"Engine v1 against v1.1 on the {V['networks']:,} switched networks swmm5-kw routes (`tools/version_check.py`, `results/version_check.json`): output changed under HEAD in {V['HEAD']['changed']} "
+          f"({V['HEAD']['changed_and_old_gap_closed']} of them where v1's allocation gap closed), under CAPACITY in {V['CAPACITY']['changed']} and under AREA in {V['AREA']['changed']}. "
+          f"The largest allocation gap in any rule went from {gap_old:.2e} cfs (v1) to {gap_new:.1e} cfs (v1.1). See [Defects fixed in v1.1](#defects-fixed-in-v11)."]
 sh = {r['name']: r for r in F['split_shares']}
 L += ['', '**Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):', '',
       '| Routing and rule | 3.0 ft pipe | 1.5 ft pipe | Routing continuity |', '|---|---|---|---|']

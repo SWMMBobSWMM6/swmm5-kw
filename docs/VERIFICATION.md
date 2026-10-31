@@ -17,8 +17,8 @@ report differences that are not the extension's.
 |---|---|---|---|
 | 1 | **Off means stock.** With both options off (the default) the bytes are stock 5.2.4, ERROR 133 and 131 included | Stock refusals reproduced with modes 0/0; corpus mode 00 identical on every KINWAVE/STEADY model | `tools/gates.py`, `tools/corpus_gate.py --modes 00,...` |
 | 2 | **On changes nothing it has no business changing.** A network with nothing to split or loop gives stock's bytes in every mode | Null gate on the tree networks; corpus modes 11, 21, 31 on every model stock runs | `tools/null_gate.sh`, `tools/corpus_gate.py` |
-| 3 | **No order dependence.** Shuffling `[JUNCTIONS]` and `[CONDUITS]` changes nothing | Three seeded shuffles of each split and loop network | `tools/order_check.py` |
-| 4 | **Conservation.** An allocation never creates water; a loop's leftover is booked. Holds to rounding on every shipped network; broken by up to 1.48e-6 cfs on 20 corpus networks switched to KINWAVE (HEAD overshoot, `docs/DESIGN.md` "Open defect"; fix proposed, not applied) | Largest gap between flow allocated and flow available, over every step and rule (`swmm_getKwStats` v[3]); `tools/head_fix_check.py` for the fix | `tools/gates.py`, `tools/head_fix_check.py` |
+| 3 | **No order dependence.** Shuffling `[JUNCTIONS]` and `[CONDUITS]` changes nothing, and neither does where an outlet sits in the file | Three seeded shuffles of each split and loop network; one junction with 63 to 130 outlets and a limited outlet first, 64th, 65th and last, three rules (v1 failed this past the 64th outlet: `docs/DESIGN.md`, "Defects fixed in v1.1") | `tools/order_check.py`, `tools/many_outlets.py` via `tools/gates.py` |
+| 4 | **Conservation.** An allocation hands out exactly what arrived, up to the outlets' combined capacity; a loop's leftover is booked. Holds to rounding on every shipped network and every corpus network in v1.1; v1 broke it by up to 1.48e-6 cfs on 20 corpus networks (HEAD) and left water behind past the 64th outlet (CAPACITY, AREA) | Largest gap between flow allocated and flow available, over every step and rule (`swmm_getKwStats` v[3]); v1 against v1.1 on every corpus network that routes | `tools/gates.py`, `tools/version_check.py` |
 | 5 | **One engine, one answer.** The wasm engine is the same engine | `.out` bytes of `swmm524kw.wasm` against native musl, every network, every mode; the same for the stock wasm | `tools/wasm_check.js` |
 
 Plus two reproducibility checks: `tools/build.sh` rebuilds both `.wasm` files byte for byte, and
@@ -85,9 +85,17 @@ forks (`tools/tree_variant.py`) so stock 5.2.4 routes the network: stock's conti
 as large as swmm5-kw's or larger (`results/tree_tests.md`, made by `tools/tree_tests.py`). For the
 others it rests on the matching signature.
 
-The same pass found the HEAD overshoot defect (`docs/DESIGN.md`, "Open defect").
-`tools/head_fix_check.py` runs every network swmm5-kw routed through the engine as it stands and
-through the proposed fix, and writes `results/head_fix_check.json`.
+The same pass found the HEAD overshoot defect (`docs/DESIGN.md`, "Defects fixed in v1.1").
+
+## What the gates missed, and the v1.1 reruns
+
+v1's gates ran CAPACITY and AREA only on the five small split and loop networks, none with more
+than three outlets at a junction, and the what-if pass ran HEAD only. So the defect that an outside
+review found on 31 October 2026, capped outlets past the 64th lost by CAPACITY and AREA, had no
+test that could reach it. v1.1 adds the outlet-count gate, and every corpus pass was rerun on the
+v1.1 engine, the what-if pass now in all three rules (`--modes 11,21,31`). The v1 records are kept
+in `results/v1/`. `tools/version_check.py` builds v1 from git history and runs v1 and v1.1 side by
+side on every network the what-if pass routes, in all three rules (`results/version_check.json`).
 
 ## Comparison with dynamic wave
 
@@ -109,6 +117,12 @@ are not in this repository.
 tag, and `tools/build.sh` rebuilt `swmm524kw.wasm` with the same SHA-256 as September's, so the
 engine is the same binary. Every gate above was rerun, the corpus gate was run for the first
 time, and three statements in the September write-up were corrected (README, "Corrections").
+
+**31 October 2026** (v1.1): two allocation defects fixed (`docs/DESIGN.md`, "Defects fixed in
+v1.1"), the outlet-count gate added, every gate rerun (all pass), v1 and v1.1 compared byte for byte
+on the 13 test networks in six mode settings (78 runs, identical), and every corpus pass rerun on
+v1.1, the what-if pass in all three rules. `tools/build.sh` rebuilds the new `swmm524kw.wasm`
+(`8d57faa0…`) byte for byte in a second build directory.
 
 ## What a person has not checked
 

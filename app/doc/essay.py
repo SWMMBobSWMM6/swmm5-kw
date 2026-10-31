@@ -29,7 +29,7 @@ def blocks(D, S):
     cen = S.get('census', [])
     cen_txt = ', '.join(f"`{c['inp']}`" for c in cen) or 'none'
     imb = max(n['stats'][3] for n in D['nets'].values())
-    OUTL = D.get('outliers') or []; FX = (D.get('fixcheck') or {}).get('summary')
+    OUTL = D.get('outliers') or []; FX = (D.get('fixcheck') or {}).get('summary'); VC = (D.get('versioncheck') or {}).get('summary')
     flat = {(c['drop_ft'], c['q_cfs']): c['musl'] for c in D['flat_channel']}
 
     B = []
@@ -109,7 +109,11 @@ def blocks(D, S):
         pre('if ( fabs(f) <= 1.0e-10 * capSum ) break;')
         p(f'With 14,812 cfs of capacity, that tolerance is 1.48e-6 cfs, coarser than the gap between the inflow and the small pipe\'s capacity. The bisection stopped just past it, the pipe was marked full at 0.1126658 cfs, and the correction step that follows only adjusts outlets below their caps:')
         pre('if ( sumFree > 0.0 && qT > sumCapped )')
-        p(f'Here the capped pipe alone was over the inflow, so nothing ran, and the junction handed out 1.48e-6 cfs it did not have. It happened in {FX["defect_fired"]} of the {FX["networks"]:,} corpus networks swmm5-kw routed, never more than {FX["max_imb_current"]:.2e} cfs. At its worst that is a rate of about five fluid ounces an hour. Still a defect: the engine promises never to make water. `patch/kw-v1.1-head-overshoot.patch` adds one branch, which scales every outlet down to the inflow when the capped ones alone exceed it. On all {FX["networks"]:,} networks it brings the largest gap to {FX["max_imb_fixed"]:.1e} cfs and changes output only where the defect fired. It is not applied, because the engine in this repository is the one already built into Bob\'s apps, and changing it is his decision.')
+        p(f'Here the capped pipe alone was over the inflow, so nothing ran, and the junction handed out 1.48e-6 cfs it did not have. It happened in {FX["defect_fired"]} of the {FX["networks"]:,} corpus networks swmm5-kw routed, never more than {FX["max_imb_current"]:.2e} cfs. At its worst that is a rate of about five fluid ounces an hour. Still a defect: the engine promises never to make water. Version 1.1 of the engine adds one branch, which scales every outlet down to the inflow when the capped ones alone exceed it. Tried on all {FX["networks"]:,} networks before it went in, it brought the largest gap to {FX["max_imb_fixed"]:.1e} cfs and changed output only where the defect fired.')
+        p('A second defect turned up the same day, and not from the corpus. An outside reviewer built a junction with sixty-five outlets, put a small flow limit on one of them, and moved that outlet from first in the file to last. Under AREA the junction then left part of its water behind and flooded. The water-filling loop that CAPACITY and AREA share kept its record of which outlets were full in an array sixty-four long:')
+        pre('char done[64];\n...\nif ( AllocQ[L] > cap ) { AllocQ[L] = cap; if ( idx < 64 ) done[idx] = 1; capped = 1; }')
+        p('An outlet past the sixty-fourth that hit its cap was clipped and then forgotten: its share never came out of what was left to divide, and the others were never topped up. No test reached it, because the gates ran CAPACITY and AREA only on the five small networks, none with more than three outlets at a junction, and the corpus pass ran HEAD alone. A limit no one wrote down is still a limit. Version 1.1 keeps one flag per outlet, however many there are, and a new gate runs 63, 64, 65, 66 and 130 outlets with the limited one in every position. It fails on the old engine and passes on the new.')
+        p(f'Both fixes went into version 1.1 together, on Bob\'s decision, since either one meant a new WebAssembly file for the apps that carry the engine.' + (f' Run side by side on every corpus network the what-if pass routes, version 1.1 changed HEAD output on {VC["HEAD"]["changed"]} of {VC["networks"]:,} networks, CAPACITY on {VC["CAPACITY"]["changed"]} and AREA on {VC["AREA"]["changed"]}; the largest allocation gap anywhere fell from {max(VC[k]["max_gap_old"] for k in ("HEAD", "CAPACITY", "AREA")):.1e} to {max(VC[k]["max_gap_new"] for k in ("HEAD", "CAPACITY", "AREA")):.1e} cfs.' if VC else '') + ' On the thirteen shipped networks the two versions write the same bytes.')
 
     h2('Three things stock 5.2.4 does by itself')
     p(f'Building and checking this engine meant running a great many kinematic-wave models, and three behaviours of unmodified EPA 5.2.4 came to light. None has anything to do with the extension. Each shows up on a network with nothing to split and no loop.')
@@ -126,7 +130,7 @@ def blocks(D, S):
         'How the three split rules compare across real networks. Five small test networks were compared with dynamic wave. The corpus contains one model the extension changes.',
         'Anything about dynamic wave, which the extension never touches.',
         'That every continuity error in the what-if pass is stock behaviour. The 30 largest were traced; three of them by a direct test, the rest by a matching signature. The long tail below them was not examined.',
-        'That the HEAD overshoot fix is right for every network. It was checked on the networks the corpus routes and the shipped ones, and it is not applied.',
+        'That the version 1.1 fixes are right for every network. They were checked on the shipped networks, on every corpus network the what-if pass routes, and on junctions of up to 130 outlets.',
         'A Windows build. The engine was built and gated on Linux (GCC 13, musl 1.2.4) and as WebAssembly (Clang 18, wasi-libc). EPA\'s optional `.def` export file does not list the two new functions.',
         'A person\'s review of the C changes, line by line. The checks above are mechanical.'])
 
@@ -136,7 +140,7 @@ def blocks(D, S):
     p('**In another app.** `wasm/swmm524kw.wasm` with `wasm/kwengine.js` and `wasm/wasi-shim.iife.js` runs anywhere a browser or Node runs, with no compiler. For a SWMM5 tree of your own, apply `patch/swmm524-kw.patch`, then run the gates before calling it the same engine.')
 
     h2('AI use')
-    p('This engine, its tests, this page and this essay were made with Claude, Anthropic\'s AI model, under the direction of Robert (Bob) Dickinson, who asked for kinematic wave and steady flow that run loops and bifurcations, asked for the AREA rule first, chose to keep the work in its own repository, and supplies the model corpus. The engine was written on 29 September 2026; the repository, the corpus gate, this page and the essay on 29 October 2026, with Claude Opus 5.5. Claude designed and wrote the C changes, the test networks, the drivers, the gates, the WebAssembly builds and the JavaScript that runs them, the figures and this text. The checks are mechanical: byte comparison against stock 5.2.4 built from EPA\'s tag, on the shipped networks and the corpus, and the wasm against native builds. Claude also made the September errors this essay corrects, about the relief pipe and the continuity sweep. No person has yet reviewed the C changes line by line.')
+    p('This engine, its tests, this page and this essay were made with Claude, Anthropic\'s AI model, under the direction of Robert (Bob) Dickinson, who asked for kinematic wave and steady flow that run loops and bifurcations, asked for the AREA rule first, chose to keep the work in its own repository, and supplies the model corpus. The engine was written on 29 September 2026; the repository, the corpus gate, this page and the essay on 29 October 2026, with Claude Opus 5.5. Claude designed and wrote the C changes, the test networks, the drivers, the gates, the WebAssembly builds and the JavaScript that runs them, the figures and this text. The checks are mechanical: byte comparison against stock 5.2.4 built from EPA\'s tag, on the shipped networks and the corpus, and the wasm against native builds. Claude also made the September errors this essay corrects, about the relief pipe and the continuity sweep, and the two allocation defects fixed in version 1.1. On 31 October 2026 an outside review of this page found the 64-outlet defect and five ways the page could misreport a run; Claude reproduced each one, fixed the engine (on Bob\'s decision) and the page, and added the gates that would have caught them. No person has yet reviewed the C changes line by line.')
     return B
 
 
@@ -201,7 +205,7 @@ def load_data():
         txt = f"{p['identical']:,} identical" + (f" · {p['census_ran']} run" if p['census_ran'] else '') + (f" · {p.get('crash_same', 0)} crash as stock" if p.get('crash_same') else '') + (f" · {p['inconclusive']} inconclusive" if p['inconclusive'] else '') + (f" · {p['different']} DIFFERENT" if p['different'] else '')
         rows.append(dict(label=lab, n=p['models'], same=p['identical'], ran=p['census_ran'] + p['census_error'], inc=p['inconclusive'] + p.get('crash_same', 0), diff=p['different'], text=txt))
     D['corpus_fig'] = rows
-    for key, fn in (('outliers', 'whatif_outliers.json'), ('fixcheck', 'head_fix_check.json')):
+    for key, fn in (('outliers', 'whatif_outliers.json'), ('fixcheck', os.path.join('v1', 'head_fix_check.json')), ('versioncheck', 'version_check.json')):
         fp = os.path.join(RES, fn)
         if os.path.exists(fp): D[key] = json.load(open(fp))
     return D, S
