@@ -46,17 +46,16 @@ Written by `tools/update_readme.py` from `results/`; the app's Verify tab and th
 | Gate | Result | |
 |---|---|---|
 | Null effect: networks with nothing to split or loop, modes 0/0, 1/1, 2/1, 3/1 against stock | 32 runs on 8 networks, 0 differences (.out bytes, .rpt bar clock lines) | pass |
-| Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network | 10 cases (ERROR 133: 6, ERROR 131: 4), KINWAVE and STEADY, all as expected | pass |
-| Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops | 5 of 5 networks: link peaks and continuity identical | pass |
+| Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network | 14 cases (ERROR 133: 10, ERROR 131: 4), KINWAVE and STEADY, all as expected | pass |
+| Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops | 7 of 7 networks: link peaks and continuity identical | pass |
 | Outlet count and position: one junction with 63, 64, 65, 66 and 130 outlets, a 0.1 cfs-limited outlet first, 64th, 65th and last, three rules, KINWAVE and STEADY | 90 runs: largest allocation gap 1.1e-13 cfs, no flooding, outflow volume the same wherever the limited outlet sits | pass |
-| Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules | 7.1e-15 cfs over 15 runs | pass |
-| WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode | 52 of 52 .out files byte-identical | pass |
-| WebAssembly: swmm524.wasm (stock) against native musl stock | 13 of 13 .out files byte-identical | pass |
+| Fan-out: 64, 65, 66 and 130 outlets from one junction, one capped by a flow limit and moved through the list, three rules, KINWAVE and STEADY | 78 runs, 0 failures: largest allocation gap 1.2e-13 cfs, no flooding, outlet peaks unchanged by position (largest change 0 cfs) | pass |
+| Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules | 6e-14 cfs over 21 runs | pass |
+| WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode | 60 of 60 .out files byte-identical | pass |
+| WebAssembly: swmm524.wasm (stock) against native musl stock | 15 of 15 .out files byte-identical | pass |
 | Reproducible build: swmm524kw.wasm rebuilt by tools/build.sh | byte-identical to wasm/swmm524kw.wasm | pass |
 | Reproducible build: swmm524.wasm rebuilt by tools/build.sh | byte-identical to wasm/swmm524.wasm | pass |
 | Patch: patch/swmm524-kw.patch on pristine EPA v5.2.4 reproduces src/ | src/ = pristine v5.2.4 + patch, byte for byte (7 files) | pass |
-
-*The corpus tables below were run on engine v1 (29 to 31 October 2026). The reruns on v1.1 are in progress and will replace them; v1 and v1.1 write identical bytes on the 13 test networks.*
 
 **Corpus** ([SWMMBobSWMM6/1729-SWMM5-Models-2030](https://github.com/SWMMBobSWMM6/1729-SWMM5-Models-2030) at 9ee63bd, the 3,759-model set swmm5-rust was gated on; `tools/corpus_gate.py`, 8,747 engine runs):
 
@@ -71,7 +70,7 @@ Written by `tools/update_readme.py` from `results/`; the app's Verify tab and th
 Refused by stock and run by swmm5-kw: `NCIMM_ROUTING/water.inp` (stock ERROR 131; swmm5-kw routing continuity -2.167% with HEAD).
 Inconclusive: `OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-huge/IO-02_end-time-1e30.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `NCIMM_Training/EPA-5.1.013-InfilTrench/infiltration5_longerm.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `SWMM5_NCIMM/1220_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/4190_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/669_Subs_4500_Nodes.inp` (stock run hit the time cap); `SWMM5_NCIMM/indy_small.inp` (stock run hit the time cap); `Simon_EPA/Session38_100_Control_Rules.inp` (stock run hit the time cap); `z1000Years/1000yearSimulation_Case6.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case1.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case0.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical); `z1000Years/1000yearSimulation_Case0_wq.inp` (stock and swmm5-kw both reached the 2 GiB file-size cap; the first 2,147,483,648 bytes of their .out files are identical).
 
-**What-if: every DYNWAVE corpus model switched to KINWAVE** (`tools/corpus_gate.py --force-routing KINWAVE --modes 11`, interface-file models left out; rules HEAD, loops iterated). Not how these models were built; it measures how often a real network has a fork or a loop.
+**What-if: every DYNWAVE corpus model switched to KINWAVE** (`tools/corpus_gate.py --force-routing KINWAVE --modes 11,21,31`, interface-file models left out; rules HEAD, CAPACITY, AREA, loops iterated). Not how these models were built; it measures how often a real network has a fork or a loop.
 
 | | Models |
 |---|---|
@@ -84,6 +83,8 @@ Inconclusive: `OpenSWMM_Code_Review_2026/4-io/IO-02-time-options-accept-nan-inf-
 | Inconclusive or stock crashes | 7 |
 
 The 30 largest continuity errors among the switched models, traced with `tools/conduit_balance.sh` (`results/whatif_outliers.json`): 18 make water in conduits pinned at capacity (finding 1), 11 in flat conduits that never fill (finding 3), 1 fails under stock DYNWAVE as well, 0 not attributed. Three were made into trees and run through stock 5.2.4 (`results/tree_tests.md`).
+
+Engine v1 against v1.1 on the 234 switched networks swmm5-kw routes (`tools/version_check.py`, `results/version_check.json`): output changed under HEAD in 20 (20 of them where v1's allocation gap closed), under CAPACITY in 0 and under AREA in 0. The largest allocation gap in any rule went from 1.48e-06 cfs (v1) to 1.8e-12 cfs (v1.1); in the networks whose output changed it is now at most 2.2e-16 cfs, and every network whose output did not change has the same gap in both versions. See [Defects fixed in v1.1](#defects-fixed-in-v11).
 
 **Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):
 

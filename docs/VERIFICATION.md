@@ -61,7 +61,7 @@ about the split rules is the five small networks in `models/`.
 ## The what-if pass
 
 Because the corpus barely exercises the extension, a fourth pass asks a harder question:
-`tools/corpus_gate.py --force-routing KINWAVE --modes 11` copies each DYNWAVE model (interface-
+`tools/corpus_gate.py --force-routing KINWAVE --modes 11,21,31` copies each DYNWAVE model (interface-
 file models left out) beside the original with its routing switched to KINWAVE, and runs the
 copy through stock and through swmm5-kw. No one built those models for kinematic wave, so this
 measures how often real networks contain a fork or a loop, and whether swmm5-kw routes them. It
@@ -96,6 +96,23 @@ test that could reach it. v1.1 adds the outlet-count gate, and every corpus pass
 v1.1 engine, the what-if pass now in all three rules (`--modes 11,21,31`). The v1 records are kept
 in `results/v1/`. `tools/version_check.py` builds v1 from git history and runs v1 and v1.1 side by
 side on every network the what-if pass routes, in all three rules (`results/version_check.json`).
+
+The reruns gave every model the same verdict v1 did: no model different in any of the four passes,
+the same one network refused by stock and run by swmm5-kw, the same 10 stock crashes and the same 11
+models that could not be compared (README, results block). In the version check, HEAD output
+changed in exactly the 20 networks where v1's HEAD defect fired, and CAPACITY and AREA output
+changed in none.
+
+Two records needed a second look. One what-if run, `OWA_EXTRAN/longTS_extran1.inp` under
+CAPACITY, first came back different: it had hit the 120 s cap while writing a 2.1 GB report, so its
+files were cut short. Run again alone with `--timeout 900`, it was identical to stock in `.out` and
+`.rpt`; the record carries a `rerun` note. And in the interface-file pass, two models that read a
+hotstart file (`IO-37_use-hotstart.inp` and `Individual_Infiltration_Per_Subcatchment_use_HS.inp`)
+ran this time, where under v1 stock stopped with ERROR 331 (cannot open hot start interface file),
+because a model run earlier in the reruns had saved that file. swmm5-kw matched stock byte for byte
+both times. That is why the count of models stock stops on in that pass went from 45 to 43; the
+engine had nothing to do with it. The gate runs in the corpus checkout, so files that models save
+stay there between passes.
 
 ## Comparison with dynamic wave
 

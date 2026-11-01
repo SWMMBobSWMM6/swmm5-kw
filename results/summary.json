@@ -59,7 +59,7 @@
    "census_error": 0,
    "different": 0,
    "inconclusive": 4,
-   "stock_input_errors": 45,
+   "stock_input_errors": 43,
    "routing": {
     "KINWAVE": 16,
     "DYNWAVE": 146,
@@ -201,7 +201,17 @@
  "whatif": {
   "file": "gate_whatif.jsonl",
   "forced": "KINWAVE",
+  "modes": [
+   "11",
+   "21",
+   "31"
+  ],
   "models": 3218,
+  "cont_over_1_by_rule": {
+   "11": 60,
+   "21": 63,
+   "31": 79
+  },
   "census": 925,
   "census_ran": 234,
   "census_error": 691,
@@ -774,25 +784,25 @@
     "inp": "XPSWMM/EXTUT13.inp",
     "split": 2.0,
     "loops": 0.0,
-    "continuity": "-0.043"
+    "continuity": "-0.042"
    },
    {
     "inp": "XPSWMM/EXTUT14.inp",
     "split": 2.0,
     "loops": 0.0,
-    "continuity": "-0.043"
+    "continuity": "-0.042"
    },
    {
     "inp": "XPSWMM/EXTUT15.inp",
     "split": 2.0,
     "loops": 0.0,
-    "continuity": "-0.043"
+    "continuity": "-0.042"
    },
    {
     "inp": "XPSWMM/EXTUT18.inp",
     "split": 2.0,
     "loops": 0.0,
-    "continuity": "-0.048"
+    "continuity": "-0.047"
    },
    {
     "inp": "XPSWMM/IMPORTLL.inp",
@@ -828,7 +838,7 @@
     "inp": "XPSWMM/EXTUT17.inp",
     "split": 2.0,
     "loops": 0.0,
-    "continuity": "-0.042"
+    "continuity": "-0.041"
    },
    {
     "inp": "XPSWMM/WQALL.inp",
@@ -1062,7 +1072,7 @@
     "inp": "XPSWMM/EXTUT1.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.054"
+    "continuity": "-0.052"
    },
    {
     "inp": "XPSWMM/TORONTO5.inp",
@@ -1074,25 +1084,25 @@
     "inp": "XPSWMM/EXTUT3.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.050"
+    "continuity": "-0.049"
    },
    {
     "inp": "XPSWMM/EXTUT2A.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.050"
+    "continuity": "-0.049"
    },
    {
     "inp": "XPSWMM/EXTUT3A.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.050"
+    "continuity": "-0.049"
    },
    {
     "inp": "XPSWMM/EXTUT4.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.050"
+    "continuity": "-0.049"
    },
    {
     "inp": "XPSWMM/ALLORF.inp",
@@ -1116,19 +1126,19 @@
     "inp": "XPSWMM/EXTUT10.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.057"
+    "continuity": "-0.055"
    },
    {
     "inp": "XPSWMM/EXTUT7.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.056"
+    "continuity": "-0.054"
    },
    {
     "inp": "XPSWMM/EXTUT8.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.057"
+    "continuity": "-0.055"
    },
    {
     "inp": "XPSWMM/EXTUT11.inp",
@@ -1140,7 +1150,7 @@
     "inp": "XPSWMM/EXTUT9.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.056"
+    "continuity": "-0.053"
    },
    {
     "inp": "XPSWMM/EXTUT12.inp",
@@ -1152,13 +1162,13 @@
     "inp": "XPSWMM/EXTUT5.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.050"
+    "continuity": "-0.049"
    },
    {
     "inp": "XPSWMM/EXTUT6.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.050"
+    "continuity": "-0.049"
    },
    {
     "inp": "XPSWMM/ALLWEIR.inp",
@@ -1194,7 +1204,7 @@
     "inp": "XPSWMM/EXTUT2.inp",
     "split": 3.0,
     "loops": 0.0,
-    "continuity": "-0.067"
+    "continuity": "-0.066"
    },
    {
     "inp": "NCIMM_ROUTING/Session66_ALL_Outfall_Types.inp",
@@ -1631,7 +1641,7 @@
   ],
   "different_list": []
  },
- "max_allocation_imbalance_cfs": 1.48e-06,
+ "max_allocation_imbalance_cfs": 1.82e-12,
  "total": {
   "models": 3759,
   "identical": 3737,
@@ -1641,6 +1651,6 @@
   "different": 0,
   "inconclusive": 11,
   "runs": 8747,
-  "stock_input_errors": 466
+  "stock_input_errors": 464
  }
 }

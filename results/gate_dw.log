@@ -1,37 +1,43 @@
-3239 models, 0 already done, 3239 to run, modes ['11']
-100/3239
-200/3239
-300/3239
-400/3239
-500/3239
-600/3239
-700/3239
-800/3239
-900/3239
-1000/3239
-1100/3239
-1200/3239
-1300/3239
-1400/3239
-1500/3239
-1600/3239
-1700/3239
-1800/3239
-1900/3239
-2000/3239
-2100/3239
-2200/3239
-2300/3239
-2400/3239
-2500/3239
-2600/3239
-2700/3239
-2800/3239
-2900/3239
-3000/3239
-3100/3239
-3239 models, 3106 already done, 133 to run, modes ['11']
-100/133
+3239 models, engine v1.1, run 31 Oct 2026 as two parallel lists (1297 + 1942); part 01 was resumed twice after container restarts, skipping records already written
+== dw_part00.log
+1297 models, 0 already done, 1297 to run, modes ['11']
+100/1297
+200/1297
+300/1297
+400/1297
+500/1297
+600/1297
+700/1297
+800/1297
+900/1297
+1000/1297
+1100/1297
+1200/1297
+done
+== dw_part01.log
+1942 models, 0 already done, 1942 to run, modes ['11']
+100/1942
+200/1942
+300/1942
+400/1942
+500/1942
+600/1942
+700/1942
+800/1942
+900/1942
+1000/1942
+1100/1942
+1200/1942
+1300/1942
+1400/1942
+1500/1942
+== dw_part01b.log
+1942 models, 1567 already done, 375 to run, modes ['11']
+100/375
+== dw_part01c.log
+1942 models, 1686 already done, 256 to run, modes ['11']
+100/256
+200/256
 INCONCLUSIVE SWMM5_NCIMM/1220_Nodes.inp
 INCONCLUSIVE SWMM5_NCIMM/4190_Nodes.inp
 INCONCLUSIVE SWMM5_NCIMM/669_Subs_4500_Nodes.inp
