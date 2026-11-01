@@ -51,7 +51,8 @@ if os.path.exists(VCp):
     V = json.load(open(VCp))['summary']; gap_old = max(V[k]['max_gap_old'] for k in ('HEAD', 'CAPACITY', 'AREA')); gap_new = max(V[k]['max_gap_new'] for k in ('HEAD', 'CAPACITY', 'AREA'))
     L += ['', f"Engine v1 against v1.1 on the {V['networks']:,} switched networks swmm5-kw routes (`tools/version_check.py`, `results/version_check.json`): output changed under HEAD in {V['HEAD']['changed']} "
           f"({V['HEAD']['changed_and_old_gap_closed']} of them where v1's allocation gap closed), under CAPACITY in {V['CAPACITY']['changed']} and under AREA in {V['AREA']['changed']}. "
-          f"The largest allocation gap in any rule went from {gap_old:.2e} cfs (v1) to {gap_new:.1e} cfs (v1.1). See [Defects fixed in v1.1](#defects-fixed-in-v11)."]
+          f"The largest allocation gap in any rule went from {gap_old:.2e} cfs (v1) to {gap_new:.1e} cfs (v1.1); "
+          f"in the networks whose output changed it is now at most {max((x['m1']['imb_new'] or 0) for x in json.load(open(VCp))['rows'] if not x['m1']['out_same']):.1e} cfs, and every network whose output did not change has the same gap in both versions. See [Defects fixed in v1.1](#defects-fixed-in-v11)."]
 sh = {r['name']: r for r in F['split_shares']}
 L += ['', '**Split against dynamic wave** (`split.inp`, 20 cfs into a 3.0 ft and a 1.5 ft outlet, at the moment the total outflow peaks; `tools/figure_runs.py`):', '',
       '| Routing and rule | 3.0 ft pipe | 1.5 ft pipe | Routing continuity |', '|---|---|---|---|']
