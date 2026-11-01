@@ -17,8 +17,9 @@ B, C, REC, OUT = [os.path.abspath(x) for x in sys.argv[1:5]]
 REV = sys.argv[5] if len(sys.argv) > 5 else '5c6c060'
 
 T = tempfile.mkdtemp()
-subprocess.run(f'git -C "{R}" archive {REV} src tools/kwmain.c | tar -x -C "{T}"', shell=True, check=True)
+subprocess.run(f'git -C "{R}" archive {REV} src | tar -x -C "{T}"', shell=True, check=True)
 S = os.path.join(T, 'src', 'solver'); OLD = os.path.join(T, 'kwold')
+os.makedirs(os.path.join(T, 'tools')); open(os.path.join(T, 'tools', 'kwmain.c'), 'w').write(open(os.path.join(R, 'tools', 'kwmain.c')).read())  # the driver came after v1; its API did not change
 subprocess.run(['gcc', '-O2', '-D_FORTIFY_SOURCE=0', '-U_FORTIFY_SOURCE', '-w', '-I' + S, '-I' + os.path.join(S, 'include')]
                + [os.path.join(S, f) for f in sorted(os.listdir(S)) if f.endswith('.c')]
                + [os.path.join(T, 'tools', 'kwmain.c'), '-lm', '-o', OLD], check=True)
