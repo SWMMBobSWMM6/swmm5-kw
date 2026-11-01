@@ -13,6 +13,9 @@ Every number in the README, the app and the essay is read from these files.
 | `gate_whatif.jsonl`, `gate_whatif.log` | `tools/corpus_gate.py --force-routing KINWAVE` | the what-if pass: DYNWAVE models copied with routing switched to KINWAVE, modes 11, 21 and 31 (v1: mode 11 only) |
 | `whatif_outliers.json` | `tools/trace_outliers.py` | the 30 largest what-if continuity errors, each with stock DYNWAVE's error on the original, the conduits whose volume balance fails worst and a cause |
 | `tree_tests.md` | `tools/tree_tests.py` | three outliers made into trees so stock 5.2.4 routes them: stock's continuity error against swmm5-kw's |
+| `fanout_fig.json` | `tools/fanout_figure.py` | the 65-outlet junction with the capped outlet in each of 65 positions, AREA, STEADY, on v1 and v1.1 (the Doc's fan-out figure) |
+| `outlet_census.json` | `tools/outlet_census.py` | the most outlets any node has in the 3,759-model gate set, and what that means for the 64-outlet defect |
+| `app_review2.json` | `tests/app/review2.test.js` | the app's five review findings as 12 browser checks, all passing |
 | `version_check.json` | `tools/version_check.py` | v1 against v1.1, HEAD, CAPACITY and AREA, on every network the what-if pass routes |
 | `v1/` | the same tools, on engine v1 | the corpus records and `head_fix_check.json` as they stood before v1.1 |
 | `summary.json` | `tools/summarize.py` | the three passes classified: identical, refused by stock and run, stock crashes, different, inconclusive |

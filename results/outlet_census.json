@@ -1,0 +1,12 @@
+{
+ "models": 3759,
+ "missing": 0,
+ "max_outlets": 65,
+ "model": "XPSWMM/CTIA_EXI.inp",
+ "node": "n",
+ "over_64": 1,
+ "with_2_or_more": 1247,
+ "corpus": "SWMMBobSWMM6/1729-SWMM5-Models-2030 at 9ee63bd",
+ "date": "2026-10-31",
+ "note": "The one node with more than 64 outlets is node n in XPSWMM/CTIA_EXI.inp: 65 conduits from n to n, an XPSWMM conversion artefact. The model routes DYNWAVE, which the extension never touches; switched to KINWAVE it stops with ERROR 131 (extension off) or ERROR 115 (on) before routing. v1.0 and v1.1 write identical .out files for it in modes 00, 11, 21 and 31 (KINWAVE) and 11 (as written). Every other corpus node has 64 outlets or fewer, where v1.0 and v1.1 execute the same code, so the 64-outlet fix changes no corpus result. (Main's v1.1 also carries the HEAD overshoot fix, which does change output on 20 what-if networks: results/version_check.json. Across all 4,540 .inp files in the corpus repository, outside the gate set too, four models have a node with more than 64 conduit outlets; the one of them that routes, XPSWMM/AREA91.inp with 166, gives identical .out files under v1 and v1.1 in every rule.)"
+}

@@ -9,12 +9,12 @@
   ],
   [
    "Stock refusals: options off reproduce stock's ERROR 133 / 131; options on run the network",
-   "10 cases (ERROR 133: 6, ERROR 131: 4), KINWAVE and STEADY, all as expected",
+   "14 cases (ERROR 133: 10, ERROR 131: 4), KINWAVE and STEADY, all as expected",
    true
   ],
   [
    "Order independence: [JUNCTIONS] and [CONDUITS] shuffled, 3 seeds, HEAD + loops",
-   "5 of 5 networks: link peaks and continuity identical",
+   "7 of 7 networks: link peaks and continuity identical",
    true
   ],
   [
@@ -23,18 +23,23 @@
    true
   ],
   [
+   "Fan-out: 64, 65, 66 and 130 outlets from one junction, one capped by a flow limit and moved through the list, three rules, KINWAVE and STEADY",
+   "78 runs, 0 failures: largest allocation gap 1.2e-13 cfs, no flooding, outlet peaks unchanged by position (largest change 0 cfs)",
+   true
+  ],
+  [
    "Conservation: largest gap between flow allocated and flow available at any split junction, any step, three rules",
-   "7.1e-15 cfs over 15 runs",
+   "6e-14 cfs over 21 runs",
    true
   ],
   [
    "WebAssembly: swmm524kw.wasm against a native musl build, every network, every mode",
-   "52 of 52 .out files byte-identical",
+   "60 of 60 .out files byte-identical",
    true
   ],
   [
    "WebAssembly: swmm524.wasm (stock) against native musl stock",
-   "13 of 13 .out files byte-identical",
+   "15 of 15 .out files byte-identical",
    true
   ],
   [

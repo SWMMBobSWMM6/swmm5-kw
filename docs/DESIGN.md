@@ -160,9 +160,14 @@ v1.1 keeps one flag per outlet in a buffer sized to the network's links at `kwmo
 The new gate in `tools/gates.py` ("Outlet count and position") runs 63, 64, 65, 66 and 130
 outlets with the limited outlet first, 64th, 65th and last, under all three rules: it fails 16
 cases on v1 and passes all 90 runs on v1.1 (largest gap 1.1e-13 cfs, no flooding, the same
-outflow volume wherever the limited outlet sits). No corpus network reached the defect: four
-corpus models have a node with more than 64 conduit outlets, and the one of them that routes
-(`XPSWMM/AREA91.inp`, 166 outlets) gives byte-identical output under v1 and v1.1 in every rule.
+outflow volume wherever the limited outlet sits). A second gate from the parallel review branch,
+`tools/fanout_check.py`, keeps every outlet's name fixed and moves the capped one through the list:
+12 failures on v1, none on v1.1, every outlet peak unchanged by position. No corpus network reached
+the defect: in the 3,759-model gate set one node has more than 64 outlets (`XPSWMM/CTIA_EXI.inp`,
+65 conduits from a node to itself, which stops before routing; `tools/outlet_census.py`,
+`results/outlet_census.json`), and across all 4,540 `.inp` files in the corpus repository the one
+such model that routes (`XPSWMM/AREA91.inp`, 166 outlets) gives byte-identical output under v1
+and v1.1 in every rule.
 
 ### 2. HEAD could hand out slightly more than arrived
 

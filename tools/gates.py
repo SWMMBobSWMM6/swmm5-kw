@@ -9,7 +9,7 @@ stockseq-musl. Needs node for the WebAssembly gate.
 import json, os, re, subprocess, sys, tempfile, hashlib, glob, datetime
 R = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 B = os.path.abspath(sys.argv[1]); M = os.path.join(R, 'models'); TOOLS = os.path.join(R, 'tools')
-models = sorted(glob.glob(os.path.join(M, '*.inp')))
+models = sorted(glob.glob(os.path.join(M, '*.inp'))) + sorted(glob.glob(os.path.join(R, 'tests', 'fanout', '*.inp')))  # + the 65-outlet review networks
 log = []; gates = []
 def sh(cmd, **kw):
     p = subprocess.run(cmd, capture_output=True, text=True, **kw); log.append('$ ' + ' '.join(cmd) + '\n' + p.stdout + p.stderr); return p
@@ -73,6 +73,12 @@ log.append('outlet-count gate:\n' + ('\n'.join(bad) or 'no failures'))
 gates.append(['Outlet count and position: one junction with 63, 64, 65, 66 and 130 outlets, a 0.1 cfs-limited outlet first, 64th, 65th and last, three rules, KINWAVE and STEADY',
               f'{nrun} runs: largest allocation gap {mxb:.2g} cfs, no flooding, outflow volume the same wherever the limited outlet sits' if not bad else f'FAILED in {len(bad)} cases: see gates.log',
               not bad])
+
+# 3c. fan-out, as the second review built it: names fixed, the capped outlet moved through the list (tools/fanout_check.py)
+p = sh([sys.executable, os.path.join(TOOLS, 'fanout_check.py'), os.path.join(B, 'kwswmm')])
+m = re.search(r'fan-out gate: (\d+) runs, (\d+) failures, largest allocation gap (\S+) cfs, largest change in any outlet peak with the capped outlet moved (\S+) cfs', p.stdout)
+gates.append(['Fan-out: 64, 65, 66 and 130 outlets from one junction, one capped by a flow limit and moved through the list, three rules, KINWAVE and STEADY',
+              f'{m.group(1)} runs, {m.group(2)} failures: largest allocation gap {float(m.group(3)):.2g} cfs, no flooding, outlet peaks unchanged by position (largest change {float(m.group(4)):.2g} cfs)', m.group(2) == '0'])
 
 # 4. conservation
 mx = 0.0

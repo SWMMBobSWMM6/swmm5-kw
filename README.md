@@ -155,6 +155,8 @@ python3 tools/version_check.py build/kw /path/to/1729-SWMM5-Models-2030 results/
 python3 tools/summarize.py && python3 tools/update_readme.py
 python3 app/build.py && node app/doc/build_docx.js          # dist/swmm5-kw.html and the .docx
 node tools/app_check.js                                     # the app, in Chromium (Playwright)
+node tests/app/review2.test.js                              # the five app findings as 12 pass/fail checks
+python3 tools/fanout_check.py build/kw/kwswmm               # the fan-out gate on its own (also in gates.py)
 ```
 
 EPA's own CMake build works unchanged on this tree (`cmake -S . -B build && cmake --build build`) and gives `runswmm` and `libswmm5`; they behave as stock until a program calls `swmm_setKwOptions`. `KWSPLIT`: 1 HEAD, 2 CAPACITY, 3 AREA, unset or 0 stock. `KWLOOP`: 1 iterate, unset or 0 stock.
@@ -170,7 +172,8 @@ Browser, Replit or Node: `wasm/swmm524kw.wasm` + `wasm/wasi-shim.iife.js` + `was
 | `src/` | EPA's source tree with the extension applied (EPA's `README.md` is kept as `README-EPA.md`; `Build.md`, `CMakeLists.txt`, `bindings/`, `tests/` are EPA's, untouched) |
 | `patch/` | the extension (v1.1) as a patch against pristine v5.2.4, and the v1 to v1.1 change on its own |
 | `models/` | 13 test networks: splits, loops, chains, storage, and dynamic-wave twins |
-| `tools/` | build, gates, corpus gate, v1-against-v1.1 check, outlier tracing and tree tests, the many-outlet generator, figure runs, the browser check, the two command-line drivers |
+| `tools/` | build, gates, corpus gate, v1-against-v1.1 check, outlier tracing and tree tests, the many-outlet and fan-out checks, the outlet census, figure runs, the browser check, the two command-line drivers |
+| `tests/` | the two 65-outlet review networks (`tests/fanout/`, also run by the gates) and the app's browser checks (`tests/app/`) |
 | `wasm/` | the two WebAssembly engines and their JavaScript driver |
 | `results/` | every gate record, the figure data, and summaries ([results/README.md](results/README.md)) |
 | `docs/` | design, integration, verification, findings, open decisions |

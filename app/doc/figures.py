@@ -309,5 +309,48 @@ def fig_flat(P, D):
     return _svg(W, H, s, 'Stock kinematic wave continuity in a flat channel')
 
 
+# ---------------------------------------------------------------- 12. the sixty-fifth outlet (second review, v1.1)
+def fig_fanout(P, D):
+    F = D['fanout']; W, H = 760, 320; X0, X1, Y0, Y1 = 70, 600, 26, 250
+    n = F['n']; top = 0.045
+    fx = lambda k: X0 + (X1 - X0) * (k - 1) / (n - 1); fy = lambda v: Y1 - (Y1 - Y0) * v / top
+    s = axes(P, X0, Y0, X1, Y1, [1, 10, 20, 30, 40, 50, 60, 65], [0, 0.01, 0.02, 0.03, 0.04], fx, fy,
+             f'position of the capped outlet among the junction\'s {n} outlets, in file order', 'allocation gap (cfs)')
+    s += line(fx(64.5), Y0, fx(64.5), Y1, P, 'd', 1.2, '4 4') + T(fx(64.5) - 6, Y0 + 2, 'v1 kept 64 "full" flags', P, 11, 'd', 'end')
+    g0 = F['runs']['v1.0']['gap']; g1 = F['runs']['v1.1']['gap']
+    for k, v in enumerate(g0): s += circle(fx(k + 1), fy(v), 3.6, P, 'face', 'd', 1.4)   # rings, so the v1.1 line shows through
+    s += path('M' + 'L'.join(f'{fx(k + 1):.1f} {fy(v):.1f}' for k, v in enumerate(g1)), P, 'kw', 2.2)
+    w = max(range(n), key=lambda k: g0[k]); fl = F['runs']['v1.0']['flood'][w]
+    s += T(fx(w + 1) - 10, fy(g0[w]) + 4, f'v1: {g0[w]:.4f} cfs short, junction floods (peak {fl:.2f} cfs)', P, 11.5, 'd', 'end')
+    s += T(X0 + 10, fy(0) - 10, f'v1.1: largest gap {max(g1):.0e} cfs at any position, no flooding', P, 11.5, 'kw')
+    s += T(X1 + 18, 50, f'{n} outlets, 12 in, 400 ft,', P, 11, 'dim') + T(X1 + 18, 65, '1% slope, from one', P, 11, 'dim') + T(X1 + 18, 80, f'junction; {F["inflow"]:g} cfs in;', P, 11, 'dim')
+    s += T(X1 + 18, 95, f'one outlet limited to {F["qlimit"]:g} cfs.', P, 11, 'dim') + T(X1 + 18, 118, f'{F["rule"]} rule, {F["routing"]}.', P, 11, 'dim')
+    s += T(X1 + 18, 141, 'Rings: v1. Line: v1.1.', P, 11, 'dim')
+    return _svg(W, H, s, 'Allocation gap against the position of the capped outlet, v1.0 and v1.1')
+
+
+# ---------------------------------------------------------------- 13. where a sample belongs on the time axis
+def fig_timeaxis(P, D):
+    W, H = 760, 240; X0, X1 = 90, 560; span = X1 - X0; s = ''
+    def row(y, title, xs, ticks, colr):
+        r = T(14, y - 34, title, P, 12, 'ink', 'start', 600)
+        r += line(X0, y, X1, y, P, 'dim', 1.2) + line(X1, y - 30, X1, y + 8, P, 'dim', 1, '3 3')
+        for hv, x in ticks:
+            out = x > X1 + 1
+            r += line(x, y, x, y + 5, P, 'd' if out else 'dim', 1) + T(x, y + 18, str(hv), P, 11, 'd' if out else 'dim', 'middle')
+        for k, x in enumerate(xs):
+            r += circle(x, y - 12, 4.5, P, colr, colr, 0)
+        return r
+    old_x = [X0 + span * p / 5 for p in range(6)]                 # sample p drawn at p of 5 steps
+    old_ticks = [(h, X0 + span * h / 5) for h in range(0, 7)]      # tick h at h of 5 steps: 6 h lands past the edge
+    new_x = [X0 + span * h / 6 for h in range(1, 7)]
+    new_ticks = [(h, X0 + span * h / 6) for h in range(0, 7)]
+    s += row(84, 'v1: sample p drawn p steps from the left edge', old_x, old_ticks, 'd')
+    s += T(X1 + 8, 66, 'chart edge', P, 10.5, 'dim') + T(X0 + span * 6 / 5 + 8, 104, '6 h tick drawn', P, 10.5, 'd') + T(X0 + span * 6 / 5 + 8, 118, 'outside the chart', P, 10.5, 'd')
+    s += T(X0 - 4, 122, '\u2191 the hour-1 sample, drawn at hour 0', P, 10.5, 'd')
+    s += row(186, 'v1.1: each sample at the hour recorded with it in the .out file', new_x, new_ticks, 'kw')
+    s += T(14, 228, 'Six hourly reporting periods. SWMM writes the first at the end of hour 1, not at hour 0; the axis runs from the report start to the last sample.', P, 11, 'dim')
+    return _svg(W, H, s, 'Six hourly samples on the time axis, v1.0 and v1.1')
+
 FIGS = dict(tree=fig_tree, head=fig_head, sfactor=fig_sfactor, shares=fig_shares, hydro=fig_hydro,
-            loopstep=fig_loopstep, backwards=fig_backwards, chain=fig_chain, peaks=fig_peaks, corpus=fig_corpus, flat=fig_flat)
+            loopstep=fig_loopstep, backwards=fig_backwards, chain=fig_chain, peaks=fig_peaks, corpus=fig_corpus, flat=fig_flat, fanout=fig_fanout, timeaxis=fig_timeaxis)

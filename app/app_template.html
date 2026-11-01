@@ -211,7 +211,7 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
         <h1>swmm5-kw</h1>
         <div class="sub">EPA SWMM 5.2.4 &middot; kinematic wave and steady flow that split and loop</div>
       </div>
-      <span class="pill">v1.0 &middot; 5.2.4 + kw</span>
+      <span class="pill">v1.1 &middot; 5.2.4 + kw</span>
     </div>
     <div class="cluster">
       <div class="seg" id="theme-toggle" role="group" aria-label="Colour theme">
@@ -394,6 +394,19 @@ var t=v==='light'?'light':v==='auto'?((window.matchMedia&&matchMedia('(prefers-c
       </div>
     </div>
     <div class="stack">
+      <div class="card" id="changes11">
+        <h2>What changed in 1.1</h2>
+        <p>An outside review of v1.0 (31 October 2026) found a defect in the engine and five ways this page could misreport a run. Each was reproduced first, then fixed, and each now has a check that fails on v1.0:</p>
+        <ol style="margin:0;padding-left:18px">
+          <li><b>Engine, 65 outlets.</b> CAPACITY and AREA kept their "outlet is full" flags in <code>char done[64]</code>, so a capped outlet past the 64th was never set aside and the junction flooded. Now one flag per outlet, no limit. Two gates cover it (Verify tab).</li>
+          <li><b>Engine, HEAD.</b> Found by the corpus pass the same day: HEAD could hand out up to 1.5e-6 cfs more than arrived. Fixed in the same release, on Bob's decision.</li>
+          <li><b>Stale results.</b> Results now carry the run that made them, say when the inputs have changed, and export under the run's own model name.</li>
+          <li><b>Stopped runs.</b> A run that did not finish gets a "Stopped" verdict saying how far it got, and no comparison or export.</li>
+          <li><b>Peaks.</b> Missing values export blank, never <code>-Infinity</code>; every peak keeps its sign, with maximum, minimum and a backwards-flow flag.</li>
+          <li><b>Time axis.</b> Each point sits at the time stamped on it in the <code>.out</code> file; the first hourly sample is at hour 1.</li>
+        </ol>
+        <p class="faint" style="margin-top:6px">A second session fixed the same review in parallel on branch <code>claude/kw-v1.1-review-fixes</code>; its fan-out gate, browser checks, outlet census and two figures are folded into this version.</p>
+      </div>
       <div class="card" id="aiUse">
         <h2>AI use</h2>
         <p>The extension, this page, its tests and the Doc essay were made with Claude, Anthropic's AI model, under the direction of Robert (Bob) Dickinson: the engine in a session on 28 and 29 September 2026, the repository, this page and the essay on 29 October 2026, engine v1.1 and this page's fixes on 31 October 2026 after an outside review (Claude Opus 5.5). Bob asked for KW and steady flow that run loops and bifurcations, chose to keep the work in its own repository, and supplies the model corpus it was tested on. Responsibility for publishing the work is his.</p>

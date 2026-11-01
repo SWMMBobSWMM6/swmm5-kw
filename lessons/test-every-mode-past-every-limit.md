@@ -17,3 +17,8 @@ as limits (`[64]`, `< 64`, `MAXOUT`) and treat each one as a limit until a test 
 junction with 63, 64, 65, 66 and 130 outlets and a limited outlet first, 64th, 65th and last,
 under all three rules. It fails 16 cases on v1 and passes all 90 runs on v1.1. And the corpus
 what-if pass now runs `--modes 11,21,31`.
+
+A constant in the code is a boundary, and a guard around it is a decision about what happens past
+it. Either remove the boundary or test both sides of it: 64 and 65, not 2. (From the parallel
+review branch's lesson, `claude/kw-v1.1-review-fixes`, whose `tools/fanout_check.py` and
+`tests/app/review2.test.js` now run on main.)
